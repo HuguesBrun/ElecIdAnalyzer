@@ -20,6 +20,7 @@ ElecIdAnalyzer::ElecIdAnalyzer(const edm::ParameterSet& iConfig)
     // is DATA/MC 
     isMC_                   = iConfig.getParameter<bool>("isMC");
     doMuons_				= iConfig.getParameter<bool>("doMuons");
+    doElectrons_				= iConfig.getParameter<bool>("doElectrons");
     doPhotons_              = iConfig.getParameter<bool>("doPhotons");
     savePF_                 = iConfig.getParameter<bool>("savePF");
     saveConversions_        = iConfig.getParameter<bool>("saveConversions");
@@ -329,7 +330,6 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     reco::GsfElectronCollection FOelectrons;
     
     
-    
     for (reco::GsfElectronCollection::const_iterator iE = inElectrons.begin(); 
          iE != inElectrons.end(); ++iE) {
         
@@ -571,253 +571,253 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     
     
     
-    
-    // loop on electrons
-    unsigned int n = els_h->size();
-//    cout << "nb of electrons = " << n << endl;
-    for(unsigned int i = 0; i < n; ++i) {
-        
-        // get reference to electron
-        reco::GsfElectronRef ele(els_h, i);
-        
-        if (isMC_) doMCtruth(ele, genParticles, 0.3);
-        
-      //  cout << " le electron, eta=" << ele->eta() << " phi=" << ele->phi() << endl;
-        
-        T_Elec_Eta->push_back(ele->eta());
-        T_Elec_Pt->push_back(ele->pt());
-        T_Elec_Px->push_back(ele->px());
-        T_Elec_Py->push_back(ele->py());
-        T_Elec_Pz->push_back(ele->pz());
-        T_Elec_Energy->push_back(ele->energy());
-        T_Elec_Charge->push_back(ele->charge());
-
-        T_Elec_nBrems->push_back(ele->numberOfBrems());
-        T_Elec_fBrem->push_back(ele->fbrem());
-        T_Elec_eSuperClusterOverP->push_back(ele->eSuperClusterOverP());
-        T_Elec_vz->push_back(ele->vz());
-        T_Elec_vy->push_back(ele->vy());
-        T_Elec_vx->push_back(ele->vx());	
-
-        T_Elec_SC_Et->push_back( ele->superCluster()->energy()/TMath::CosH(ele->superCluster()->eta()));
-        T_Elec_SC_Eta->push_back( ele->superCluster()->eta());
-	float etaSC = ele->superCluster()->eta();
-
-        T_Elec_sigmaIetaIeta ->push_back( ele->sigmaIetaIeta());
-        T_Elec_deltaPhiIn->push_back( ele->deltaPhiSuperClusterTrackAtVtx());
-        T_Elec_deltaEtaIn->push_back( ele->deltaEtaSuperClusterTrackAtVtx());
-        T_Elec_isEcalDriven -> push_back(ele->ecalDrivenSeed());
-        T_Elec_HtoE ->push_back(ele->hadronicOverEm());
-
-	T_Elec_dr03TkSumPt->push_back(ele->dr03TkSumPt());
-	T_Elec_dr03EcalSumEt->push_back(ele->dr03EcalRecHitSumEt());
-	T_Elec_dr03HcalSumEt->push_back(ele->dr03HcalTowerSumEt());
-
-        T_Elec_isEB->push_back(ele->isEB());
-        T_Elec_isEE->push_back(ele->isEE());
-        
-        // conversion rejection variables
-        bool vtxFitConversion = ConversionTools::hasMatchedConversion(*ele, conversions_h, beamSpot.position());
-        float mHits = ele->gsfTrack()->trackerExpectedHitsInner().numberOfHits(); 
-        float missingHist = ele->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits();
-        T_Elec_passConversionVeto->push_back(vtxFitConversion);
-        T_Elec_nHits->push_back(mHits);
-        T_Elec_nLost->push_back(missingHist);
-        
-        double iso_ch =  (*(isoVals)[0])[ele];
-        double iso_em = (*(isoVals)[1])[ele];
-        double iso_nh = (*(isoVals)[2])[ele];
-        double iso_chAll = (*(isoVals)[3])[ele];
-        double iso_chPU = (*(isoVals)[4])[ele];
-        double iso_ch04 =  (*(isoVals)[5])[ele];
-        double iso_em04 = (*(isoVals)[6])[ele];
-        double iso_nh04 = (*(isoVals)[7])[ele];
-        double iso_chAll04 = (*(isoVals)[8])[ele];
-        double iso_chPU04 = (*(isoVals)[9])[ele];
-        T_Elec_photonIso->push_back(iso_em);
-        T_Elec_neutralHadronIso->push_back(iso_nh);
-        T_Elec_chargedHadronIso->push_back(iso_ch);
-        T_Elec_allChargedHadronIso->push_back(iso_chAll);
-        T_Elec_puChargedHadronIso->push_back(iso_chPU);
-        
-        
-        T_Elec_photonIso04->push_back(iso_em04);
-        T_Elec_neutralHadronIso04->push_back(iso_nh04);
-        T_Elec_chargedHadronIso04->push_back(iso_ch04);
-        T_Elec_allChargedHadronIso04->push_back(iso_chAll04);
-        T_Elec_puChargedHadronIso04->push_back(iso_chPU04);
-        
-        float rhoPlus = std::max(0.0, Rho);
-        // effective area for isolation
-        float AEff = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, etaSC, ElectronEffectiveArea::kEleEAData2011);
-        
-        float isoSum04 = iso_ch04 + std::max(iso_em04 + iso_nh04 - rhoPlus * AEff, 0.0); 
-    
-        T_Elec_CombIsoHWW->push_back(isoSum04);  
-        
-        // working points
-        bool veto       = EgammaCutBasedEleId::PassWP(EgammaCutBasedEleId::VETO, ele, conversions_h, beamSpot, vtx_h, iso_ch, iso_em, iso_nh, rhoIso);
-        bool loose      = EgammaCutBasedEleId::PassWP(EgammaCutBasedEleId::LOOSE, ele, conversions_h, beamSpot, vtx_h, iso_ch, iso_em, iso_nh, rhoIso);
-        bool medium     = EgammaCutBasedEleId::PassWP(EgammaCutBasedEleId::MEDIUM, ele, conversions_h, beamSpot, vtx_h, iso_ch, iso_em, iso_nh, rhoIso);
-        bool tight      = EgammaCutBasedEleId::PassWP(EgammaCutBasedEleId::TIGHT, ele, conversions_h, beamSpot, vtx_h, iso_ch, iso_em, iso_nh, rhoIso);
-        
-        // eop/fbrem cuts for extra tight ID
-        bool fbremeopin = EgammaCutBasedEleId::PassEoverPCuts(ele);
-        
-        // cuts to match tight trigger requirements
-        bool trigtight = EgammaCutBasedEleId::PassTriggerCuts(EgammaCutBasedEleId::TRIGGERTIGHT, ele);
-        
-        // for 2011 WP70 trigger
-        bool trigwp70 = EgammaCutBasedEleId::PassTriggerCuts(EgammaCutBasedEleId::TRIGGERWP70, ele);
-        
-        T_Elec_passVeto->push_back(veto);
-        T_Elec_passLoose->push_back(loose);
-        T_Elec_passMedium->push_back(medium);
-        T_Elec_passTight->push_back(tight);
-        T_Elec_passFbremopin->push_back(fbremeopin);
-        T_Elec_passtrigTight->push_back(trigtight);
-        T_Elec_passtrigwp70->push_back(trigwp70);
-        
-        bool isTriggering = trainTrigPresel(*ele);
-        //T_Elec_isTrig->push_back();
-         double myMVANonTrigMethod = myMVANonTrig->mvaValue(*ele,*pv,thebuilder,lazyTools,debugMVAclass);
-        double myMVATrigMethod= myMVATrig->mvaValue(*ele,*pv,thebuilder,lazyTools,debugMVAclass);
-        
-        double isomva = fElectronIsoMVA->mvaValue( *ele, vtx_h->at(0), 
-                                                  inPfCands, Rho, 
-                                                  ElectronEffectiveArea::kEleEAData2011,
-                                                  IdentifiedElectrons, IdentifiedMuons);
-        T_Elec_isTrig->push_back(isTriggering);
-        T_Elec_MVAid_trig->push_back(myMVATrigMethod);
-        T_Elec_MVAid_Nontrig->push_back(myMVANonTrigMethod);
-        T_Elec_Mvaiso->push_back(isomva);
-        
-        double theRadIso = GetRadialIsoValue(*ele, inPfCands);
-        T_Elec_RadialIso->push_back(theRadIso);
-        
-        double theRadIsoVeto = GetRadialIsoValueVeto(*ele, inPfCands);
-        T_Elec_RadialIsoVeto->push_back(theRadIsoVeto);
-        
-        double theRadIsoVetoMore = GetRadialIsoValueVetoMore(*ele, inPfCands, IdentifiedElectrons, IdentifiedMuons);
-        T_Elec_RadialIsoVetoMore->push_back(theRadIsoVetoMore);
-        
-        fillIsoRings(*ele, vtx_h->at(0), 
-        inPfCands, Rho, 
-        ElectronEffectiveArea::kEleEAData2011,
-        IdentifiedElectrons, IdentifiedMuons);
-        
-        int pass_Elec_HLT_Elec27_WP80 = 0;
-        int pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = 0;
-        int pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = 0;
-        int pass_Elec_HLT_Ele17_Ele8_Ele8Leg = 0;
-        int pass_Elec_HLT_Ele17_Ele8_Ele17Leg = 0;
-        int pass_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg = 0;
-        int pass_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg = 0;
-        int pass_Elec_HLT_Ele20_SC4_TnP_SC4Leg = 0;
-        int pass_Elec_HLT_Ele20_SC4_TnP_Ele20Leg = 0;
-        int pass_Elec_HLT_Mu8_Ele17_Ele17Leg = 0;
-        int pass_Elec_HLT_Ele8_Mu17_Ele8Leg = 0;
-        
-        for (size_t t = 0 ; t < selectedObjects.size() ; t++){
-      //    cout << "eta = " << selectedObjects[t].eta() << " phi = " << selectedObjects[t].phi() << "filter = " << HLT_triggerObjects[theHLTcorr[t]] << endl;
-            float HLTdeltaR = deltaR(ele->phi(), selectedObjects[t].phi(), ele->eta(), selectedObjects[t].eta());
-      //  cout << "delta R =" << HLTdeltaR << endl;
-            if (HLTdeltaR < 0.3){
-	  //     cout << "coucou on passe = " << theHLTcorr[t] << endl;
-                if (theHLTcorr[t] == 0) pass_Elec_HLT_Elec27_WP80 = 1;
-                if (theHLTcorr[t] == 1) pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = 1; 
-                if (theHLTcorr[t] == 2) pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = 1; 
-                if (theHLTcorr[t] == 3) pass_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg = 1; 
-                if (theHLTcorr[t] == 4) pass_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg = 1; 
-                if (theHLTcorr[t] == 5) pass_Elec_HLT_Ele20_SC4_TnP_SC4Leg = 1; 
-                if (theHLTcorr[t] == 6) pass_Elec_HLT_Ele20_SC4_TnP_Ele20Leg = 1;
-                if (theHLTcorr[t] == 7) pass_Elec_HLT_Ele17_Ele8_Ele8Leg = 1;
-                if (theHLTcorr[t] == 8) pass_Elec_HLT_Ele17_Ele8_Ele17Leg = 1;
-                if (theHLTcorr[t] == 15) pass_Elec_HLT_Mu8_Ele17_Ele17Leg = 1;
-                if (theHLTcorr[t] == 17) pass_Elec_HLT_Ele8_Mu17_Ele8Leg = 1;
-           }
-        }
-        T_Elec_HLT_Elec27_WP80->push_back(pass_Elec_HLT_Elec27_WP80);
-        T_Elec_HLT_Ele17TightID_Ele8_Ele8Leg->push_back(pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg);
-        T_Elec_HLT_Ele17TightID_Ele8_Ele17Leg->push_back(pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg);
-        T_Elec_HLT_Ele17_Ele8_Ele8Leg->push_back(pass_Elec_HLT_Ele17_Ele8_Ele8Leg);
-        T_Elec_HLT_Ele17_Ele8_Ele17Leg->push_back(pass_Elec_HLT_Ele17_Ele8_Ele17Leg);
-        T_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg->push_back(pass_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg);
-        T_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg->push_back(pass_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg);
-        T_Elec_HLT_Ele20_SC4_TnP_Ele20Leg->push_back(pass_Elec_HLT_Ele20_SC4_TnP_Ele20Leg);
-        T_Elec_HLT_Ele20_SC4_TnP_SC4Leg->push_back(pass_Elec_HLT_Ele20_SC4_TnP_SC4Leg);
-        T_Elec_HLT_Mu8_Ele17_Ele17Leg->push_back(pass_Elec_HLT_Mu8_Ele17_Ele17Leg);
-        T_Elec_HLT_Ele8_Mu17_Ele8Leg->push_back(pass_Elec_HLT_Ele8_Mu17_Ele8Leg);
-        
-        bool validKF= false; 
-        reco::TrackRef myTrackRef = ele->closestCtfTrackRef();
-        validKF = (myTrackRef.isAvailable());
-        validKF = (myTrackRef.isNonnull());  
-        
-        T_Elec_kfchi2->push_back((validKF) ? myTrackRef->normalizedChi2() : 0 );
-        T_Elec_kfhits->push_back((validKF) ? myTrackRef->hitPattern().trackerLayersWithMeasurement() : -1.);
-        T_Elec_gsfchi2->push_back(ele->gsfTrack()->normalizedChi2());
-        T_Elec_detacalo->push_back(ele->deltaEtaSeedClusterTrackAtCalo());
-        T_Elec_see->push_back(ele->sigmaIetaIeta());
-        std::vector<float> vCov = lazyTools.localCovariances(*(ele->superCluster()->seed())) ;
-        if (!isnan(vCov[2])) T_Elec_spp->push_back(sqrt(vCov[2]));   //EleSigmaIPhiIPhi
-        else T_Elec_spp->push_back(0.);
-        T_Elec_etawidth->push_back(ele->superCluster()->etaWidth());
-        T_Elec_phiwidth->push_back(ele->superCluster()->phiWidth());
-        T_Elec_e1x5e5x5->push_back((ele->e5x5()) !=0. ? 1.-(ele->e1x5()/ele->e5x5()) : -1.);
-        T_Elec_R9->push_back(lazyTools.e3x3(*(ele->superCluster()->seed())) / ele->superCluster()->rawEnergy());
-        T_Elec_EoP->push_back(ele->eSuperClusterOverP());
-        T_Elec_ESeedoP->push_back(ele->eSeedClusterOverP());
-        T_Elec_ESeedoPout->push_back(ele->eSeedClusterOverPout());
-        T_Elec_IoEmIoP->push_back((1.0/ele->ecalEnergy()) - (1.0 / ele->p()));
-        T_Elec_eleEoPout->push_back(ele->eEleClusterOverPout());
-        T_Elec_PreShowerOverRaw->push_back(ele->superCluster()->preshowerEnergy() / ele->superCluster()->rawEnergy());
-        T_Elec_EcalEnergy->push_back(ele->ecalEnergy());
-        T_Elec_TrackPatVtx->push_back(ele->trackMomentumAtVtx().R());
-        
-        bool isPassingMVA = passMVAcuts((*ele), myMVATrigMethod);
-        T_Elec_passMVA->push_back(isPassingMVA);
-        
-        bool isPassingFO = passFOcuts((*ele), vtx_h->at(0), vtxFitConversion);
-        T_Elec_isFO->push_back(isPassingFO);
-        
-        float fMVAVar_d0;
-        if (ele->gsfTrack().isNonnull()) {
-            fMVAVar_d0 = (-1.0)*ele->gsfTrack()->dxy(vtx_h->at(0).position()); 
-        } else if (ele->closestCtfTrackRef().isNonnull()) {
-            fMVAVar_d0 = (-1.0)*ele->closestCtfTrackRef()->dxy(vtx_h->at(0).position()); 
-        } else {
-            fMVAVar_d0 = -9999.0;
-        }
-        T_Elec_d0->push_back(fMVAVar_d0);
-        
-        float fMVAVar_ip3d = -999.0; 
-        // fMVAVar_ip3dSig = 0.0;
-        if (ele->gsfTrack().isNonnull()) {
-            const double gsfsign   = ( (-ele->gsfTrack()->dxy(vtx_h->at(0).position()))   >=0 ) ? 1. : -1.;
+    if (doElectrons_){
+        // loop on electrons
+        unsigned int n = els_h->size();
+    //    cout << "nb of electrons = " << n << endl;
+        for(unsigned int i = 0; i < n; ++i) {
             
-           const reco::TransientTrack &tt = thebuilder.build(ele->gsfTrack()); 
-           const std::pair<bool,Measurement1D> &ip3dpv =  IPTools::absoluteImpactParameter3D(tt,vtx_h->at(0));
-            if (ip3dpv.first) {
-                double ip3d = gsfsign*ip3dpv.second.value();
-                //double ip3derr = ip3dpv.second.error();  
-                fMVAVar_ip3d = ip3d; 
-                // fMVAVar_ip3dSig = ip3d/ip3derr;
+            // get reference to electron
+            reco::GsfElectronRef ele(els_h, i);
+            
+            if (isMC_) doMCtruth(ele, genParticles, 0.3);
+            
+          //  cout << " le electron, eta=" << ele->eta() << " phi=" << ele->phi() << endl;
+            
+            T_Elec_Eta->push_back(ele->eta());
+            T_Elec_Pt->push_back(ele->pt());
+            T_Elec_Px->push_back(ele->px());
+            T_Elec_Py->push_back(ele->py());
+            T_Elec_Pz->push_back(ele->pz());
+            T_Elec_Energy->push_back(ele->energy());
+            T_Elec_Charge->push_back(ele->charge());
+
+            T_Elec_nBrems->push_back(ele->numberOfBrems());
+            T_Elec_fBrem->push_back(ele->fbrem());
+            T_Elec_eSuperClusterOverP->push_back(ele->eSuperClusterOverP());
+            T_Elec_vz->push_back(ele->vz());
+            T_Elec_vy->push_back(ele->vy());
+            T_Elec_vx->push_back(ele->vx());	
+
+            T_Elec_SC_Et->push_back( ele->superCluster()->energy()/TMath::CosH(ele->superCluster()->eta()));
+            T_Elec_SC_Eta->push_back( ele->superCluster()->eta());
+        float etaSC = ele->superCluster()->eta();
+
+            T_Elec_sigmaIetaIeta ->push_back( ele->sigmaIetaIeta());
+            T_Elec_deltaPhiIn->push_back( ele->deltaPhiSuperClusterTrackAtVtx());
+            T_Elec_deltaEtaIn->push_back( ele->deltaEtaSuperClusterTrackAtVtx());
+            T_Elec_isEcalDriven -> push_back(ele->ecalDrivenSeed());
+            T_Elec_HtoE ->push_back(ele->hadronicOverEm());
+
+        T_Elec_dr03TkSumPt->push_back(ele->dr03TkSumPt());
+        T_Elec_dr03EcalSumEt->push_back(ele->dr03EcalRecHitSumEt());
+        T_Elec_dr03HcalSumEt->push_back(ele->dr03HcalTowerSumEt());
+
+            T_Elec_isEB->push_back(ele->isEB());
+            T_Elec_isEE->push_back(ele->isEE());
+            
+            // conversion rejection variables
+            bool vtxFitConversion = ConversionTools::hasMatchedConversion(*ele, conversions_h, beamSpot.position());
+            float mHits = ele->gsfTrack()->trackerExpectedHitsInner().numberOfHits(); 
+            float missingHist = ele->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits();
+            T_Elec_passConversionVeto->push_back(vtxFitConversion);
+            T_Elec_nHits->push_back(mHits);
+            T_Elec_nLost->push_back(missingHist);
+            
+            double iso_ch =  (*(isoVals)[0])[ele];
+            double iso_em = (*(isoVals)[1])[ele];
+            double iso_nh = (*(isoVals)[2])[ele];
+            double iso_chAll = (*(isoVals)[3])[ele];
+            double iso_chPU = (*(isoVals)[4])[ele];
+            double iso_ch04 =  (*(isoVals)[5])[ele];
+            double iso_em04 = (*(isoVals)[6])[ele];
+            double iso_nh04 = (*(isoVals)[7])[ele];
+            double iso_chAll04 = (*(isoVals)[8])[ele];
+            double iso_chPU04 = (*(isoVals)[9])[ele];
+            T_Elec_photonIso->push_back(iso_em);
+            T_Elec_neutralHadronIso->push_back(iso_nh);
+            T_Elec_chargedHadronIso->push_back(iso_ch);
+            T_Elec_allChargedHadronIso->push_back(iso_chAll);
+            T_Elec_puChargedHadronIso->push_back(iso_chPU);
+            
+            
+            T_Elec_photonIso04->push_back(iso_em04);
+            T_Elec_neutralHadronIso04->push_back(iso_nh04);
+            T_Elec_chargedHadronIso04->push_back(iso_ch04);
+            T_Elec_allChargedHadronIso04->push_back(iso_chAll04);
+            T_Elec_puChargedHadronIso04->push_back(iso_chPU04);
+            
+            float rhoPlus = std::max(0.0, Rho);
+            // effective area for isolation
+            float AEff = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, etaSC, ElectronEffectiveArea::kEleEAData2011);
+            
+            float isoSum04 = iso_ch04 + std::max(iso_em04 + iso_nh04 - rhoPlus * AEff, 0.0); 
+        
+            T_Elec_CombIsoHWW->push_back(isoSum04);  
+            
+            // working points
+            bool veto       = EgammaCutBasedEleId::PassWP(EgammaCutBasedEleId::VETO, ele, conversions_h, beamSpot, vtx_h, iso_ch, iso_em, iso_nh, rhoIso);
+            bool loose      = EgammaCutBasedEleId::PassWP(EgammaCutBasedEleId::LOOSE, ele, conversions_h, beamSpot, vtx_h, iso_ch, iso_em, iso_nh, rhoIso);
+            bool medium     = EgammaCutBasedEleId::PassWP(EgammaCutBasedEleId::MEDIUM, ele, conversions_h, beamSpot, vtx_h, iso_ch, iso_em, iso_nh, rhoIso);
+            bool tight      = EgammaCutBasedEleId::PassWP(EgammaCutBasedEleId::TIGHT, ele, conversions_h, beamSpot, vtx_h, iso_ch, iso_em, iso_nh, rhoIso);
+            
+            // eop/fbrem cuts for extra tight ID
+            bool fbremeopin = EgammaCutBasedEleId::PassEoverPCuts(ele);
+            
+            // cuts to match tight trigger requirements
+            bool trigtight = EgammaCutBasedEleId::PassTriggerCuts(EgammaCutBasedEleId::TRIGGERTIGHT, ele);
+            
+            // for 2011 WP70 trigger
+            bool trigwp70 = EgammaCutBasedEleId::PassTriggerCuts(EgammaCutBasedEleId::TRIGGERWP70, ele);
+            
+            T_Elec_passVeto->push_back(veto);
+            T_Elec_passLoose->push_back(loose);
+            T_Elec_passMedium->push_back(medium);
+            T_Elec_passTight->push_back(tight);
+            T_Elec_passFbremopin->push_back(fbremeopin);
+            T_Elec_passtrigTight->push_back(trigtight);
+            T_Elec_passtrigwp70->push_back(trigwp70);
+            
+            bool isTriggering = trainTrigPresel(*ele);
+            //T_Elec_isTrig->push_back();
+             double myMVANonTrigMethod = myMVANonTrig->mvaValue(*ele,*pv,thebuilder,lazyTools,debugMVAclass);
+            double myMVATrigMethod= myMVATrig->mvaValue(*ele,*pv,thebuilder,lazyTools,debugMVAclass);
+            
+            double isomva = fElectronIsoMVA->mvaValue( *ele, vtx_h->at(0), 
+                                                      inPfCands, Rho, 
+                                                      ElectronEffectiveArea::kEleEAData2011,
+                                                      IdentifiedElectrons, IdentifiedMuons);
+            T_Elec_isTrig->push_back(isTriggering);
+            T_Elec_MVAid_trig->push_back(myMVATrigMethod);
+            T_Elec_MVAid_Nontrig->push_back(myMVANonTrigMethod);
+            T_Elec_Mvaiso->push_back(isomva);
+            
+            double theRadIso = GetRadialIsoValue(*ele, inPfCands);
+            T_Elec_RadialIso->push_back(theRadIso);
+            
+            double theRadIsoVeto = GetRadialIsoValueVeto(*ele, inPfCands);
+            T_Elec_RadialIsoVeto->push_back(theRadIsoVeto);
+            
+            double theRadIsoVetoMore = GetRadialIsoValueVetoMore(*ele, inPfCands, IdentifiedElectrons, IdentifiedMuons);
+            T_Elec_RadialIsoVetoMore->push_back(theRadIsoVetoMore);
+            
+            fillIsoRings(*ele, vtx_h->at(0), 
+            inPfCands, Rho, 
+            ElectronEffectiveArea::kEleEAData2011,
+            IdentifiedElectrons, IdentifiedMuons);
+            
+            int pass_Elec_HLT_Elec27_WP80 = 0;
+            int pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = 0;
+            int pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = 0;
+            int pass_Elec_HLT_Ele17_Ele8_Ele8Leg = 0;
+            int pass_Elec_HLT_Ele17_Ele8_Ele17Leg = 0;
+            int pass_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg = 0;
+            int pass_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg = 0;
+            int pass_Elec_HLT_Ele20_SC4_TnP_SC4Leg = 0;
+            int pass_Elec_HLT_Ele20_SC4_TnP_Ele20Leg = 0;
+            int pass_Elec_HLT_Mu8_Ele17_Ele17Leg = 0;
+            int pass_Elec_HLT_Ele8_Mu17_Ele8Leg = 0;
+            
+            for (size_t t = 0 ; t < selectedObjects.size() ; t++){
+          //    cout << "eta = " << selectedObjects[t].eta() << " phi = " << selectedObjects[t].phi() << "filter = " << HLT_triggerObjects[theHLTcorr[t]] << endl;
+                float HLTdeltaR = deltaR(ele->phi(), selectedObjects[t].phi(), ele->eta(), selectedObjects[t].eta());
+          //  cout << "delta R =" << HLTdeltaR << endl;
+                if (HLTdeltaR < 0.3){
+          //     cout << "coucou on passe = " << theHLTcorr[t] << endl;
+                    if (theHLTcorr[t] == 0) pass_Elec_HLT_Elec27_WP80 = 1;
+                    if (theHLTcorr[t] == 1) pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = 1; 
+                    if (theHLTcorr[t] == 2) pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = 1; 
+                    if (theHLTcorr[t] == 3) pass_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg = 1; 
+                    if (theHLTcorr[t] == 4) pass_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg = 1; 
+                    if (theHLTcorr[t] == 5) pass_Elec_HLT_Ele20_SC4_TnP_SC4Leg = 1; 
+                    if (theHLTcorr[t] == 6) pass_Elec_HLT_Ele20_SC4_TnP_Ele20Leg = 1;
+                    if (theHLTcorr[t] == 7) pass_Elec_HLT_Ele17_Ele8_Ele8Leg = 1;
+                    if (theHLTcorr[t] == 8) pass_Elec_HLT_Ele17_Ele8_Ele17Leg = 1;
+                    if (theHLTcorr[t] == 15) pass_Elec_HLT_Mu8_Ele17_Ele17Leg = 1;
+                    if (theHLTcorr[t] == 17) pass_Elec_HLT_Ele8_Mu17_Ele8Leg = 1;
+               }
             }
+            T_Elec_HLT_Elec27_WP80->push_back(pass_Elec_HLT_Elec27_WP80);
+            T_Elec_HLT_Ele17TightID_Ele8_Ele8Leg->push_back(pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg);
+            T_Elec_HLT_Ele17TightID_Ele8_Ele17Leg->push_back(pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg);
+            T_Elec_HLT_Ele17_Ele8_Ele8Leg->push_back(pass_Elec_HLT_Ele17_Ele8_Ele8Leg);
+            T_Elec_HLT_Ele17_Ele8_Ele17Leg->push_back(pass_Elec_HLT_Ele17_Ele8_Ele17Leg);
+            T_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg->push_back(pass_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg);
+            T_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg->push_back(pass_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg);
+            T_Elec_HLT_Ele20_SC4_TnP_Ele20Leg->push_back(pass_Elec_HLT_Ele20_SC4_TnP_Ele20Leg);
+            T_Elec_HLT_Ele20_SC4_TnP_SC4Leg->push_back(pass_Elec_HLT_Ele20_SC4_TnP_SC4Leg);
+            T_Elec_HLT_Mu8_Ele17_Ele17Leg->push_back(pass_Elec_HLT_Mu8_Ele17_Ele17Leg);
+            T_Elec_HLT_Ele8_Mu17_Ele8Leg->push_back(pass_Elec_HLT_Ele8_Mu17_Ele8Leg);
+            
+            bool validKF= false; 
+            reco::TrackRef myTrackRef = ele->closestCtfTrackRef();
+            validKF = (myTrackRef.isAvailable());
+            validKF = (myTrackRef.isNonnull());  
+            
+            T_Elec_kfchi2->push_back((validKF) ? myTrackRef->normalizedChi2() : 0 );
+            T_Elec_kfhits->push_back((validKF) ? myTrackRef->hitPattern().trackerLayersWithMeasurement() : -1.);
+            T_Elec_gsfchi2->push_back(ele->gsfTrack()->normalizedChi2());
+            T_Elec_detacalo->push_back(ele->deltaEtaSeedClusterTrackAtCalo());
+            T_Elec_see->push_back(ele->sigmaIetaIeta());
+            std::vector<float> vCov = lazyTools.localCovariances(*(ele->superCluster()->seed())) ;
+            if (!isnan(vCov[2])) T_Elec_spp->push_back(sqrt(vCov[2]));   //EleSigmaIPhiIPhi
+            else T_Elec_spp->push_back(0.);
+            T_Elec_etawidth->push_back(ele->superCluster()->etaWidth());
+            T_Elec_phiwidth->push_back(ele->superCluster()->phiWidth());
+            T_Elec_e1x5e5x5->push_back((ele->e5x5()) !=0. ? 1.-(ele->e1x5()/ele->e5x5()) : -1.);
+            T_Elec_R9->push_back(lazyTools.e3x3(*(ele->superCluster()->seed())) / ele->superCluster()->rawEnergy());
+            T_Elec_EoP->push_back(ele->eSuperClusterOverP());
+            T_Elec_ESeedoP->push_back(ele->eSeedClusterOverP());
+            T_Elec_ESeedoPout->push_back(ele->eSeedClusterOverPout());
+            T_Elec_IoEmIoP->push_back((1.0/ele->ecalEnergy()) - (1.0 / ele->p()));
+            T_Elec_eleEoPout->push_back(ele->eEleClusterOverPout());
+            T_Elec_PreShowerOverRaw->push_back(ele->superCluster()->preshowerEnergy() / ele->superCluster()->rawEnergy());
+            T_Elec_EcalEnergy->push_back(ele->ecalEnergy());
+            T_Elec_TrackPatVtx->push_back(ele->trackMomentumAtVtx().R());
+            
+            bool isPassingMVA = passMVAcuts((*ele), myMVATrigMethod);
+            T_Elec_passMVA->push_back(isPassingMVA);
+            
+            bool isPassingFO = passFOcuts((*ele), vtx_h->at(0), vtxFitConversion);
+            T_Elec_isFO->push_back(isPassingFO);
+            
+            float fMVAVar_d0;
+            if (ele->gsfTrack().isNonnull()) {
+                fMVAVar_d0 = (-1.0)*ele->gsfTrack()->dxy(vtx_h->at(0).position()); 
+            } else if (ele->closestCtfTrackRef().isNonnull()) {
+                fMVAVar_d0 = (-1.0)*ele->closestCtfTrackRef()->dxy(vtx_h->at(0).position()); 
+            } else {
+                fMVAVar_d0 = -9999.0;
+            }
+            T_Elec_d0->push_back(fMVAVar_d0);
+            
+            float fMVAVar_ip3d = -999.0; 
+            // fMVAVar_ip3dSig = 0.0;
+            if (ele->gsfTrack().isNonnull()) {
+                const double gsfsign   = ( (-ele->gsfTrack()->dxy(vtx_h->at(0).position()))   >=0 ) ? 1. : -1.;
+                
+               const reco::TransientTrack &tt = thebuilder.build(ele->gsfTrack()); 
+               const std::pair<bool,Measurement1D> &ip3dpv =  IPTools::absoluteImpactParameter3D(tt,vtx_h->at(0));
+                if (ip3dpv.first) {
+                    double ip3d = gsfsign*ip3dpv.second.value();
+                    //double ip3derr = ip3dpv.second.error();  
+                    fMVAVar_ip3d = ip3d; 
+                    // fMVAVar_ip3dSig = ip3d/ip3derr;
+                }
+            }
+            T_Elec_IP3D->push_back(fMVAVar_ip3d);
+            float dzvtx = 0;
+            if (vtx_h->size() > 0) {
+                reco::VertexRef vtx(vtx_h, 0);    
+                dzvtx = ele->gsfTrack()->dz(vtx->position());
+            } else {
+                dzvtx = ele->gsfTrack()->dz();
+            }
+            T_Elec_dZ->push_back(dzvtx);
+        
         }
-        T_Elec_IP3D->push_back(fMVAVar_ip3d);
-        float dzvtx = 0;
-        if (vtx_h->size() > 0) {
-            reco::VertexRef vtx(vtx_h, 0);    
-            dzvtx = ele->gsfTrack()->dz(vtx->position());
-        } else {
-            dzvtx = ele->gsfTrack()->dz();
-        }
-        T_Elec_dZ->push_back(dzvtx);
-    
     }
-    
-    
+
     T_METPF_ET = metsPF[0].pt();
     T_METPF_Phi = metsPF[0].phi();
     T_METPF_Sig = metsPF[0].significance();
@@ -2318,6 +2318,74 @@ ElecIdAnalyzer::doMCtruth(reco::GsfElectronRef theElec, edm::Handle <reco::GenPa
     
 }
 
+void
+ElecIdAnalyzer::doMCtruthMuons(const reco::Muon* theMuon, edm::Handle <reco::GenParticleCollection> genParts, double dR)
+{
+    int nbOfGen = genParts->size();
+    float minDiff= 100;
+    int iteDiff = -1000;
+    int motherID = 0;
+    //reco::GenParticle & theCand = (*genParts)[0];
+    for (int j = 0 ; j < nbOfGen ; j++){
+        const reco::GenParticle & p = (*genParts)[j];
+        float theDeltaR = deltaR(p.phi(), theMuon->phi(), p.eta(), theMuon->eta());
+        if (theDeltaR > 0.2) continue;
+        if (!(p.status()==1)) continue;
+        if (fabs(p.pdgId())!=11) continue;
+        // find the mother of the particle !
+        const reco::Candidate * theLocalCandidate = &p;
+        bool hasMother = (theLocalCandidate->numberOfMothers()>0);
+        const reco::Candidate * theMother;
+        while (hasMother) {
+            theMother = theLocalCandidate->mother();
+            //    cout << "mum PDGid = " << theMother->pdgId() << endl;
+            theLocalCandidate = theMother;
+            hasMother = (theLocalCandidate->numberOfMothers()>0);
+            motherID = theMother->pdgId();
+            if ((theMother->pdgId()==23)||(theMother->pdgId()==22)) break;
+        }
+        //  cout << "fin " << endl;
+        //     float theDiff = fabs(p.pt()-theElec->pt())/p.pt();
+        //     if (theDeltaR < minDiff){
+        minDiff = theDeltaR;
+        iteDiff = j;
+        //  }
+    }
+    
+    
+    if (iteDiff>=0) {
+        const reco::GenParticle & theCand = (*genParts)[iteDiff];
+        const reco::Candidate * mom = theCand.mother();
+        //     cout << "ID =" << theCand.pdgId() << " pt = " << theCand.pt() << " status=" << theCand.status() << endl;
+        //   cout << "nb of mother " << theCand.numberOfMothers() << endl;
+        if (theCand.numberOfMothers()>0) mom = theCand.mother();
+        //   cout << "mother id " << mom->pdgId() << endl;
+        T_Gen_Elec_Px->push_back(theCand.px());
+        T_Gen_Elec_Py->push_back(theCand.py());
+        T_Gen_Elec_Pz->push_back(theCand.pz());
+        T_Gen_Elec_Energy->push_back(theCand.energy());
+        T_Gen_Elec_MCpart->push_back(1);
+        T_Gen_Elec_PDGid->push_back(theCand.pdgId());
+        T_Gen_Elec_status->push_back(theCand.status());
+        //if (theCand.numberOfMothers()>0) T_Gen_Elec_MotherID->push_back(mom->pdgId());
+        if (theCand.numberOfMothers()>0) T_Gen_Elec_MotherID->push_back(motherID);
+        else T_Gen_Elec_MotherID->push_back(-1);
+        T_Gen_Elec_deltaR->push_back(minDiff);
+    }
+    else{
+        T_Gen_Elec_Px->push_back(-1);
+        T_Gen_Elec_Py->push_back(-1);
+        T_Gen_Elec_Pz->push_back(-1);
+        T_Gen_Elec_Energy->push_back(-1);
+        T_Gen_Elec_MCpart->push_back(0);
+        T_Gen_Elec_PDGid->push_back(-1);
+        T_Gen_Elec_status->push_back(-1);
+        T_Gen_Elec_MotherID->push_back(-1);
+        T_Gen_Elec_deltaR->push_back(-1);
+        
+    }
+    
+}
 
 float ElecIdAnalyzer::deltaR(float phi1, float phi2, float eta1, float eta2)
 {

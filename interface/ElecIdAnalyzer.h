@@ -186,6 +186,7 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     // is DATA / MC 
     bool isMC_;
 	bool doMuons_;
+	bool doElectrons_;
     bool doPhotons_;
     bool doMuMuGammaMCtruth_;
     bool savePF_;

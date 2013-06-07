@@ -7,9 +7,9 @@ process.load('Configuration/StandardSequences/MagneticField_38T_cff')
 process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
 process.load("Configuration.StandardSequences.Reconstruction_cff")
 process.GlobalTag.globaltag = 'START53_V7A::All'
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(200))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10000))
 
-process.MessageLogger.cerr.FwkReport.reportEvery = 1000
+process.MessageLogger.cerr.FwkReport.reportEvery = 10
 #
 # the MC global Tag : START53_V7A
 # the RERECO of 2012 data (Jan22 reRECO) for run ABC FT_53_V21_AN3
@@ -24,7 +24,8 @@ process.source = cms.Source(
 	#'file:/sps/cms/hbrun/CMSSW_5_3_6_recup/src/recupTrigger/diMu/theFileTrigger.root'
 #	'file:/sps/cms/hbrun/CMSSW_5_3_7_myCode/src/dataFile_runA/theFile.root'
 #	'file:/sps/cms/hbrun/CMSSW_5_3_2_myCode/src/files/DYJetsToLLM50.root'
-	'file:/sps/cms/hbrun/CMSSW_5_3_2_myCode/src/files/mumuFiles/mumugamma_1.root'
+    'file:/sps/cms/hbrun/CMSSW_5_3_2_myCode/src/files/mumuFiles/mumugamma_1.root'
+                                      #  'file:/sps/cms/hbrun/CMSSW_5_3_7_myCode/src/files/MC_DY_1.root'
     ),
     secondaryFileNames = cms.untracked.vstring(),
     noEventSort = cms.untracked.bool(True),
@@ -48,11 +49,11 @@ process.theDiElecFilter = cms.EDFilter('DiElecFilter',
                                     
 
 process.theEleIdAnalyzer = cms.EDAnalyzer('ElecIdAnalyzer',
-    isMC                                    = cms.bool(False),
+    isMC                    = cms.bool(False),
 	doMuons					= cms.bool(False),
-
+    doElectrons             = cms.bool(True),
 	doPhotons				= cms.bool(False),
-	savePF					= cms.bool(True),
+	savePF					= cms.bool(False),
 	saveConversions			= cms.bool(False),
     doMuMuGammaMC           = cms.bool(False),
     electronsInputTag       = cms.InputTag("gsfElectrons"),
