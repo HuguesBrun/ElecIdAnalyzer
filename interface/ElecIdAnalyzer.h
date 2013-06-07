@@ -103,9 +103,7 @@
 #include "DataFormats/Candidate/interface/CandMatchMap.h"
 #include "DataFormats/Candidate/interface/CandidateFwd.h"
 
-#include "Muon/MuonAnalysisTools/interface/MuonEffectiveArea.h"
-#include "Muon/MuonAnalysisTools/interface/MuonMVAEstimator.h"
-#include "Muon/MuonAnalysisTools/src/MuonMVAEstimator.cc"
+
 
 
 
@@ -158,14 +156,6 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
       virtual void beginEvent();
       virtual void endEvent();
       virtual bool trainTrigPresel(const reco::GsfElectron&);
-      virtual double GetRadialIsoValue(const reco::GsfElectron&, 
-                                       const reco::PFCandidateCollection &);
-     virtual double GetRadialIsoValueVeto(const reco::GsfElectron&, 
-                                     const reco::PFCandidateCollection &);
-     virtual double GetRadialIsoValueVetoMore(const reco::GsfElectron&, 
-                                                     const reco::PFCandidateCollection &,
-                                                     const reco::GsfElectronCollection &,
-                                              const reco::MuonCollection &);
       virtual void doMCtruth(reco::GsfElectronRef, edm::Handle <reco::GenParticleCollection>, double);
       virtual float deltaR(float , float , float , float );
       virtual float deltaPhi(float , float);
@@ -179,7 +169,6 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
       virtual bool passMVAcuts(const reco::GsfElectron&, double );
       virtual bool passFOcuts(const reco::GsfElectron&, const reco::Vertex&, bool);
       virtual int PFisCommingFromVertex(const reco::PFCandidate&, const reco::VertexCollection&);
-    virtual double PFisolationMVA(const reco::Muon*, const reco::PFCandidateCollection &, const reco::Vertex*, float);
 
     
       // ----------member data ---------------------------
@@ -223,8 +212,6 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     EGammaMvaEleEstimator* myMVATrig;
 	EGammaMvaEleEstimator *fElectronIsoMVA;
     
-    MuonMVAEstimator *muMVANonTrig;
-    MuonEffectiveArea::MuonEffectiveAreaTarget effAreaTarget;
 
 
     HLTConfigProvider hltConfig;
