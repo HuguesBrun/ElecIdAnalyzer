@@ -47,44 +47,12 @@ ElecIdAnalyzer::ElecIdAnalyzer(const edm::ParameterSet& iConfig)
     outputFile_   = iConfig.getParameter<std::string>("outputFile");
     rootFile_ = TFile::Open(outputFile_.c_str(),"RECREATE");
     
-    HLT_name.push_back("HLT_Ele27_WP80_v");
-    HLT_name.push_back("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");
-    HLT_name.push_back("HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_Ele8_Mass50_v");
-    HLT_name.push_back("HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v");
-    HLT_name.push_back("HLT_Ele22_CaloIdL_CaloIsoVL_v");
-    HLT_name.push_back("HLT_Ele27_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL_v");
-    HLT_name.push_back("HLT_Ele30_CaloIdVT_TrkIdT_v");
-    HLT_name.push_back("HLT_Ele27_WP80_PFMET_MT50_v");
-    HLT_name.push_back("HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFNoPUJet30_v");
-    HLT_name.push_back("HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");
-    HLT_name.push_back("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");
-    HLT_name.push_back("HLT_Mu17_TkMu8_v");
-    HLT_name.push_back("HLT_Mu17_Mu8_v");
-    HLT_name.push_back("HLT_Mu17_v");
-    HLT_name.push_back("HLT_Mu8_v");
-    HLT_name.push_back("HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");
-    HLT_name.push_back("HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");
+    HLT_name.push_back("HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC8_Mass30_v");
     
     
-    HLT_triggerObjects.push_back("hltEle27WP80TrackIsoFilter");//0
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter");//1
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoFilter");//2
-    HLT_triggerObjects.push_back("hltEle17CaloIdVTCaloIsoVTTrkIdTTrkIsoVTEle8PMMassFilter");//3
-    HLT_triggerObjects.push_back("hltEle17CaloIdVTCaloIsoVTTrkIdTTrkIsoVTEle8TrackIsoFilter");//4
-    HLT_triggerObjects.push_back("hltEle20CaloIdVTCaloIsoVTTrkIdTTrkIsoVTSC4PMMassFilter");//5
-    HLT_triggerObjects.push_back("hltEle20CaloIdVTCaloIsoVTTrkIdTTrkIsoVTSC4TrackIsoFilter");//6
-    HLT_triggerObjects.push_back("hltEle17CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//7
-    HLT_triggerObjects.push_back("hltEle8TightIdLooseIsoTrackIsoFilter");//8
-    HLT_triggerObjects.push_back("hltL3fL1sMu10MuOpenOR3p5L1f0L2f10L3Filtered17");//9
-    HLT_triggerObjects.push_back("hltDiMuonGlbFiltered17TrkFiltered8");//10
-    HLT_triggerObjects.push_back("hltL3pfL1DoubleMu10MuOpenOR3p5L1f0L2pf0L3PreFiltered8");//11
-    HLT_triggerObjects.push_back("hltL3fL1DoubleMu10MuOpenOR3p5L1f0L2f10L3Filtered17");//12
-    HLT_triggerObjects.push_back("hltL3fL1sMu12L3Filtered17");//13
-    HLT_triggerObjects.push_back("hltL3fL1sMu3L3Filtered8");//14
-    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//15
-    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12L3Filtered8");//16
-    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//17
-    HLT_triggerObjects.push_back("hltL1Mu12EG7L3MuFiltered17");//18
+    HLT_triggerObjects.push_back("hltEle17CaloIdVTCaloIsoVTTrkIdTTrkIsoVTSC8TrackIsolFilter");//0
+    HLT_triggerObjects.push_back("hltEle17CaloIdVTCaloIsoVTTrkIdTTrkIsoVTSC8PMMassFilter");//1
+
     
     
     fElectronIsoMVA = new EGammaMvaEleEstimator();
@@ -296,10 +264,11 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     double rhoIso = *(rhoIso_h.product());
     
     // rho 
-    Handle<double> hRho;
+/*    Handle<double> hRho;
     edm::InputTag tag("kt6PFJets","rho");
     iEvent.getByLabel(tag,hRho);
-    double Rho = *hRho;
+    double Rho = *hRho;*/
+    double Rho = rhoIso;
 
 
     T_Event_Rho = Rho;
@@ -389,26 +358,13 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         for (unsigned int j=0; j<HLT_triggerObjects.size(); j++)
             moduleLabels.push_back(edm::InputTag(HLT_triggerObjects[j], "", triggerResultsLabel_.process()));
     }
-    // nom fill the trigger bits : 
+   // std::cout << "on va remplir les trigger bits " << std::endl;
+    // nom fill the trigger bits :
 
-    T_Event_HLT_Ele27_WP80 =         triggerResults->accept(theBitCorr[0]);
-    T_Event_HLT_Ele17_Ele8 =         triggerResults->accept(theBitCorr[1]);
-    T_Event_HLT_Ele17_Ele8_M50_TnP = triggerResults->accept(theBitCorr[2]);
-    T_Event_HLT_Ele20_SC4_M50_TnP =  triggerResults->accept(theBitCorr[3]);
-    T_Event_HLT_Ele22_CaloIdL_CaloIsoVL =         triggerResults->accept(theBitCorr[4]);
-    T_Event_HLT_Ele27_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL =         triggerResults->accept(theBitCorr[5]);
-    T_Event_HLT_Ele30_CaloIdVT_TrkIdT =         triggerResults->accept(theBitCorr[6]);
-    T_Event_HLT_Ele27_WP80_PFMET_MT50 =         triggerResults->accept(theBitCorr[7]);
-    T_Event_HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFNoPUJet30 =         triggerResults->accept(theBitCorr[8]);
-    T_Event_HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL     =         triggerResults->accept(theBitCorr[9]);
-    T_Event_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL =         triggerResults->accept(theBitCorr[10]);
-    T_Event_HLT_Mu17_Mu8 =         triggerResults->accept(theBitCorr[11]);
-    T_Event_HLT_Mu17_TkMu8 =         triggerResults->accept(theBitCorr[12]);
-    T_Event_HLT_Mu17 =         triggerResults->accept(theBitCorr[13]);
-    T_Event_HLT_Mu8 =         triggerResults->accept(theBitCorr[14]);
-    T_Event_HLT_Mu8_Ele17 =         triggerResults->accept(theBitCorr[15]);
-    T_Event_HLT_Ele8_Mu17 =         triggerResults->accept(theBitCorr[16]);
+    T_Event_HLT_Ele17_SC8 =         triggerResults->accept(theBitCorr[0]);
+
     
+    //std::cout << "on a rempli les trigger bits ! " << std::endl;
     /// fill the in selected Objet the HLT filter we will use for the matching
     trigger::TriggerObjectCollection allTriggerObjects = triggerSummary->getObjects();
     trigger::TriggerObjectCollection selectedObjects;
@@ -429,7 +385,7 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     
 
 
-    
+   //std::cout << "coucou, on vient de passer le HLT matching ! " << endl;
 
     
     
@@ -682,17 +638,9 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             ElectronEffectiveArea::kEleEAData2011,
             IdentifiedElectrons, IdentifiedMuons);
             
-            int pass_Elec_HLT_Elec27_WP80 = 0;
-            int pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = 0;
-            int pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = 0;
-            int pass_Elec_HLT_Ele17_Ele8_Ele8Leg = 0;
-            int pass_Elec_HLT_Ele17_Ele8_Ele17Leg = 0;
-            int pass_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg = 0;
-            int pass_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg = 0;
-            int pass_Elec_HLT_Ele20_SC4_TnP_SC4Leg = 0;
-            int pass_Elec_HLT_Ele20_SC4_TnP_Ele20Leg = 0;
-            int pass_Elec_HLT_Mu8_Ele17_Ele17Leg = 0;
-            int pass_Elec_HLT_Ele8_Mu17_Ele8Leg = 0;
+            int pass_Elec_HLT_Ele17_SC8_leg17 = 0;
+            int pass_Elec_HLT_Ele17_SC8_leg8 = 0;
+
             
             for (size_t t = 0 ; t < selectedObjects.size() ; t++){
           //    cout << "eta = " << selectedObjects[t].eta() << " phi = " << selectedObjects[t].phi() << "filter = " << HLT_triggerObjects[theHLTcorr[t]] << endl;
@@ -700,30 +648,14 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
           //  cout << "delta R =" << HLTdeltaR << endl;
                 if (HLTdeltaR < 0.3){
           //     cout << "coucou on passe = " << theHLTcorr[t] << endl;
-                    if (theHLTcorr[t] == 0) pass_Elec_HLT_Elec27_WP80 = 1;
-                    if (theHLTcorr[t] == 1) pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = 1; 
-                    if (theHLTcorr[t] == 2) pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = 1; 
-                    if (theHLTcorr[t] == 3) pass_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg = 1; 
-                    if (theHLTcorr[t] == 4) pass_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg = 1; 
-                    if (theHLTcorr[t] == 5) pass_Elec_HLT_Ele20_SC4_TnP_SC4Leg = 1; 
-                    if (theHLTcorr[t] == 6) pass_Elec_HLT_Ele20_SC4_TnP_Ele20Leg = 1;
-                    if (theHLTcorr[t] == 7) pass_Elec_HLT_Ele17_Ele8_Ele8Leg = 1;
-                    if (theHLTcorr[t] == 8) pass_Elec_HLT_Ele17_Ele8_Ele17Leg = 1;
-                    if (theHLTcorr[t] == 15) pass_Elec_HLT_Mu8_Ele17_Ele17Leg = 1;
-                    if (theHLTcorr[t] == 17) pass_Elec_HLT_Ele8_Mu17_Ele8Leg = 1;
+                    if (theHLTcorr[t] == 0) pass_Elec_HLT_Ele17_SC8_leg17 = 1;
+                    if (theHLTcorr[t] == 1) pass_Elec_HLT_Ele17_SC8_leg8 = 1;
+
                }
             }
-            T_Elec_HLT_Elec27_WP80->push_back(pass_Elec_HLT_Elec27_WP80);
-            T_Elec_HLT_Ele17TightID_Ele8_Ele8Leg->push_back(pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg);
-            T_Elec_HLT_Ele17TightID_Ele8_Ele17Leg->push_back(pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg);
-            T_Elec_HLT_Ele17_Ele8_Ele8Leg->push_back(pass_Elec_HLT_Ele17_Ele8_Ele8Leg);
-            T_Elec_HLT_Ele17_Ele8_Ele17Leg->push_back(pass_Elec_HLT_Ele17_Ele8_Ele17Leg);
-            T_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg->push_back(pass_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg);
-            T_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg->push_back(pass_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg);
-            T_Elec_HLT_Ele20_SC4_TnP_Ele20Leg->push_back(pass_Elec_HLT_Ele20_SC4_TnP_Ele20Leg);
-            T_Elec_HLT_Ele20_SC4_TnP_SC4Leg->push_back(pass_Elec_HLT_Ele20_SC4_TnP_SC4Leg);
-            T_Elec_HLT_Mu8_Ele17_Ele17Leg->push_back(pass_Elec_HLT_Mu8_Ele17_Ele17Leg);
-            T_Elec_HLT_Ele8_Mu17_Ele8Leg->push_back(pass_Elec_HLT_Ele8_Mu17_Ele8Leg);
+            T_Elec_HLT_Ele17_SC8_leg17->push_back(pass_Elec_HLT_Ele17_SC8_leg17);
+            T_Elec_HLT_Ele17_SC8_leg8->push_back(pass_Elec_HLT_Ele17_SC8_leg8);
+
             
             bool validKF= false; 
             reco::TrackRef myTrackRef = ele->closestCtfTrackRef();
@@ -929,6 +861,12 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Pho_r9->push_back(aPho->r9());
             T_Pho_sigmaIetaIeta->push_back(aPho->sigmaIetaIeta());
             
+            T_Pho_hasPixelSeed->push_back(aPho->hasPixelSeed());
+            
+            T_Pho_trkIso->push_back(aPho->trkSumPtHollowConeDR03());
+            T_Pho_EcalIso->push_back(aPho->ecalRecHitSumEtConeDR03());
+            T_Pho_HcalIso->push_back(aPho->hcalTowerSumEtConeDR03());
+            
             reco::SuperClusterRef superCluster = aPho->superCluster();
             if ( superCluster.isNonnull() ) {
                 T_Pho_SCEt->push_back(superCluster->energy()*sin(superCluster->position().theta()));
@@ -1059,23 +997,7 @@ ElecIdAnalyzer::beginJob()
    mytree_->Branch("T_Event_nPUm", &T_Event_nPUm, "T_Event_nPUm/I");
    mytree_->Branch("T_Event_nPUp", &T_Event_nPUp, "T_Event_nPUp/I");
    mytree_->Branch("T_Event_AveNTruePU", &T_Event_AveNTruePU, "T_Event_AveNTruePU/F"); 
-   mytree_->Branch("T_Event_HLT_Ele27_WP80",&T_Event_HLT_Ele27_WP80,"T_Event_HLT_Ele27_WP80/I");
-   mytree_->Branch("T_Event_HLT_Ele17_Ele8",&T_Event_HLT_Ele17_Ele8,"T_Event_HLT_Ele17_Ele8/I");
-   mytree_->Branch("T_Event_HLT_Ele17_Ele8_M50_TnP",&T_Event_HLT_Ele17_Ele8_M50_TnP,"T_Event_HLT_Ele17_Ele8_M50_TnP/I");
-   mytree_->Branch("T_Event_HLT_Ele20_SC4_M50_TnP",&T_Event_HLT_Ele20_SC4_M50_TnP,"T_Event_HLT_Ele20_SC4_M50_TnP/I");
-   mytree_->Branch("T_Event_HLT_Ele22_CaloIdL_CaloIsoVL",&T_Event_HLT_Ele22_CaloIdL_CaloIsoVL,"T_Event_HLT_Ele22_CaloIdL_CaloIsoVL/I");
-   mytree_->Branch("T_Event_HLT_Ele27_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL",&T_Event_HLT_Ele27_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL,"T_Event_HLT_Ele27_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL/I");
-   mytree_->Branch("T_Event_HLT_Ele30_CaloIdVT_TrkIdT",&T_Event_HLT_Ele30_CaloIdVT_TrkIdT,"T_Event_HLT_Ele30_CaloIdVT_TrkIdT/I");
-   mytree_->Branch("T_Event_HLT_Ele27_WP80_PFMET_MT50",&T_Event_HLT_Ele27_WP80_PFMET_MT50,"T_Event_HLT_Ele27_WP80_PFMET_MT50/I");
-   mytree_->Branch("T_Event_HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFNoPUJet30",&T_Event_HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFNoPUJet30,"T_Event_HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFNoPUJet30/I");
-    mytree_->Branch("T_Event_HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL",&T_Event_HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL,"T_Event_HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL/I");
-    mytree_->Branch("T_Event_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL",&T_Event_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL,"T_Event_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL/I");
-    mytree_->Branch("T_Event_HLT_Mu17_Mu8",&T_Event_HLT_Mu17_Mu8,"T_Event_HLT_Mu17_Mu8/I");
-    mytree_->Branch("T_Event_HLT_Mu17_TkMu8",&T_Event_HLT_Mu17_TkMu8,"T_Event_HLT_Mu17_TkMu8/I");
-    mytree_->Branch("T_Event_HLT_Mu17",&T_Event_HLT_Mu17,"T_Event_HLT_Mu17/I");
-    mytree_->Branch("T_Event_HLT_Mu8",&T_Event_HLT_Mu8,"T_Event_HLT_Mu8/I");
-    mytree_->Branch("T_Event_HLT_Mu8_Ele17",&T_Event_HLT_Mu8_Ele17,"T_Event_HLT_Mu8_Ele17/I");
-    mytree_->Branch("T_Event_HLT_Ele8_Mu17",&T_Event_HLT_Ele8_Mu17,"T_Event_HLT_Ele8_Mu17/I");
+   mytree_->Branch("T_Event_HLT_Ele17_SC8",&T_Event_HLT_Ele17_SC8,"T_Event_HLT_Ele17_SC8/I");
 
     
     
@@ -1182,17 +1104,8 @@ ElecIdAnalyzer::beginJob()
     mytree_->Branch("T_Elec_NeutralHadronIso_DR0p3To0p4","std::vector<double>", &T_Elec_NeutralHadronIso_DR0p3To0p4); 
     mytree_->Branch("T_Elec_NeutralHadronIso_DR0p4To0p5","std::vector<double>", &T_Elec_NeutralHadronIso_DR0p4To0p5); 
 
-    mytree_->Branch("T_Elec_HLT_Elec27_WP80","std::vector<int>", &T_Elec_HLT_Elec27_WP80);
-    mytree_->Branch("T_Elec_HLT_Ele17TightID_Ele8_Ele8Leg","std::vector<int>", &T_Elec_HLT_Ele17TightID_Ele8_Ele8Leg);
-    mytree_->Branch("T_Elec_HLT_Ele17TightID_Ele8_Ele17Leg","std::vector<int>", &T_Elec_HLT_Ele17TightID_Ele8_Ele17Leg);
-    mytree_->Branch("T_Elec_HLT_Ele17_Ele8_Ele8Leg","std::vector<int>", &T_Elec_HLT_Ele17_Ele8_Ele8Leg);
-    mytree_->Branch("T_Elec_HLT_Ele17_Ele8_Ele17Leg","std::vector<int>", &T_Elec_HLT_Ele17_Ele8_Ele17Leg);
-    mytree_->Branch("T_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg","std::vector<int>", &T_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg);
-    mytree_->Branch("T_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg","std::vector<int>", &T_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg); 
-    mytree_->Branch("T_Elec_HLT_Ele20_SC4_TnP_SC4Leg","std::vector<int>", &T_Elec_HLT_Ele20_SC4_TnP_SC4Leg); 
-    mytree_->Branch("T_Elec_HLT_Ele20_SC4_TnP_Ele20Leg","std::vector<int>", &T_Elec_HLT_Ele20_SC4_TnP_Ele20Leg);
-    mytree_->Branch("T_Elec_HLT_Mu8_Ele17_Ele17Leg","std::vector<int>", &T_Elec_HLT_Mu8_Ele17_Ele17Leg);
-    mytree_->Branch("T_Elec_HLT_Ele8_Mu17_Ele8Leg","std::vector<int>", &T_Elec_HLT_Ele8_Mu17_Ele8Leg);
+    mytree_->Branch("T_Elec_HLT_Ele17_SC8_leg17","std::vector<int>", &T_Elec_HLT_Ele17_SC8_leg17);
+    mytree_->Branch("T_Elec_HLT_Ele17_SC8_leg8","std::vector<int>", &T_Elec_HLT_Ele17_SC8_leg8);
 
     mytree_->Branch("T_Elec_passMVA","std::vector<bool>", &T_Elec_passMVA); 
     mytree_->Branch("T_Elec_kfchi2","std::vector<float>", &T_Elec_kfchi2); 
@@ -1304,6 +1217,10 @@ ElecIdAnalyzer::beginJob()
         mytree_->Branch("T_Pho_Eta", "std::vector<float>", &T_Pho_Eta);
         mytree_->Branch("T_Pho_Phi", "std::vector<float>", &T_Pho_Phi);
         mytree_->Branch("T_Pho_r9", "std::vector<float>", &T_Pho_r9);
+        mytree_->Branch("T_Pho_hasPixelSeed", "std::vector<int>", &T_Pho_hasPixelSeed);
+        mytree_->Branch("T_Pho_trkIso", "std::vector<float>", &T_Pho_trkIso);
+        mytree_->Branch("T_Pho_EcalIso", "std::vector<float>", &T_Pho_EcalIso);
+        mytree_->Branch("T_Pho_HcalIso", "std::vector<float>", &T_Pho_HcalIso);
         mytree_->Branch("T_Pho_EtaWidth", "std::vector<float>", &T_Pho_EtaWidth);
         mytree_->Branch("T_Pho_PhiWidth", "std::vector<float>", &T_Pho_PhiWidth);
         mytree_->Branch("T_Pho_sigmaIetaIeta", "std::vector<float>", &T_Pho_sigmaIetaIeta);
@@ -1476,17 +1393,9 @@ ElecIdAnalyzer::beginEvent()
     T_Elec_NeutralHadronIso_DR0p3To0p4 = new std::vector<double>;
     T_Elec_NeutralHadronIso_DR0p4To0p5 = new std::vector<double>;
 
-    T_Elec_HLT_Elec27_WP80 = new std::vector<int>;
-    T_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = new std::vector<int>;
-    T_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = new std::vector<int>;
-    T_Elec_HLT_Ele17_Ele8_Ele8Leg = new std::vector<int>;
-    T_Elec_HLT_Ele17_Ele8_Ele17Leg = new std::vector<int>;
-    T_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg = new std::vector<int>;
-    T_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg = new std::vector<int>;
-    T_Elec_HLT_Ele20_SC4_TnP_SC4Leg = new std::vector<int>;
-    T_Elec_HLT_Ele20_SC4_TnP_Ele20Leg = new std::vector<int>;
-    T_Elec_HLT_Mu8_Ele17_Ele17Leg = new std::vector<int>;
-    T_Elec_HLT_Ele8_Mu17_Ele8Leg = new std::vector<int>;
+    T_Elec_HLT_Ele17_SC8_leg17 = new std::vector<int>;
+    T_Elec_HLT_Ele17_SC8_leg8 = new std::vector<int>;
+
     
     T_Elec_passMVA = new std::vector<bool>;
     T_Elec_kfchi2 = new std::vector<float>;
@@ -1591,6 +1500,10 @@ ElecIdAnalyzer::beginEvent()
 	T_Pho_Eta = new std::vector<float>;
 	T_Pho_Phi = new std::vector<float>;
 	T_Pho_r9 = new std::vector<float>;
+	T_Pho_hasPixelSeed = new std::vector<int>;
+	T_Pho_trkIso = new std::vector<float>;
+	T_Pho_EcalIso = new std::vector<float>;
+	T_Pho_HcalIso = new std::vector<float>;
 	T_Pho_EtaWidth = new std::vector<float>;
 	T_Pho_PhiWidth = new std::vector<float>;
 	T_Pho_sigmaIetaIeta = new std::vector<float>;
@@ -1713,17 +1626,9 @@ void ElecIdAnalyzer::endEvent(){
     delete T_Elec_NeutralHadronIso_DR0p3To0p4;
     delete T_Elec_NeutralHadronIso_DR0p4To0p5;
     
-    delete T_Elec_HLT_Elec27_WP80;
-    delete T_Elec_HLT_Ele17TightID_Ele8_Ele8Leg;
-    delete T_Elec_HLT_Ele17TightID_Ele8_Ele17Leg;
-    delete T_Elec_HLT_Ele17_Ele8_Ele8Leg;
-    delete T_Elec_HLT_Ele17_Ele8_Ele17Leg;
-    delete T_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg;
-    delete T_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg;
-    delete T_Elec_HLT_Ele20_SC4_TnP_SC4Leg;
-    delete T_Elec_HLT_Ele20_SC4_TnP_Ele20Leg;
-    delete T_Elec_HLT_Mu8_Ele17_Ele17Leg;
-    delete T_Elec_HLT_Ele8_Mu17_Ele8Leg;
+    delete T_Elec_HLT_Ele17_SC8_leg17;
+    delete T_Elec_HLT_Ele17_SC8_leg8;
+
     
     delete T_Elec_passMVA;
     delete T_Elec_kfchi2;
@@ -1835,6 +1740,10 @@ void ElecIdAnalyzer::endEvent(){
 	delete T_Pho_Eta;
 	delete T_Pho_Phi;
 	delete T_Pho_r9;
+	delete T_Pho_hasPixelSeed;
+	delete T_Pho_trkIso;
+	delete T_Pho_EcalIso;
+	delete T_Pho_HcalIso;
 	delete T_Pho_EtaWidth;
 	delete T_Pho_PhiWidth;
 	delete T_Pho_sigmaIetaIeta;

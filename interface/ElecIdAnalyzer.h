@@ -234,23 +234,9 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     int T_Event_nPUm;
     int T_Event_nPUp;
     float T_Event_AveNTruePU;
-    int T_Event_HLT_Ele27_WP80;
-    int T_Event_HLT_Ele17_Ele8;
-    int T_Event_HLT_Ele17_Ele8_M50_TnP;
-    int T_Event_HLT_Ele20_SC4_M50_TnP;
-    int T_Event_HLT_Ele22_CaloIdL_CaloIsoVL;
-    int T_Event_HLT_Ele27_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL;
-    int T_Event_HLT_Ele30_CaloIdVT_TrkIdT;
-    int T_Event_HLT_Ele27_WP80_PFMET_MT50;
-    int T_Event_HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFNoPUJet30;
-    int T_Event_HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
-    int T_Event_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
-    int T_Event_HLT_Mu17_Mu8;
-    int T_Event_HLT_Mu17_TkMu8;
-    int T_Event_HLT_Mu17;
-    int T_Event_HLT_Mu8;
-    int T_Event_HLT_Mu8_Ele17;
-    int T_Event_HLT_Ele8_Mu17;
+    int T_Event_HLT_Ele17_SC8;
+
+    
 
     // gen info on the electron
     std::vector<float> *T_Gen_Elec_Px;
@@ -353,17 +339,9 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<double> *T_Elec_NeutralHadronIso_DR0p2To0p3;
     std::vector<double> *T_Elec_NeutralHadronIso_DR0p3To0p4;
     std::vector<double> *T_Elec_NeutralHadronIso_DR0p4To0p5;
-    std::vector<int>    *T_Elec_HLT_Elec27_WP80;
-    std::vector<int>    *T_Elec_HLT_Ele17TightID_Ele8_Ele8Leg;
-    std::vector<int>    *T_Elec_HLT_Ele17TightID_Ele8_Ele17Leg;
-    std::vector<int>    *T_Elec_HLT_Ele17_Ele8_Ele8Leg;
-    std::vector<int>    *T_Elec_HLT_Ele17_Ele8_Ele17Leg;
-    std::vector<int>    *T_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg;
-    std::vector<int>    *T_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg;
-    std::vector<int>    *T_Elec_HLT_Ele20_SC4_TnP_SC4Leg;
-    std::vector<int>    *T_Elec_HLT_Ele20_SC4_TnP_Ele20Leg;
-    std::vector<int>    *T_Elec_HLT_Mu8_Ele17_Ele17Leg;
-    std::vector<int>    *T_Elec_HLT_Ele8_Mu17_Ele8Leg;
+    std::vector<int>    *T_Elec_HLT_Ele17_SC8_leg17;
+    std::vector<int>    *T_Elec_HLT_Ele17_SC8_leg8;
+
     std::vector<bool>* T_Elec_passMVA;
     std::vector<float>* T_Elec_kfchi2;
     std::vector<float>* T_Elec_kfhits;
@@ -487,6 +465,10 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<float> *T_Pho_EtaWidth;
     std::vector<float> *T_Pho_PhiWidth;
     std::vector<float> *T_Pho_sigmaIetaIeta;
+    std::vector<int> *T_Pho_hasPixelSeed;
+    std::vector<float> *T_Pho_trkIso;
+    std::vector<float> *T_Pho_EcalIso;
+    std::vector<float> *T_Pho_HcalIso;
     
     std::vector<int>   *T_Pho_indOfTheElec;
     

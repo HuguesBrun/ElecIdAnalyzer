@@ -6,15 +6,13 @@ process.load("Configuration.StandardSequences.Geometry_cff")
 process.load('Configuration/StandardSequences/MagneticField_38T_cff')
 process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
 process.load("Configuration.StandardSequences.Reconstruction_cff")
-process.GlobalTag.globaltag = 'START53_V7A::All'
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10000))
+process.GlobalTag.globaltag = 'START42_V14B::All'
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
 
-process.MessageLogger.cerr.FwkReport.reportEvery = 10
+process.MessageLogger.cerr.FwkReport.reportEvery = 100
 #
-# the MC global Tag : START53_V7A
-# the RERECO of 2012 data (Jan22 reRECO) for run ABC FT_53_V21_AN3
-# input
-#
+# the MC global Tag : START42_V14B
+# 2011 data global tag : 
 
 process.source = cms.Source(
     "PoolSource",
@@ -24,8 +22,8 @@ process.source = cms.Source(
 	#'file:/sps/cms/hbrun/CMSSW_5_3_6_recup/src/recupTrigger/diMu/theFileTrigger.root'
 #	'file:/sps/cms/hbrun/CMSSW_5_3_7_myCode/src/dataFile_runA/theFile.root'
 #	'file:/sps/cms/hbrun/CMSSW_5_3_2_myCode/src/files/DYJetsToLLM50.root'
-    'file:/sps/cms/hbrun/CMSSW_5_3_2_myCode/src/files/mumuFiles/mumugamma_1.root'
-                                      #  'file:/sps/cms/hbrun/CMSSW_5_3_7_myCode/src/files/MC_DY_1.root'
+#        'file:/sps/cms/hbrun/CMSSW_5_3_7_myCode/src/files/MC_DY_1.root'
+        'file:/sps/cms/hbrun/CMSSW_5_3_7_myCode/src/files/data_DoublePhoton.root'
     ),
     secondaryFileNames = cms.untracked.vstring(),
     noEventSort = cms.untracked.bool(True),
@@ -49,10 +47,10 @@ process.theDiElecFilter = cms.EDFilter('DiElecFilter',
                                     
 
 process.theEleIdAnalyzer = cms.EDAnalyzer('ElecIdAnalyzer',
-    isMC                    = cms.bool(False),
+        isMC                    = cms.bool(False),
 	doMuons					= cms.bool(False),
-    doElectrons             = cms.bool(True),
-	doPhotons				= cms.bool(False),
+        doElectrons             = cms.bool(True),
+	doPhotons				= cms.bool(True),
 	savePF					= cms.bool(False),
 	saveConversions			= cms.bool(False),
     doMuMuGammaMC           = cms.bool(False),
@@ -96,9 +94,13 @@ process.noscraping = cms.EDFilter("FilterOutScraping",
                                   )
 
 
+process.load("HLTrigger.HLTfilters.triggerResultsFilter_cfi")
+process.triggerResultsFilter.triggerConditions = cms.vstring( 'HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC8_Mass30_v*')
+process.triggerResultsFilter.l1tResults = ''
+process.triggerResultsFilter.throw = False
+process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "HLT" )
 
 
 
 
-
-process.p = cms.Path(process.primaryVertexFilter * process.noscraping * process.kt6PFJetsForIsolation * process.pfiso * process.theEleIdAnalyzer)
+process.p = cms.Path(process.triggerResultsFilter* process.primaryVertexFilter * process.noscraping * process.kt6PFJetsForIsolation * process.pfiso * process.theEleIdAnalyzer)
