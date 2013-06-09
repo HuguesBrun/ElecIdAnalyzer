@@ -886,6 +886,8 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	
           const reco::Muon* muon = &((*recoMuons)[k]);
           //  cout << "le muon : eta=" << muon->eta() << " phi=" << muon->phi() << endl;
+            if (isMC_) doMCtruthMuons(muon, genParticles, 0.3);
+
            T_Muon_Eta->push_back(muon->eta());
             T_Muon_Phi->push_back(muon->phi());
             T_Muon_IsGlobalMuon->push_back(muon->isGlobalMuon());
@@ -1410,6 +1412,19 @@ ElecIdAnalyzer::beginJob()
         mytree_->Branch("T_Muon_HLT_Mu8_obj", "std::vector<int>", &T_Muon_HLT_Mu8_obj);
         mytree_->Branch("T_Muon_HLT_Mu8_Ele17_Mu8Leg", "std::vector<int>", &T_Muon_HLT_Mu8_Ele17_Mu8Leg);
         mytree_->Branch("T_Muon_HLT_Ele8_Mu17_Mu17Leg", "std::vector<int>", &T_Muon_HLT_Ele8_Mu17_Mu17Leg);
+  
+        mytree_->Branch("T_Gen_Muon_Px", "std::vector<float>", &T_Gen_Muon_Px);
+        mytree_->Branch("T_Gen_Muon_Py", "std::vector<float>", &T_Gen_Muon_Py);
+        mytree_->Branch("T_Gen_Muon_Pz", "std::vector<float>", &T_Gen_Muon_Pz);
+        mytree_->Branch("T_Gen_Muon_Energy", "std::vector<float>", &T_Gen_Muon_Energy);
+        mytree_->Branch("T_Gen_Muon_deltaR", "std::vector<float>", &T_Gen_Muon_deltaR);
+        mytree_->Branch("T_Gen_Muon_MCpart", "std::vector<int>", &T_Gen_Muon_MCpart);
+        mytree_->Branch("T_Gen_Muon_PDGid", "std::vector<int>", &T_Gen_Muon_PDGid);
+        mytree_->Branch("T_Gen_Muon_status", "std::vector<int>", &T_Gen_Muon_status);
+        mytree_->Branch("T_Gen_Muon_MotherID", "std::vector<int>", &T_Gen_Muon_MotherID);
+
+        
+        
         
     }
     
@@ -1702,6 +1717,17 @@ ElecIdAnalyzer::beginEvent()
 	T_Muon_HLT_Mu8_Ele17_Mu8Leg = new std::vector<int>;
 	T_Muon_HLT_Ele8_Mu17_Mu17Leg = new std::vector<int>;
     
+    T_Gen_Muon_Px = new std::vector<float>;
+    T_Gen_Muon_Py = new std::vector<float>;
+    T_Gen_Muon_Pz = new std::vector<float>;
+    T_Gen_Muon_Energy = new std::vector<float>;
+    T_Gen_Muon_deltaR = new std::vector<float>;
+    T_Gen_Muon_MCpart = new std::vector<int>;
+    T_Gen_Muon_PDGid = new std::vector<int>;
+    T_Gen_Muon_status = new std::vector<int>;
+    T_Gen_Muon_MotherID = new std::vector<int>;
+
+    
     
     T_PF_Et = new std::vector<float>;
     T_PF_Pt = new std::vector<float>;
@@ -1945,6 +1971,15 @@ void ElecIdAnalyzer::endEvent(){
 	delete T_Muon_HLT_Mu8_Ele17_Mu8Leg;
 	delete T_Muon_HLT_Ele8_Mu17_Mu17Leg;
     
+    delete T_Gen_Muon_Px;
+    delete T_Gen_Muon_Py;
+    delete T_Gen_Muon_Pz;
+    delete T_Gen_Muon_Energy;
+    delete T_Gen_Muon_deltaR;
+    delete T_Gen_Muon_MCpart;
+    delete T_Gen_Muon_PDGid;
+    delete T_Gen_Muon_status;
+    delete T_Gen_Muon_MotherID;
     
     
     delete T_PF_Et;
@@ -2331,14 +2366,14 @@ ElecIdAnalyzer::doMCtruthMuons(const reco::Muon* theMuon, edm::Handle <reco::Gen
         float theDeltaR = deltaR(p.phi(), theMuon->phi(), p.eta(), theMuon->eta());
         if (theDeltaR > 0.2) continue;
         if (!(p.status()==1)) continue;
-        if (fabs(p.pdgId())!=11) continue;
+        if (fabs(p.pdgId())!=13) continue;
         // find the mother of the particle !
         const reco::Candidate * theLocalCandidate = &p;
         bool hasMother = (theLocalCandidate->numberOfMothers()>0);
         const reco::Candidate * theMother;
         while (hasMother) {
             theMother = theLocalCandidate->mother();
-            //    cout << "mum PDGid = " << theMother->pdgId() << endl;
+            //cout << "mum PDGid = " << theMother->pdgId() << endl;
             theLocalCandidate = theMother;
             hasMother = (theLocalCandidate->numberOfMothers()>0);
             motherID = theMother->pdgId();
@@ -2356,32 +2391,32 @@ ElecIdAnalyzer::doMCtruthMuons(const reco::Muon* theMuon, edm::Handle <reco::Gen
     if (iteDiff>=0) {
         const reco::GenParticle & theCand = (*genParts)[iteDiff];
         const reco::Candidate * mom = theCand.mother();
-        //     cout << "ID =" << theCand.pdgId() << " pt = " << theCand.pt() << " status=" << theCand.status() << endl;
-        //   cout << "nb of mother " << theCand.numberOfMothers() << endl;
+             cout << "ID =" << theCand.pdgId() << " pt = " << theCand.pt() << " status=" << theCand.status() << endl;
+           cout << "nb of mother " << theCand.numberOfMothers() << endl;
         if (theCand.numberOfMothers()>0) mom = theCand.mother();
         //   cout << "mother id " << mom->pdgId() << endl;
-        T_Gen_Elec_Px->push_back(theCand.px());
-        T_Gen_Elec_Py->push_back(theCand.py());
-        T_Gen_Elec_Pz->push_back(theCand.pz());
-        T_Gen_Elec_Energy->push_back(theCand.energy());
-        T_Gen_Elec_MCpart->push_back(1);
-        T_Gen_Elec_PDGid->push_back(theCand.pdgId());
-        T_Gen_Elec_status->push_back(theCand.status());
-        //if (theCand.numberOfMothers()>0) T_Gen_Elec_MotherID->push_back(mom->pdgId());
-        if (theCand.numberOfMothers()>0) T_Gen_Elec_MotherID->push_back(motherID);
-        else T_Gen_Elec_MotherID->push_back(-1);
-        T_Gen_Elec_deltaR->push_back(minDiff);
+        T_Gen_Muon_Px->push_back(theCand.px());
+        T_Gen_Muon_Py->push_back(theCand.py());
+        T_Gen_Muon_Pz->push_back(theCand.pz());
+        T_Gen_Muon_Energy->push_back(theCand.energy());
+        T_Gen_Muon_MCpart->push_back(1);
+        T_Gen_Muon_PDGid->push_back(theCand.pdgId());
+        T_Gen_Muon_status->push_back(theCand.status());
+        //if (theCand.numberOfMothers()>0) T_Gen_Muon_MotherID->push_back(mom->pdgId());
+        if (theCand.numberOfMothers()>0) T_Gen_Muon_MotherID->push_back(motherID);
+        else T_Gen_Muon_MotherID->push_back(-1);
+        T_Gen_Muon_deltaR->push_back(minDiff);
     }
     else{
-        T_Gen_Elec_Px->push_back(-1);
-        T_Gen_Elec_Py->push_back(-1);
-        T_Gen_Elec_Pz->push_back(-1);
-        T_Gen_Elec_Energy->push_back(-1);
-        T_Gen_Elec_MCpart->push_back(0);
-        T_Gen_Elec_PDGid->push_back(-1);
-        T_Gen_Elec_status->push_back(-1);
-        T_Gen_Elec_MotherID->push_back(-1);
-        T_Gen_Elec_deltaR->push_back(-1);
+        T_Gen_Muon_Px->push_back(-1);
+        T_Gen_Muon_Py->push_back(-1);
+        T_Gen_Muon_Pz->push_back(-1);
+        T_Gen_Muon_Energy->push_back(-1);
+        T_Gen_Muon_MCpart->push_back(0);
+        T_Gen_Muon_PDGid->push_back(-1);
+        T_Gen_Muon_status->push_back(-1);
+        T_Gen_Muon_MotherID->push_back(-1);
+        T_Gen_Muon_deltaR->push_back(-1);
         
     }
     

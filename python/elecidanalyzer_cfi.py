@@ -49,9 +49,9 @@ process.theDiElecFilter = cms.EDFilter('DiElecFilter',
                                     
 
 process.theEleIdAnalyzer = cms.EDAnalyzer('ElecIdAnalyzer',
-    isMC                    = cms.bool(False),
-	doMuons					= cms.bool(False),
-    doElectrons             = cms.bool(True),
+    isMC                    = cms.bool(True),
+	doMuons					= cms.bool(True),
+    doElectrons             = cms.bool(False),
 	doPhotons				= cms.bool(False),
 	savePF					= cms.bool(False),
 	saveConversions			= cms.bool(False),

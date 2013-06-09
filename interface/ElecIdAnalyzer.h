@@ -167,6 +167,8 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
                                                      const reco::GsfElectronCollection &,
                                               const reco::MuonCollection &);
       virtual void doMCtruth(reco::GsfElectronRef, edm::Handle <reco::GenParticleCollection>, double);
+    virtual void doMCtruthMuons(const reco::Muon*, edm::Handle <reco::GenParticleCollection>, double);
+
       virtual float deltaR(float , float , float , float );
       virtual float deltaPhi(float , float);
       virtual void fillIsoRings(const reco::GsfElectron& , 
@@ -179,7 +181,7 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
       virtual bool passMVAcuts(const reco::GsfElectron&, double );
       virtual bool passFOcuts(const reco::GsfElectron&, const reco::Vertex&, bool);
       virtual int PFisCommingFromVertex(const reco::PFCandidate&, const reco::VertexCollection&);
-    virtual double PFisolationMVA(const reco::Muon*, const reco::PFCandidateCollection &, const reco::Vertex*, float);
+     virtual double PFisolationMVA(const reco::Muon*, const reco::PFCandidateCollection &, const reco::Vertex*, float);
 
     
       // ----------member data ---------------------------
@@ -455,6 +457,17 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<int> *T_Muon_HLT_Mu8_obj;
     std::vector<int> *T_Muon_HLT_Mu8_Ele17_Mu8Leg;
     std::vector<int> *T_Muon_HLT_Ele8_Mu17_Mu17Leg;
+    
+    //the muon GEN infos !
+    std::vector<float> *T_Gen_Muon_Px;
+    std::vector<float> *T_Gen_Muon_Py;
+    std::vector<float> *T_Gen_Muon_Pz;
+    std::vector<float> *T_Gen_Muon_Energy;
+    std::vector<float> *T_Gen_Muon_deltaR;
+    std::vector<int> *T_Gen_Muon_MCpart;
+    std::vector<int> *T_Gen_Muon_PDGid;
+    std::vector<int> *T_Gen_Muon_status;
+    std::vector<int> *T_Gen_Muon_MotherID;
     
     
     //PF particles
