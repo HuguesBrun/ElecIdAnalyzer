@@ -266,6 +266,8 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     int T_Event_HLT_Mu8;
     int T_Event_HLT_Mu8_Ele17;
     int T_Event_HLT_Ele8_Mu17;
+    int T_Event_HLT_IsoMu24;
+    int T_Event_HLT_IsoMu24_2p1;
 
     // gen info on the electron
     std::vector<float> *T_Gen_Elec_Px;
@@ -423,11 +425,14 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<bool> *T_Muon_IsCaloMuon;
     std::vector<bool> *T_Muon_IsStandAloneMuon;
     std::vector<bool> *T_Muon_IsMuon;
+    std::vector<bool> *T_Muon_IsGlobalMuon_PromptTight;
+    std::vector<bool> *T_Muon_IsTrackerMuonArbitrated;
     std::vector<int>  *T_Muon_numberOfChambers;
     std::vector<int>  *T_Muon_numberOfChambersRPC;
     std::vector<int>  *T_Muon_numberOfMatches;
     std::vector<int>  *T_Muon_numberOfMatchedStations;
     std::vector<int>  *T_Muon_charge;
+    
     
     std::vector<bool> *T_Muon_TMLastStationTight;
     std::vector<float> *T_Muon_globalTrackChi2;
@@ -439,6 +444,19 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<float> *T_Muon_trkError;
     std::vector<float> *T_Muon_dB;
     std::vector<float> *T_Muon_dzPV;
+    std::vector<float> *T_Muon_dBstop;
+    std::vector<float> *T_Muon_dzstop;
+    
+    // PF isolation
+    std::vector<float> *T_Muon_chargedHadronIsoR04;
+    std::vector<float> *T_Muon_neutralHadronIsoR04;
+    std::vector<float> *T_Muon_photonIsoR04;
+    std::vector<float> *T_Muon_chargedHadronIsoPUR04;
+    
+    std::vector<float> *T_Muon_chargedHadronIsoR03;
+    std::vector<float> *T_Muon_neutralHadronIsoR03;
+    std::vector<float> *T_Muon_photonIsoR03;
+    std::vector<float> *T_Muon_chargedHadronIsoPUR03;
     
     std::vector<float> *T_Muon_isoR03_emEt;
     std::vector<float> *T_Muon_isoR03_hadEt;
@@ -457,6 +475,8 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<int> *T_Muon_HLT_Mu8_obj;
     std::vector<int> *T_Muon_HLT_Mu8_Ele17_Mu8Leg;
     std::vector<int> *T_Muon_HLT_Ele8_Mu17_Mu17Leg;
+    std::vector<int> *T_Muon_HLT_IsoMu24;
+    std::vector<int> *T_Muon_HLT_IsoMu24_2p1;
     
     //the muon GEN infos !
     std::vector<float> *T_Gen_Muon_Px;

@@ -47,23 +47,25 @@ ElecIdAnalyzer::ElecIdAnalyzer(const edm::ParameterSet& iConfig)
     outputFile_   = iConfig.getParameter<std::string>("outputFile");
     rootFile_ = TFile::Open(outputFile_.c_str(),"RECREATE");
     
-    HLT_name.push_back("HLT_Ele27_WP80_v");
-    HLT_name.push_back("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");
-    HLT_name.push_back("HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_Ele8_Mass50_v");
-    HLT_name.push_back("HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v");
-    HLT_name.push_back("HLT_Ele22_CaloIdL_CaloIsoVL_v");
-    HLT_name.push_back("HLT_Ele27_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL_v");
-    HLT_name.push_back("HLT_Ele30_CaloIdVT_TrkIdT_v");
-    HLT_name.push_back("HLT_Ele27_WP80_PFMET_MT50_v");
-    HLT_name.push_back("HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFNoPUJet30_v");
-    HLT_name.push_back("HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");
-    HLT_name.push_back("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");
-    HLT_name.push_back("HLT_Mu17_TkMu8_v");
-    HLT_name.push_back("HLT_Mu17_Mu8_v");
-    HLT_name.push_back("HLT_Mu17_v");
-    HLT_name.push_back("HLT_Mu8_v");
-    HLT_name.push_back("HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");
-    HLT_name.push_back("HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");
+    HLT_name.push_back("HLT_Ele27_WP80_v");//0
+    HLT_name.push_back("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");//1
+    HLT_name.push_back("HLT_Ele17_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_Ele8_Mass50_v");//2
+    HLT_name.push_back("HLT_Ele20_CaloIdVT_CaloIsoVT_TrkIdT_TrkIsoVT_SC4_Mass50_v");//3
+    HLT_name.push_back("HLT_Ele22_CaloIdL_CaloIsoVL_v");//4
+    HLT_name.push_back("HLT_Ele27_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL_v");//5
+    HLT_name.push_back("HLT_Ele30_CaloIdVT_TrkIdT_v");//6
+    HLT_name.push_back("HLT_Ele27_WP80_PFMET_MT50_v");//7
+    HLT_name.push_back("HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFNoPUJet30_v");//8
+    HLT_name.push_back("HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");//9
+    HLT_name.push_back("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");//10
+    HLT_name.push_back("HLT_Mu17_TkMu8_v");//11
+    HLT_name.push_back("HLT_Mu17_Mu8_v");//12
+    HLT_name.push_back("HLT_Mu17_v");//13
+    HLT_name.push_back("HLT_Mu8_v");//14
+    HLT_name.push_back("HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");//15
+    HLT_name.push_back("HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v");//16
+    HLT_name.push_back("HLT_IsoMu24_v");//17
+    HLT_name.push_back("HLT_IsoMu24_eta2p1_v");//18
     
     
     HLT_triggerObjects.push_back("hltEle27WP80TrackIsoFilter");//0
@@ -85,6 +87,8 @@ ElecIdAnalyzer::ElecIdAnalyzer(const edm::ParameterSet& iConfig)
     HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12L3Filtered8");//16
     HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//17
     HLT_triggerObjects.push_back("hltL1Mu12EG7L3MuFiltered17");//18
+    HLT_triggerObjects.push_back("hltL3crIsoL1sMu16L1f0L2f16QL3f24QL3crIsoRhoFiltered0p15");//19
+    HLT_triggerObjects.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f24QL3crIsoRhoFiltered0p15");//20
     
     
     fElectronIsoMVA = new EGammaMvaEleEstimator();
@@ -426,6 +430,8 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     T_Event_HLT_Mu8 =         triggerResults->accept(theBitCorr[14]);
     T_Event_HLT_Mu8_Ele17 =         triggerResults->accept(theBitCorr[15]);
     T_Event_HLT_Ele8_Mu17 =         triggerResults->accept(theBitCorr[16]);
+    T_Event_HLT_IsoMu24 =         triggerResults->accept(theBitCorr[17]);
+    T_Event_HLT_IsoMu24_2p1 =         triggerResults->accept(theBitCorr[18]);
     
     /// fill the in selected Objet the HLT filter we will use for the matching
     trigger::TriggerObjectCollection allTriggerObjects = triggerSummary->getObjects();
@@ -910,7 +916,12 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Muon_numberOfMatches->push_back(muon->numberOfMatches());
             T_Muon_numberOfMatchedStations->push_back(muon->numberOfMatchedStations());
             bool isMatchTheStation = muon::isGoodMuon(*muon, muon::TMOneStationTight);
+            bool isGlobalMuonPT = muon::isGoodMuon(*muon, muon::GlobalMuonPromptTight);
+            bool isGlobalMuonArbitrated = muon::isGoodMuon(*muon, muon::TrackerMuonArbitrated);
             T_Muon_TMLastStationTight->push_back(isMatchTheStation);
+            T_Muon_IsGlobalMuon_PromptTight->push_back(isGlobalMuonPT);
+            T_Muon_IsTrackerMuonArbitrated->push_back(isGlobalMuonArbitrated);
+            
             if (muon->globalTrack().isNull()) T_Muon_globalTrackChi2->push_back(-1); else T_Muon_globalTrackChi2->push_back(muon->globalTrack()->normalizedChi2());
             if (muon->globalTrack().isNull()) T_Muon_validMuonHits->push_back(-1); else T_Muon_validMuonHits->push_back(muon->globalTrack()->hitPattern().numberOfValidMuonHits());
             T_Muon_trkKink->push_back(muon->combinedQuality().trkKink);
@@ -918,7 +929,9 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 T_Muon_trkNbOfTrackerLayers->push_back(-1);
                 T_Muon_trkError->push_back(-1);
                 T_Muon_dB->push_back(-1);
+                T_Muon_dBstop->push_back(-1);
                 T_Muon_dzPV->push_back(-1);
+                T_Muon_dzstop->push_back(-1);
                 T_Muon_trkValidPixelHits->push_back(-1);
                 T_Muon_trkNbOfValidTrackeHits->push_back(-1);
             }
@@ -927,7 +940,9 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 T_Muon_trkError->push_back(muon->muonBestTrack()->ptError());
                 T_Muon_trkValidPixelHits->push_back(muon->muonBestTrack()->hitPattern().numberOfValidPixelHits());
                 T_Muon_dB->push_back(fabs(muon->muonBestTrack()->dxy(pv->position())));
+                T_Muon_dBstop->push_back(fabs(muon->muonBestTrack()->dxy(pv->position())));
                 T_Muon_dzPV->push_back(fabs(muon->muonBestTrack()->dz(pv->position())));
+                T_Muon_dzstop->push_back(fabs(muon->muonBestTrack()->dz(pv->position())));
                 T_Muon_trkNbOfValidTrackeHits->push_back(muon->muonBestTrack()->hitPattern().numberOfValidTrackerHits());
             }
             T_Muon_isoR03_emEt->push_back(muon->isolationR03().emEt);
@@ -936,6 +951,15 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Muon_isoR03_sumPt->push_back(muon->isolationR03().sumPt);
             T_Muon_isoR03_nTracks->push_back(muon->isolationR03().nTracks);
             T_Muon_isoR03_nJets->push_back(muon->isolationR03().nJets);
+            T_Muon_chargedHadronIsoR04->push_back(muon->pfIsolationR04().sumChargedHadronPt);
+            T_Muon_neutralHadronIsoR04->push_back(muon->pfIsolationR04().sumNeutralHadronEt);
+            T_Muon_photonIsoR04->push_back(muon->pfIsolationR04().sumPhotonEt);
+            T_Muon_chargedHadronIsoPUR04->push_back(muon->pfIsolationR04().sumPUPt);
+            T_Muon_chargedHadronIsoR03->push_back(muon->pfIsolationR03().sumChargedHadronPt);
+            T_Muon_neutralHadronIsoR03->push_back(muon->pfIsolationR03().sumNeutralHadronEt);
+            T_Muon_photonIsoR03->push_back(muon->pfIsolationR03().sumPhotonEt);
+            T_Muon_chargedHadronIsoPUR03->push_back(muon->pfIsolationR03().sumPUPt);
+            
             
             float theMVAvalue = PFisolationMVA(muon,  inPfCands, pv, T_Event_Rho);
             T_Muon_isoRingsMVA->push_back(theMVAvalue);
@@ -949,6 +973,8 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             int pass_HLT_Mu17_Mu8_obj = 0;
             int pass_HLT_Mu8_Ele17_Mu8Leg= 0;
             int pass_HLT_Ele8_Mu17_Mu17Leg = 0;
+            int pass_HLT_IsoMu24 = 0;
+            int pass_HLT_IsoMu24_2p1 = 0;
 
             
             for (size_t t = 0 ; t < selectedObjects.size() ; t++){
@@ -968,6 +994,8 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     if (theHLTcorr[t] == 14) pass_HLT_Mu17_Mu8_obj = 1;
                     if (theHLTcorr[t] == 16) pass_HLT_Mu8_Ele17_Mu8Leg = 1;
                     if (theHLTcorr[t] == 18) pass_HLT_Ele8_Mu17_Mu17Leg = 1;
+                    if (theHLTcorr[t] == 19) pass_HLT_IsoMu24 = 1;
+                    if (theHLTcorr[t] == 20) pass_HLT_IsoMu24_2p1 = 1;
 
                 }
             }
@@ -979,6 +1007,8 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Muon_HLT_Mu8_obj->push_back(pass_HLT_Mu17_Mu8_obj);
             T_Muon_HLT_Mu8_Ele17_Mu8Leg->push_back(pass_HLT_Mu8_Ele17_Mu8Leg);
             T_Muon_HLT_Ele8_Mu17_Mu17Leg->push_back(pass_HLT_Ele8_Mu17_Mu17Leg);
+            T_Muon_HLT_IsoMu24->push_back(pass_HLT_IsoMu24);
+            T_Muon_HLT_IsoMu24_2p1->push_back(pass_HLT_IsoMu24_2p1);
 
            // if ((pass_HLT_Mu17_TkMu8_Mu17Leg&&muon->pt()<17)) cout << "/////////////////////////////////////////////////////////////////////////////////////// on a matché pass_HLT_Mu17_Mu8_Mu17Leg, le Pt du muon " << muon->pt() << endl;
 		}
@@ -1212,6 +1242,8 @@ ElecIdAnalyzer::beginJob()
     mytree_->Branch("T_Event_HLT_Mu8",&T_Event_HLT_Mu8,"T_Event_HLT_Mu8/I");
     mytree_->Branch("T_Event_HLT_Mu8_Ele17",&T_Event_HLT_Mu8_Ele17,"T_Event_HLT_Mu8_Ele17/I");
     mytree_->Branch("T_Event_HLT_Ele8_Mu17",&T_Event_HLT_Ele8_Mu17,"T_Event_HLT_Ele8_Mu17/I");
+    mytree_->Branch("T_Event_HLT_IsoMu24",&T_Event_HLT_IsoMu24,"T_Event_HLT_IsoMu24/I");
+    mytree_->Branch("T_Event_HLT_IsoMu24_2p1",&T_Event_HLT_IsoMu24_2p1,"T_Event_HLT_IsoMu24_2p1/I");
 
     
     
@@ -1382,6 +1414,8 @@ ElecIdAnalyzer::beginJob()
         mytree_->Branch("T_Muon_IsCaloMuon", "std::vector<bool>", &T_Muon_IsCaloMuon);
         mytree_->Branch("T_Muon_IsStandAloneMuon", "std::vector<bool>", &T_Muon_IsStandAloneMuon);
         mytree_->Branch("T_Muon_IsMuon", "std::vector<bool>", &T_Muon_IsMuon);
+        mytree_->Branch("T_Muon_IsGlobalMuon_PromptTight", "std::vector<bool>", &T_Muon_IsGlobalMuon_PromptTight);
+        mytree_->Branch("T_Muon_IsTrackerMuonArbitrated", "std::vector<bool>", &T_Muon_IsTrackerMuonArbitrated);
         mytree_->Branch("T_Muon_numberOfChambers", "std::vector<int>", &T_Muon_numberOfChambers);
         mytree_->Branch("T_Muon_numberOfChambersRPC", "std::vector<int>", &T_Muon_numberOfChambersRPC);
         mytree_->Branch("T_Muon_numberOfMatches", "std::vector<int>", &T_Muon_numberOfMatches);
@@ -1397,12 +1431,22 @@ ElecIdAnalyzer::beginJob()
         mytree_->Branch("T_Muon_trkError", "std::vector<float>", &T_Muon_trkError);
         mytree_->Branch("T_Muon_dB", "std::vector<float>", &T_Muon_dB);
         mytree_->Branch("T_Muon_dzPV", "std::vector<float>", &T_Muon_dzPV);
+        mytree_->Branch("T_Muon_dBstop", "std::vector<float>", &T_Muon_dBstop);
+        mytree_->Branch("T_Muon_dzstop", "std::vector<float>", &T_Muon_dzstop);        
         mytree_->Branch("T_Muon_isoR03_emEt", "std::vector<float>", &T_Muon_isoR03_emEt);
         mytree_->Branch("T_Muon_isoR03_hadEt", "std::vector<float>", &T_Muon_isoR03_hadEt);
         mytree_->Branch("T_Muon_isoR03_hoEt", "std::vector<float>", &T_Muon_isoR03_hoEt);
         mytree_->Branch("T_Muon_isoR03_sumPt", "std::vector<float>", &T_Muon_isoR03_sumPt);
         mytree_->Branch("T_Muon_isoR03_nTracks", "std::vector<int>", &T_Muon_isoR03_nTracks);
         mytree_->Branch("T_Muon_isoR03_nJets", "std::vector<int>", &T_Muon_isoR03_nJets);
+        mytree_->Branch("T_Muon_chargedHadronIsoR04", "std::vector<float>", &T_Muon_chargedHadronIsoR04);
+        mytree_->Branch("T_Muon_neutralHadronIsoR04", "std::vector<float>", &T_Muon_neutralHadronIsoR04);
+        mytree_->Branch("T_Muon_photonIsoR04", "std::vector<float>", &T_Muon_photonIsoR04);
+        mytree_->Branch("T_Muon_chargedHadronIsoPUR04", "std::vector<float>", &T_Muon_chargedHadronIsoPUR04);
+        mytree_->Branch("T_Muon_chargedHadronIsoR03", "std::vector<float>", &T_Muon_chargedHadronIsoR03);
+        mytree_->Branch("T_Muon_neutralHadronIsoR03", "std::vector<float>", &T_Muon_neutralHadronIsoR03);
+        mytree_->Branch("T_Muon_photonIsoR03", "std::vector<float>", &T_Muon_photonIsoR03);
+        mytree_->Branch("T_Muon_chargedHadronIsoPUR03", "std::vector<float>", &T_Muon_chargedHadronIsoPUR03);
         mytree_->Branch("T_Muon_isoRingsMVA", "std::vector<float>", &T_Muon_isoRingsMVA);
         mytree_->Branch("T_Muon_HLT_Mu17_TkMu8_Mu17Leg", "std::vector<int>", &T_Muon_HLT_Mu17_TkMu8_Mu17Leg);
         mytree_->Branch("T_Muon_HLT_Mu17_TkMu8_Mu8Leg", "std::vector<int>", &T_Muon_HLT_Mu17_TkMu8_Mu8Leg);
@@ -1412,6 +1456,8 @@ ElecIdAnalyzer::beginJob()
         mytree_->Branch("T_Muon_HLT_Mu8_obj", "std::vector<int>", &T_Muon_HLT_Mu8_obj);
         mytree_->Branch("T_Muon_HLT_Mu8_Ele17_Mu8Leg", "std::vector<int>", &T_Muon_HLT_Mu8_Ele17_Mu8Leg);
         mytree_->Branch("T_Muon_HLT_Ele8_Mu17_Mu17Leg", "std::vector<int>", &T_Muon_HLT_Ele8_Mu17_Mu17Leg);
+        mytree_->Branch("T_Muon_HLT_IsoMu24", "std::vector<int>", &T_Muon_HLT_IsoMu24);
+        mytree_->Branch("T_Muon_HLT_IsoMu24_2p1", "std::vector<int>", &T_Muon_HLT_IsoMu24_2p1);
   
         mytree_->Branch("T_Gen_Muon_Px", "std::vector<float>", &T_Gen_Muon_Px);
         mytree_->Branch("T_Gen_Muon_Py", "std::vector<float>", &T_Gen_Muon_Py);
@@ -1686,6 +1732,8 @@ ElecIdAnalyzer::beginEvent()
 	T_Muon_IsCaloMuon = new std::vector<bool>;
 	T_Muon_IsStandAloneMuon = new std::vector<bool>;
 	T_Muon_IsMuon = new std::vector<bool>;
+	T_Muon_IsGlobalMuon_PromptTight = new std::vector<bool>;
+	T_Muon_IsTrackerMuonArbitrated = new std::vector<bool>;
 	T_Muon_numberOfChambers = new std::vector<int>;
 	T_Muon_numberOfChambersRPC = new std::vector<int>;
 	T_Muon_numberOfMatches = new std::vector<int>;
@@ -1701,6 +1749,8 @@ ElecIdAnalyzer::beginEvent()
 	T_Muon_trkError = new std::vector<float>;
 	T_Muon_dB = new std::vector<float>;
 	T_Muon_dzPV = new std::vector<float>;
+    T_Muon_dBstop = new std::vector<float>;
+	T_Muon_dzstop = new std::vector<float>;
 	T_Muon_isoR03_emEt = new std::vector<float>;
 	T_Muon_isoR03_hadEt = new std::vector<float>;
 	T_Muon_isoR03_hoEt = new std::vector<float>;
@@ -1708,6 +1758,14 @@ ElecIdAnalyzer::beginEvent()
 	T_Muon_isoR03_nTracks = new std::vector<int>;
 	T_Muon_isoR03_nJets = new std::vector<int>;
 	T_Muon_isoRingsMVA = new std::vector<float>;
+    T_Muon_chargedHadronIsoR04 = new std::vector<float>;
+    T_Muon_neutralHadronIsoR04 = new std::vector<float>;
+    T_Muon_photonIsoR04 = new std::vector<float>;
+    T_Muon_chargedHadronIsoPUR04 = new std::vector<float>;
+    T_Muon_chargedHadronIsoR03 = new std::vector<float>;
+    T_Muon_neutralHadronIsoR03 = new std::vector<float>;
+    T_Muon_photonIsoR03 = new std::vector<float>;
+    T_Muon_chargedHadronIsoPUR03 = new std::vector<float>;
 	T_Muon_HLT_Mu17_TkMu8_Mu17Leg = new std::vector<int>;
 	T_Muon_HLT_Mu17_TkMu8_Mu8Leg = new std::vector<int>;
 	T_Muon_HLT_Mu17_Mu8_Mu17Leg = new std::vector<int>;
@@ -1716,6 +1774,8 @@ ElecIdAnalyzer::beginEvent()
 	T_Muon_HLT_Mu8_obj = new std::vector<int>;
 	T_Muon_HLT_Mu8_Ele17_Mu8Leg = new std::vector<int>;
 	T_Muon_HLT_Ele8_Mu17_Mu17Leg = new std::vector<int>;
+	T_Muon_HLT_IsoMu24 = new std::vector<int>;
+	T_Muon_HLT_IsoMu24_2p1 = new std::vector<int>;
     
     T_Gen_Muon_Px = new std::vector<float>;
     T_Gen_Muon_Py = new std::vector<float>;
@@ -1940,6 +2000,8 @@ void ElecIdAnalyzer::endEvent(){
 	delete T_Muon_IsCaloMuon;
 	delete T_Muon_IsStandAloneMuon;
 	delete T_Muon_IsMuon;
+	delete T_Muon_IsTrackerMuonArbitrated;
+	delete T_Muon_IsGlobalMuon_PromptTight;
 	delete T_Muon_numberOfChambers;
 	delete T_Muon_numberOfChambersRPC;
 	delete T_Muon_numberOfMatches;
@@ -1955,6 +2017,8 @@ void ElecIdAnalyzer::endEvent(){
 	delete T_Muon_trkError;
 	delete T_Muon_dB;
 	delete T_Muon_dzPV;
+    delete T_Muon_dBstop;
+	delete T_Muon_dzstop;
 	delete T_Muon_isoR03_emEt;
 	delete T_Muon_isoR03_hadEt;
 	delete T_Muon_isoR03_hoEt;
@@ -1962,6 +2026,14 @@ void ElecIdAnalyzer::endEvent(){
 	delete T_Muon_isoR03_nTracks;
 	delete T_Muon_isoR03_nJets;
 	delete T_Muon_isoRingsMVA;
+	delete T_Muon_chargedHadronIsoR04;
+	delete T_Muon_neutralHadronIsoR04;
+	delete T_Muon_photonIsoR04;
+	delete T_Muon_chargedHadronIsoPUR04;
+    delete T_Muon_chargedHadronIsoR03;
+	delete T_Muon_neutralHadronIsoR03;
+	delete T_Muon_photonIsoR03;
+	delete T_Muon_chargedHadronIsoPUR03;
 	delete T_Muon_HLT_Mu17_TkMu8_Mu17Leg;
 	delete T_Muon_HLT_Mu17_TkMu8_Mu8Leg;
 	delete T_Muon_HLT_Mu17_Mu8_Mu17Leg;
@@ -1970,6 +2042,8 @@ void ElecIdAnalyzer::endEvent(){
 	delete T_Muon_HLT_Mu8_obj;
 	delete T_Muon_HLT_Mu8_Ele17_Mu8Leg;
 	delete T_Muon_HLT_Ele8_Mu17_Mu17Leg;
+	delete T_Muon_HLT_IsoMu24;
+	delete T_Muon_HLT_IsoMu24_2p1;
     
     delete T_Gen_Muon_Px;
     delete T_Gen_Muon_Py;
@@ -2391,8 +2465,8 @@ ElecIdAnalyzer::doMCtruthMuons(const reco::Muon* theMuon, edm::Handle <reco::Gen
     if (iteDiff>=0) {
         const reco::GenParticle & theCand = (*genParts)[iteDiff];
         const reco::Candidate * mom = theCand.mother();
-             cout << "ID =" << theCand.pdgId() << " pt = " << theCand.pt() << " status=" << theCand.status() << endl;
-           cout << "nb of mother " << theCand.numberOfMothers() << endl;
+        //     cout << "ID =" << theCand.pdgId() << " pt = " << theCand.pt() << " status=" << theCand.status() << endl;
+       //    cout << "nb of mother " << theCand.numberOfMothers() << endl;
         if (theCand.numberOfMothers()>0) mom = theCand.mother();
         //   cout << "mother id " << mom->pdgId() << endl;
         T_Gen_Muon_Px->push_back(theCand.px());
