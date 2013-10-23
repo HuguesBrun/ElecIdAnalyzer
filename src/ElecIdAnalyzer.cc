@@ -93,6 +93,12 @@ ElecIdAnalyzer::ElecIdAnalyzer(const edm::ParameterSet& iConfig)
     HLT_triggerObjects.push_back("hltL1Mu12EG7L3MuFiltered17");//18
     HLT_triggerObjects.push_back("hltL3crIsoL1sMu16L1f0L2f16QL3f24QL3crIsoRhoFiltered0p15");//19
     HLT_triggerObjects.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f24QL3crIsoRhoFiltered0p15");//20
+    //muon begin of the year
+    HLT_triggerObjects.push_back("hltL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17");//21
+    HLT_triggerObjects.push_back("hltL3pfL1DoubleMu10MuOpenL1f0L2pf0L3PreFiltered8");//22
+    HLT_triggerObjects.push_back("hltL3fL1sMu10MuOpenL1f0L2f10L3Filtered17");//23
+    HLT_triggerObjects.push_back("hltDiMuonGlbFiltered17TrkFiltered8");//24
+
     
     
     fElectronIsoMVA = new EGammaMvaEleEstimator();
@@ -1012,12 +1018,12 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		float relatDeltaPt = fabs(selectedObjects[t].pt()-muon->pt())/muon->pt();
                // cout << "delta R =" << HLTdeltaR << endl;
                 //if (HLTdeltaR < 0.3){
-                if ((HLTdeltaR < 0.5)&&(relatDeltaPt<0.5)){
+                if ((HLTdeltaR < 0.3)&&(relatDeltaPt<0.5)){
                //     	cout << "coucou on passe = " << theHLTcorr[t] << endl;
-                    if (theHLTcorr[t] == 9)  pass_HLT_Mu17_TkMu8_Mu17Leg = 1;
-                    if (theHLTcorr[t] == 10) pass_HLT_Mu17_TkMu8_Mu8Leg = 1;
-                    if (theHLTcorr[t] == 12) pass_HLT_Mu17_Mu8_Mu17Leg = 1;
-                    if (theHLTcorr[t] == 11) pass_HLT_Mu17_Mu8_Mu8Leg = 1;
+                    if ((theHLTcorr[t] == 9)||(theHLTcorr[t] == 23))  pass_HLT_Mu17_TkMu8_Mu17Leg = 1;
+                    if ((theHLTcorr[t] == 10)||(theHLTcorr[t] == 24)) pass_HLT_Mu17_TkMu8_Mu8Leg = 1;
+                    if ((theHLTcorr[t] == 12)||(theHLTcorr[t] == 21)) pass_HLT_Mu17_Mu8_Mu17Leg = 1;
+                    if ((theHLTcorr[t] == 11)||(theHLTcorr[t] == 22)) pass_HLT_Mu17_Mu8_Mu8Leg = 1;
                     if (theHLTcorr[t] == 13) pass_HLT_Mu17_Mu17_obj = 1;
                     if (theHLTcorr[t] == 14) pass_HLT_Mu17_Mu8_obj = 1;
                     if (theHLTcorr[t] == 16) pass_HLT_Mu8_Ele17_Mu8Leg = 1;

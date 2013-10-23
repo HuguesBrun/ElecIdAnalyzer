@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-savePatInTree=True;
+savePatInTree=False;
 
 
 process = cms.Process("EX")
@@ -36,19 +36,19 @@ process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 process.MessageLogger.cerr.FwkReport.reportEvery = 10
 #
 # the MC global Tag : START53_V7A
-# the RERECO of 2012 data (Jan22 reRECO) for run ABC FT_53_V21_AN3
+# the RERECO of 2012 data (Jan22 reRECO) for run ABCD FT_53_V21_AN6
 # input
 #
 
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_1.root',
-    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_2.root',
-    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_3.root',
-    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_4.root',
-    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_5.root',
-    ),
+    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/TTsample/MYCOPY_3_1_1rg.root'),
+                                      #  '''file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_1.root',
+                                      #    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_2.root',
+                                      #    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_3.root',
+                                      #    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_4.root',
+                                      #    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_5.root','''    ),
     secondaryFileNames = cms.untracked.vstring(),
     noEventSort = cms.untracked.bool(True),
     duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
