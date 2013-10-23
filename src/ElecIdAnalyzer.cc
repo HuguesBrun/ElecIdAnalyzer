@@ -20,11 +20,12 @@ ElecIdAnalyzer::ElecIdAnalyzer(const edm::ParameterSet& iConfig)
     // is DATA/MC 
     isMC_                   = iConfig.getParameter<bool>("isMC");
     doMuons_				= iConfig.getParameter<bool>("doMuons");
-    doElectrons_				= iConfig.getParameter<bool>("doElectrons");
+    doElectrons_		    = iConfig.getParameter<bool>("doElectrons");
     doPhotons_              = iConfig.getParameter<bool>("doPhotons");
     savePF_                 = iConfig.getParameter<bool>("savePF");
     saveConversions_        = iConfig.getParameter<bool>("saveConversions");
     doMuMuGammaMCtruth_     = iConfig.getParameter<bool>("doMuMuGammaMC");
+    doPFPATmatching_           = iConfig.getParameter<bool>("doPFPATmatching");
     
     // get input parameters
     electronsInputTag_      = iConfig.getParameter<edm::InputTag>("electronsInputTag");
@@ -68,6 +69,7 @@ ElecIdAnalyzer::ElecIdAnalyzer(const edm::ParameterSet& iConfig)
     HLT_name.push_back("HLT_IsoMu24_eta2p1_v");//18
     
     
+    //electron part :
     HLT_triggerObjects.push_back("hltEle27WP80TrackIsoFilter");//0
     HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter");//1
     HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoFilter");//2
@@ -77,6 +79,8 @@ ElecIdAnalyzer::ElecIdAnalyzer(const edm::ParameterSet& iConfig)
     HLT_triggerObjects.push_back("hltEle20CaloIdVTCaloIsoVTTrkIdTTrkIsoVTSC4TrackIsoFilter");//6
     HLT_triggerObjects.push_back("hltEle17CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//7
     HLT_triggerObjects.push_back("hltEle8TightIdLooseIsoTrackIsoFilter");//8
+    
+    //muon part :
     HLT_triggerObjects.push_back("hltL3fL1sMu10MuOpenOR3p5L1f0L2f10L3Filtered17");//9
     HLT_triggerObjects.push_back("hltDiMuonGlbFiltered17TrkFiltered8");//10
     HLT_triggerObjects.push_back("hltL3pfL1DoubleMu10MuOpenOR3p5L1f0L2pf0L3PreFiltered8");//11
@@ -292,6 +296,13 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Handle<reco::PhotonCollection> pPhotons;
     iEvent.getByLabel(photonCollection_, pPhotons);
     const reco::PhotonCollection* photons = pPhotons.product();
+    
+    
+    //read the PAT PF electrons
+    edm::Handle<pat::ElectronCollection > electrons;
+    iEvent.getByLabel( "selectedPatElectronsPFlow", electrons );
+    
+
 
     //map for MC matching
    // Handle<CandMatchMap> match;
@@ -697,6 +708,23 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Elec_MVAid_trig->push_back(myMVATrigMethod);
             T_Elec_MVAid_Nontrig->push_back(myMVANonTrigMethod);
             T_Elec_Mvaiso->push_back(isomva);
+            
+            if (doPFPATmatching_){
+            /// look if the electron is a PF one
+                T_Elec_isPF->push_back(0);
+                for( size_t iElectron = 0; iElectron < electrons->size(); ++iElectron ) {
+                    float PFdeltaR = deltaR(ele->phi(), electrons->at( iElectron ).phi(), ele->eta(), electrons->at( iElectron ).eta());
+                    if (PFdeltaR>0.1) continue;
+                    T_Elec_isPF->push_back(1);
+                    T_Elec_PFenergy->push_back(electrons->at( iElectron ).energy());
+                    T_Elec_PFeta->push_back(electrons->at( iElectron ).eta());
+                    T_Elec_PFphi->push_back(electrons->at( iElectron ).phi());
+                    T_Elec_PFpt->push_back(electrons->at( iElectron ).pt());
+                    T_Elec_PFpx->push_back(electrons->at( iElectron ).px());
+                    T_Elec_PFpy->push_back(electrons->at( iElectron ).py());
+                    T_Elec_PFpz->push_back(electrons->at( iElectron ).pz());
+                }
+            }
             
             double theRadIso = GetRadialIsoValue(*ele, inPfCands);
             T_Elec_RadialIso->push_back(theRadIso);
@@ -1390,6 +1418,18 @@ ElecIdAnalyzer::beginJob()
     mytree_->Branch("T_Elec_dr03EcalSumEt","std::vector<float>", &T_Elec_dr03EcalSumEt);
     mytree_->Branch("T_Elec_dr03HcalSumEt","std::vector<float>", &T_Elec_dr03HcalSumEt);
     
+    if (doPFPATmatching_){
+        mytree_->Branch("T_Elec_isPF","std::vector<int>", &T_Elec_isPF);
+        mytree_->Branch("T_Elec_PFenergy","std::vector<float>", &T_Elec_PFenergy);
+        mytree_->Branch("T_Elec_PFeta","std::vector<float>", &T_Elec_PFeta);
+        mytree_->Branch("T_Elec_PFphi","std::vector<float>", &T_Elec_PFphi);
+        mytree_->Branch("T_Elec_PFpt","std::vector<float>", &T_Elec_PFpt);
+        mytree_->Branch("T_Elec_PFpx","std::vector<float>", &T_Elec_PFpx);
+        mytree_->Branch("T_Elec_PFpy","std::vector<float>", &T_Elec_PFpy);
+        mytree_->Branch("T_Elec_PFpz","std::vector<float>", &T_Elec_PFpz);
+    }
+    
+    
     mytree_->Branch("T_METPF_ET", &T_METPF_ET, "T_METPF_ET/F");
     mytree_->Branch("T_METPF_Phi", &T_METPF_Phi, "T_METPF_Phi/F");	
     mytree_->Branch("T_METPF_Sig", &T_METPF_Sig, "T_METPF_Sig/F");
@@ -1709,7 +1749,18 @@ ElecIdAnalyzer::beginEvent()
     T_Elec_CombIsoHWW = new std::vector<float>;
     T_Elec_dr03TkSumPt = new std::vector<float>;
     T_Elec_dr03EcalSumEt = new std::vector<float>;
-    T_Elec_dr03HcalSumEt = new std::vector<float>; 
+    T_Elec_dr03HcalSumEt = new std::vector<float>;
+    
+    T_Elec_isPF = new std::vector<int>;
+    T_Elec_PFenergy = new std::vector<float>;
+    T_Elec_PFeta = new std::vector<float>;
+    T_Elec_PFphi = new std::vector<float>;
+    T_Elec_PFpt = new std::vector<float>;
+    T_Elec_PFpx = new std::vector<float>;
+    T_Elec_PFpy = new std::vector<float>;
+    T_Elec_PFpz = new std::vector<float>;
+
+    
 
 	
     T_Gen_Elec_Px = new std::vector<float>;
@@ -1972,6 +2023,16 @@ void ElecIdAnalyzer::endEvent(){
     delete T_Elec_dr03TkSumPt;
     delete T_Elec_dr03EcalSumEt;
     delete T_Elec_dr03HcalSumEt;
+    
+    delete T_Elec_isPF;
+    delete T_Elec_PFenergy;
+    delete T_Elec_PFeta;
+    delete T_Elec_PFphi;
+    delete T_Elec_PFpt;
+    delete T_Elec_PFpx;
+    delete T_Elec_PFpy;
+    delete T_Elec_PFpz;
+
   
     
     delete T_Gen_Elec_Px;

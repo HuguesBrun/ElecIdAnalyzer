@@ -1,13 +1,37 @@
 import FWCore.ParameterSet.Config as cms
 
+savePatInTree=True;
+
+
 process = cms.Process("EX")
 process.load("Configuration.StandardSequences.Services_cff")
 process.load("Configuration.Geometry.GeometryIdeal_cff")
 process.load('Configuration/StandardSequences/MagneticField_38T_cff')
 process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
 process.load("Configuration.StandardSequences.Reconstruction_cff")
+
+
+# try to add the PAT PF sequences in the analyser...
+## import skeleton process
+from PhysicsTools.PatAlgos.patTemplate_cfg import *
+
+# load the PAT config
+process.load("PhysicsTools.PatAlgos.patSequences_cff")
+from PhysicsTools.PatAlgos.tools.pfTools import *
+postfix = "PFlow"
+jetAlgo="AK5"
+if savePatInTree: usePF2PAT(process,runPF2PAT=True, jetAlgo=jetAlgo, runOnMC=True, postfix=postfix)
+
+
+
+
 process.GlobalTag.globaltag = 'START53_V7A::All'
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+
+
+
+
+
 
 process.MessageLogger.cerr.FwkReport.reportEvery = 10
 #
@@ -47,12 +71,13 @@ process.theDiElecFilter = cms.EDFilter('DiElecFilter',
                                     
 
 process.theEleIdAnalyzer = cms.EDAnalyzer('ElecIdAnalyzer',
-    	isMC                    = cms.bool(True),
-	doMuons		        = cms.bool(True),
-    	doElectrons             = cms.bool(False),
-	doPhotons		= cms.bool(False),
-	savePF			= cms.bool(False),
-	saveConversions		= cms.bool(False),
+    isMC                        = cms.bool(True),
+	doMuons		                = cms.bool(True),
+    doElectrons                 = cms.bool(True),
+	doPhotons		            = cms.bool(False),
+    doPFPATmatching             = cms.bool(False),
+	savePF			            = cms.bool(False),
+	saveConversions		        = cms.bool(False),
     doMuMuGammaMC           	= cms.bool(False),
     electronsInputTag       	= cms.InputTag("gsfElectrons"),
     conversionsInputTag     	= cms.InputTag("allConversions"),
@@ -97,6 +122,24 @@ process.noscraping = cms.EDFilter("FilterOutScraping",
 
 
 
+if savePatInTree:
+    # top projections in PF2PAT:
+    getattr(process,"pfNoPileUp"+postfix).enable = True
+    getattr(process,"pfNoMuon"+postfix).enable = True
+    getattr(process,"pfNoElectron"+postfix).enable = True
+    getattr(process,"pfNoTau"+postfix).enable = False
+    getattr(process,"pfNoJet"+postfix).enable = True
 
+    # verbose flags for the PF2PAT modules
+    getattr(process,"pfNoMuon"+postfix).verbose = False
 
-process.p = cms.Path(process.primaryVertexFilter * process.noscraping * process.kt6PFJetsForIsolation * process.pfiso * process.theEleIdAnalyzer)
+    #ask the analyzer to
+    getattr(process,"theEleIdAnalyzer").doPFPATmatching = True
+
+if savePatInTree:
+    #sequence with PF
+    process.p = cms.Path(process.primaryVertexFilter * process.noscraping * process.kt6PFJetsForIsolation * process.pfiso * getattr(process,"patPF2PATSequence"+postfix)* process.theEleIdAnalyzer)
+else:
+    #sequence with no PF
+    process.p = cms.Path(process.primaryVertexFilter * process.noscraping * process.kt6PFJetsForIsolation * process.pfiso * process.theEleIdAnalyzer)
+

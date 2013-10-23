@@ -108,6 +108,9 @@
 #include "Muon/MuonAnalysisTools/src/MuonMVAEstimator.cc"
 
 
+#include "DataFormats/PatCandidates/interface/Electron.h"
+
+
 
 
 // root stuff !
@@ -193,6 +196,7 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     bool doMuMuGammaMCtruth_;
     bool savePF_;
     bool saveConversions_;
+    bool doPFPATmatching_;
 	
 	vtag muonProducers_;
     // input tags
@@ -405,6 +409,16 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<float>* T_Elec_dZ;
     std::vector<bool>* T_Elec_isFO;
     std::vector<float>* T_Elec_CombIsoHWW;
+    
+    //PF info
+    std::vector<int>* T_Elec_isPF;
+    std::vector<float>* T_Elec_PFenergy;
+    std::vector<float>* T_Elec_PFeta;
+    std::vector<float>* T_Elec_PFphi;
+    std::vector<float>* T_Elec_PFpt;
+    std::vector<float>* T_Elec_PFpx;
+    std::vector<float>* T_Elec_PFpy;
+    std::vector<float>* T_Elec_PFpz;
 	
 	
 	//now the muons ! 
