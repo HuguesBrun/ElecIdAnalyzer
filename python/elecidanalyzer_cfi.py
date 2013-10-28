@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-savePatInTree=False;
+savePatInTree=True
 
 
 process = cms.Process("EX")
@@ -10,23 +10,22 @@ process.load('Configuration/StandardSequences/MagneticField_38T_cff')
 process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
 process.load("Configuration.StandardSequences.Reconstruction_cff")
 
-
 # try to add the PAT PF sequences in the analyser...
 ## import skeleton process
-from PhysicsTools.PatAlgos.patTemplate_cfg import *
 
 # load the PAT config
-process.load("PhysicsTools.PatAlgos.patSequences_cff")
-from PhysicsTools.PatAlgos.tools.pfTools import *
-postfix = "PFlow"
-jetAlgo="AK5"
-if savePatInTree: usePF2PAT(process,runPF2PAT=True, jetAlgo=jetAlgo, runOnMC=True, postfix=postfix)
-
-
+if savePatInTree:
+    from PhysicsTools.PatAlgos.patTemplate_cfg import *
+    process.load("PhysicsTools.PatAlgos.patSequences_cff")
+    from PhysicsTools.PatAlgos.tools.pfTools import *
+    postfix = "PFlow"
+    jetAlgo="AK5"
+    usePF2PAT(process,runPF2PAT=True, jetAlgo=jetAlgo, runOnMC=True, postfix=postfix)
 
 
 process.GlobalTag.globaltag = 'START53_V7A::All'
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+
 
 
 
@@ -43,12 +42,12 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 10
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/TTsample/MYCOPY_3_1_1rg.root'),
-                                      #  '''file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_1.root',
-                                      #    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_2.root',
-                                      #    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_3.root',
-                                      #    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_4.root',
-                                      #    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_5.root','''    ),
+#    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/TTsample/MYCOPY_3_1_1rg.root'),
+                                      'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_1.root',
+                                      'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_2.root',
+                                      'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_3.root',
+                                      'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_4.root',
+                                      'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_5.root'),
     secondaryFileNames = cms.untracked.vstring(),
     noEventSort = cms.untracked.bool(True),
     duplicateCheckMode = cms.untracked.string('noDuplicateCheck')

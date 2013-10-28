@@ -418,37 +418,40 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	std::cout << "the present menu is " << hltConfig.tableName() << std::endl;
         moduleLabels.clear();
         for (size_t m = 0 ; m < HLT_name.size() ; m++){
+            bool foundThePathInMenu = false;
             for (size_t j = 0; j < hltConfig.triggerNames().size(); j++) {
                 if (TString(hltConfig.triggerNames()[j]).Contains(HLT_name[m])){
                     cout << j << " = " << hltConfig.triggerNames()[j] << endl;
                     theBitCorr.push_back(j);
+                    foundThePathInMenu = true;
                 }
             }
+            if (!(foundThePathInMenu)) theBitCorr.push_back(-1);
         }
         for (unsigned int j=0; j<HLT_triggerObjects.size(); j++)
             moduleLabels.push_back(edm::InputTag(HLT_triggerObjects[j], "", triggerResultsLabel_.process()));
     }
     // nom fill the trigger bits : 
 
-    T_Event_HLT_Ele27_WP80 =         triggerResults->accept(theBitCorr[0]);
-    T_Event_HLT_Ele17_Ele8 =         triggerResults->accept(theBitCorr[1]);
-    T_Event_HLT_Ele17_Ele8_M50_TnP = triggerResults->accept(theBitCorr[2]);
-    T_Event_HLT_Ele20_SC4_M50_TnP =  triggerResults->accept(theBitCorr[3]);
-    T_Event_HLT_Ele22_CaloIdL_CaloIsoVL =         triggerResults->accept(theBitCorr[4]);
-    T_Event_HLT_Ele27_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL =         triggerResults->accept(theBitCorr[5]);
-    T_Event_HLT_Ele30_CaloIdVT_TrkIdT =         triggerResults->accept(theBitCorr[6]);
-    T_Event_HLT_Ele27_WP80_PFMET_MT50 =         triggerResults->accept(theBitCorr[7]);
-    T_Event_HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFNoPUJet30 =         triggerResults->accept(theBitCorr[8]);
-    T_Event_HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL     =         triggerResults->accept(theBitCorr[9]);
-    T_Event_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL =         triggerResults->accept(theBitCorr[10]);
-    T_Event_HLT_Mu17_Mu8 =         triggerResults->accept(theBitCorr[11]);
-    T_Event_HLT_Mu17_TkMu8 =         triggerResults->accept(theBitCorr[12]);
-    T_Event_HLT_Mu17 =         triggerResults->accept(theBitCorr[13]);
-    T_Event_HLT_Mu8 =         triggerResults->accept(theBitCorr[14]);
-    T_Event_HLT_Mu8_Ele17 =         triggerResults->accept(theBitCorr[15]);
-    T_Event_HLT_Ele8_Mu17 =         triggerResults->accept(theBitCorr[16]);
-    T_Event_HLT_IsoMu24 =         triggerResults->accept(theBitCorr[17]);
-    T_Event_HLT_IsoMu24_2p1 =         triggerResults->accept(theBitCorr[18]);
+    T_Event_HLT_Ele27_WP80 = (theBitCorr[0]==-1) ? -1 : triggerResults->accept(theBitCorr[0]);
+    T_Event_HLT_Ele17_Ele8 = (theBitCorr[1]==-1) ? -1 : triggerResults->accept(theBitCorr[1]);
+    T_Event_HLT_Ele17_Ele8_M50_TnP = (theBitCorr[2]==-1) ? -1 : triggerResults->accept(theBitCorr[2]);
+    T_Event_HLT_Ele20_SC4_M50_TnP = (theBitCorr[3]==-1) ? -1 : triggerResults->accept(theBitCorr[3]);
+    T_Event_HLT_Ele22_CaloIdL_CaloIsoVL = (theBitCorr[4]==-1) ? -1 : triggerResults->accept(theBitCorr[4]);
+    T_Event_HLT_Ele27_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL = (theBitCorr[5]==-1) ? -1 : triggerResults->accept(theBitCorr[5]);
+    T_Event_HLT_Ele30_CaloIdVT_TrkIdT = (theBitCorr[6]==-1) ? -1 : triggerResults->accept(theBitCorr[6]);
+    T_Event_HLT_Ele27_WP80_PFMET_MT50 = (theBitCorr[7]==-1) ? -1 : triggerResults->accept(theBitCorr[7]);
+    T_Event_HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFNoPUJet30 = (theBitCorr[8]==-1) ? -1 : triggerResults->accept(theBitCorr[8]);
+    T_Event_HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL     = (theBitCorr[9]==-1) ? -1 : triggerResults->accept(theBitCorr[9]);
+    T_Event_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL = (theBitCorr[10]==-1) ? -1 : triggerResults->accept(theBitCorr[10]);
+    T_Event_HLT_Mu17_Mu8 = (theBitCorr[11]==-1) ? -1 : triggerResults->accept(theBitCorr[11]);
+    T_Event_HLT_Mu17_TkMu8 = (theBitCorr[12]==-1) ? -1 : triggerResults->accept(theBitCorr[12]);
+    T_Event_HLT_Mu17 = (theBitCorr[13]==-1) ? -1 : triggerResults->accept(theBitCorr[13]);
+    T_Event_HLT_Mu8 = (theBitCorr[14]==-1) ? -1 : triggerResults->accept(theBitCorr[14]);
+    T_Event_HLT_Mu8_Ele17 = (theBitCorr[15]==-1) ? -1 : triggerResults->accept(theBitCorr[15]);
+    T_Event_HLT_Ele8_Mu17 = (theBitCorr[16]==-1) ? -1 : triggerResults->accept(theBitCorr[16]);
+    T_Event_HLT_IsoMu24 = (theBitCorr[17]==-1) ? -1 : triggerResults->accept(theBitCorr[17]);
+    T_Event_HLT_IsoMu24_2p1 = (theBitCorr[18]==-1) ? -1 : triggerResults->accept(theBitCorr[18]);
     
     /// fill the in selected Objet the HLT filter we will use for the matching
     trigger::TriggerObjectCollection allTriggerObjects = triggerSummary->getObjects();
