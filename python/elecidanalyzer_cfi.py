@@ -98,7 +98,7 @@ process.theEleIdAnalyzer = cms.EDAnalyzer('ElecIdAnalyzer',
     HLTTriggerSummaryAOD    = cms.InputTag("hltTriggerSummaryAOD", "", "HLT"),
 	photonCollection		= cms.string("photons"),
     outputFile		        = cms.string("elecIDtree.root"),
-    deltaRsavePF            = cms.double(0.6),
+    deltaRsavePF            = cms.double(0.3),
     printDebug              = cms.bool(True)
 )
 
@@ -118,6 +118,13 @@ process.noscraping = cms.EDFilter("FilterOutScraping",
                                   )
 
 
+#keep only events passing the single Electron path
+process.load("HLTrigger.HLTfilters.triggerResultsFilter_cfi")
+process.triggerResultsFilter.triggerConditions = cms.vstring('*')
+process.triggerResultsFilter.l1tResults = ''
+process.triggerResultsFilter.throw = False
+process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "HLT" )
+
 
 
 
@@ -126,14 +133,40 @@ if savePatInTree:
     getattr(process,"pfNoPileUp"+postfix).enable = True
     getattr(process,"pfNoMuon"+postfix).enable = True
     getattr(process,"pfNoElectron"+postfix).enable = True
+    
+    # tau considered as jet
     getattr(process,"pfNoTau"+postfix).enable = False
-    getattr(process,"pfNoJet"+postfix).enable = True
+    getattr(process,"pfNoJet"+postfix).enable = False
 
     # verbose flags for the PF2PAT modules
     getattr(process,"pfNoMuon"+postfix).verbose = False
 
     #ask the analyzer to
     getattr(process,"theEleIdAnalyzer").doPFPATmatching = True
+
+    #all pfMuons considered as isolated
+    process.pfIsolatedMuonsPFlow.combinedIsolationCut = cms.double(9999.)
+    process.pfIsolatedMuonsPFlow.isolationCut = cms.double(9999.)
+    process.pfSelectedMuonsPFlow.cut = cms.string("pt>5")
+
+    #all pfElectrons considered as isolated
+    process.pfIsolatedElectronsPFlow.combinedIsolationCut = cms.double(9999.)
+    process.pfIsolatedElectronsPFlow.isolationCut = cms.double(9999.)
+
+    process.load('EGamma.EGammaAnalysisTools.electronIdMVAProducer_cfi')
+    process.eidMVASequence = cms.Sequence(  process.mvaTrigV0 + process.mvaNonTrigV0 )
+    #Electron ID
+    process.patElectrons.electronIDSources.mvaTrigV0    = cms.InputTag("mvaTrigV0")
+    process.patElectrons.electronIDSources.mvaNonTrigV0 = cms.InputTag("mvaNonTrigV0")
+    process.patPF2PATSequence.replace( process.patElectronsPFlow, process.eidMVASequence * process.patElectronsPFlow )
+
+    #Only one isoCone can be saved in patElectrons... Set to DR0.3 since it is used in both SUSY and TOP
+    process.patElectronsPFlow.isolationValues.pfNeutralHadrons = cms.InputTag( 'elPFIsoValueNeutral03PFIdPFlow' )
+    process.patElectronsPFlow.isolationValues.pfPhotons = cms.InputTag( 'elPFIsoValueGamma03PFIdPFlow' )
+    process.patElectronsPFlow.isolationValues.pfChargedHadrons = cms.InputTag( 'elPFIsoValueCharged03PFIdPFlow' )
+    process.patElectronsPFlow.isolationValues.pfPUChargedHadrons = cms.InputTag( 'elPFIsoValuePU03PFIdPFlow' )
+    process.patElectronsPFlow.isolationValues.pfChargedAll = cms.InputTag("elPFIsoValueChargedAll03PFIdPFlow")
+
 
 if savePatInTree:
     #sequence with PF
