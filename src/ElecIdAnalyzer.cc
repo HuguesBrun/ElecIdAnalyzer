@@ -309,6 +309,9 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     iEvent.getByLabel( "selectedPatElectronsPFlow", electrons );
     
 
+    //read the PAT PF muons
+    edm::Handle<pat::MuonCollection > patMuons;
+    iEvent.getByLabel( "selectedPatMuonsPFlow", patMuons );
 
     //map for MC matching
    // Handle<CandMatchMap> match;
@@ -718,12 +721,14 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Elec_MVAid_Nontrig->push_back(myMVANonTrigMethod);
             T_Elec_Mvaiso->push_back(isomva);
             
+            
+            bool foundAElectronPfMatch = false;
             if (doPFPATmatching_){
             /// look if the electron is a PF one
-                T_Elec_isPF->push_back(0);
                 for( size_t iElectron = 0; iElectron < electrons->size(); ++iElectron ) {
                     float PFdeltaR = deltaR(ele->phi(), electrons->at( iElectron ).phi(), ele->eta(), electrons->at( iElectron ).eta());
                     if (PFdeltaR>0.1) continue;
+                    foundAElectronPfMatch = true;
                     T_Elec_isPF->push_back(1);
                     T_Elec_PFenergy->push_back(electrons->at( iElectron ).energy());
                     T_Elec_PFeta->push_back(electrons->at( iElectron ).eta());
@@ -735,6 +740,8 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     T_Elec_PFmva->push_back(electrons->at( iElectron ).userFloat("mvaTrigV0"));
                 }
             }
+            if (!(foundAElectronPfMatch)) T_Elec_isPF->push_back(0);
+
             
             double theRadIso = GetRadialIsoValue(*ele, inPfCands);
             T_Elec_RadialIso->push_back(theRadIso);
@@ -1047,6 +1054,26 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Muon_HLT_Ele8_Mu17_Mu17Leg->push_back(pass_HLT_Ele8_Mu17_Mu17Leg);
             T_Muon_HLT_IsoMu24->push_back(pass_HLT_IsoMu24);
             T_Muon_HLT_IsoMu24_2p1->push_back(pass_HLT_IsoMu24_2p1);
+            
+            bool foundAMuonPfMatch = false;
+            if (doPFPATmatching_){
+                /// look if the electron is a PF one
+                for( size_t iPFmuon = 0; iPFmuon < patMuons->size(); ++iPFmuon ) {
+                    float PFdeltaR = deltaR(muon->phi(), patMuons->at( iPFmuon ).phi(), muon->eta(), patMuons->at( iPFmuon ).eta());
+                    if (PFdeltaR>0.1) continue;
+                    foundAMuonPfMatch = true;
+                    T_Muon_isPF->push_back(1);
+                    T_Muon_PFenergy->push_back(patMuons->at( iPFmuon ).energy());
+                    T_Muon_PFeta->push_back(patMuons->at( iPFmuon ).eta());
+                    T_Muon_PFphi->push_back(patMuons->at( iPFmuon ).phi());
+                    T_Muon_PFpt->push_back(patMuons->at( iPFmuon ).pt());
+                    T_Muon_PFpx->push_back(patMuons->at( iPFmuon ).px());
+                    T_Muon_PFpy->push_back(patMuons->at( iPFmuon ).py());
+                    T_Muon_PFpz->push_back(patMuons->at( iPFmuon ).pz());
+                }
+            }
+            if (!(foundAMuonPfMatch)) T_Muon_isPF->push_back(0);
+
 
            // if ((pass_HLT_Mu17_TkMu8_Mu17Leg&&muon->pt()<17)) cout << "/////////////////////////////////////////////////////////////////////////////////////// on a matché pass_HLT_Mu17_Mu8_Mu17Leg, le Pt du muon " << muon->pt() << endl;
 		}
@@ -1510,6 +1537,20 @@ ElecIdAnalyzer::beginJob()
         mytree_->Branch("T_Muon_HLT_IsoMu24", "std::vector<int>", &T_Muon_HLT_IsoMu24);
         mytree_->Branch("T_Muon_HLT_IsoMu24_2p1", "std::vector<int>", &T_Muon_HLT_IsoMu24_2p1);
   
+        if (doPFPATmatching_){
+            mytree_->Branch("T_Muon_isPF", "std::vector<int>", &T_Muon_isPF);
+            mytree_->Branch("T_Muon_PFenergy", "std::vector<float>", &T_Muon_PFenergy);
+            mytree_->Branch("T_Muon_PFeta", "std::vector<float>", &T_Muon_PFeta);
+            mytree_->Branch("T_Muon_PFphi", "std::vector<float>", &T_Muon_PFphi);
+            mytree_->Branch("T_Muon_PFpt", "std::vector<float>", &T_Muon_PFpt);
+            mytree_->Branch("T_Muon_PFpx", "std::vector<float>", &T_Muon_PFpx);
+            mytree_->Branch("T_Muon_PFpy", "std::vector<float>", &T_Muon_PFpy);
+            mytree_->Branch("T_Muon_PFpz", "std::vector<float>", &T_Muon_PFpz);
+
+            
+        }
+        
+        
         mytree_->Branch("T_Gen_Muon_Px", "std::vector<float>", &T_Gen_Muon_Px);
         mytree_->Branch("T_Gen_Muon_Py", "std::vector<float>", &T_Gen_Muon_Py);
         mytree_->Branch("T_Gen_Muon_Pz", "std::vector<float>", &T_Gen_Muon_Pz);
@@ -1840,6 +1881,17 @@ ElecIdAnalyzer::beginEvent()
 	T_Muon_HLT_IsoMu24 = new std::vector<int>;
 	T_Muon_HLT_IsoMu24_2p1 = new std::vector<int>;
     
+    T_Muon_isPF = new std::vector<int>;
+    T_Muon_PFenergy = new std::vector<float>;
+    T_Muon_PFeta = new std::vector<float>;
+    T_Muon_PFphi = new std::vector<float>;
+    T_Muon_PFpt = new std::vector<float>;
+    T_Muon_PFpx = new std::vector<float>;
+    T_Muon_PFpy = new std::vector<float>;
+    T_Muon_PFpz = new std::vector<float>;
+
+    
+    
     T_Gen_Muon_Px = new std::vector<float>;
     T_Gen_Muon_Py = new std::vector<float>;
     T_Gen_Muon_Pz = new std::vector<float>;
@@ -2118,6 +2170,15 @@ void ElecIdAnalyzer::endEvent(){
 	delete T_Muon_HLT_Ele8_Mu17_Mu17Leg;
 	delete T_Muon_HLT_IsoMu24;
 	delete T_Muon_HLT_IsoMu24_2p1;
+    
+    delete T_Muon_isPF;
+    delete T_Muon_PFenergy;
+    delete T_Muon_PFeta;
+    delete T_Muon_PFphi;
+    delete T_Muon_PFpt;
+    delete T_Muon_PFpx;
+    delete T_Muon_PFpy;
+    delete T_Muon_PFpz;
     
     delete T_Gen_Muon_Px;
     delete T_Gen_Muon_Py;

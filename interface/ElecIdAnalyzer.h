@@ -109,6 +109,7 @@
 
 
 #include "DataFormats/PatCandidates/interface/Electron.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
 
 
 
@@ -492,6 +493,17 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<int> *T_Muon_HLT_Ele8_Mu17_Mu17Leg;
     std::vector<int> *T_Muon_HLT_IsoMu24;
     std::vector<int> *T_Muon_HLT_IsoMu24_2p1;
+    
+    //match with the PF muon
+    std::vector<int> *T_Muon_isPF;
+    std::vector<float> *T_Muon_PFenergy;
+    std::vector<float> *T_Muon_PFeta;
+    std::vector<float> *T_Muon_PFphi;
+    std::vector<float> *T_Muon_PFpt;
+    std::vector<float> *T_Muon_PFpx;
+    std::vector<float> *T_Muon_PFpy;
+    std::vector<float> *T_Muon_PFpz;
+    
     
     //the muon GEN infos !
     std::vector<float> *T_Gen_Muon_Px;
