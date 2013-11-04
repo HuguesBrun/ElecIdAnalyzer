@@ -737,7 +737,10 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     T_Elec_PFpx->push_back(electrons->at( iElectron ).px());
                     T_Elec_PFpy->push_back(electrons->at( iElectron ).py());
                     T_Elec_PFpz->push_back(electrons->at( iElectron ).pz());
-                    T_Elec_PFmva->push_back(electrons->at( iElectron ).userFloat("mvaTrigV0"));
+                    const string mvaTrigV0 = "mvaTrigV0";
+                    T_Elec_PFmva->push_back(electrons->at( iElectron ).electronID(mvaTrigV0));
+                    const string mvaNonTrigV0 = "mvaNonTrigV0";
+                    T_Elec_PFNonTrigMva->push_back(electrons->at( iElectron ).electronID(mvaNonTrigV0));
                 }
             }
             if (!(foundAElectronPfMatch)) T_Elec_isPF->push_back(0);
@@ -1465,6 +1468,7 @@ ElecIdAnalyzer::beginJob()
         mytree_->Branch("T_Elec_PFpy","std::vector<float>", &T_Elec_PFpy);
         mytree_->Branch("T_Elec_PFpz","std::vector<float>", &T_Elec_PFpz);
         mytree_->Branch("T_Elec_PFmva","std::vector<float>", &T_Elec_PFmva);
+        mytree_->Branch("T_Elec_PFNonTrigMva","std::vector<float>", &T_Elec_PFNonTrigMva);
     }
     
     
@@ -1812,6 +1816,7 @@ ElecIdAnalyzer::beginEvent()
     T_Elec_PFpy = new std::vector<float>;
     T_Elec_PFpz = new std::vector<float>;
     T_Elec_PFmva = new std::vector<float>;
+    T_Elec_PFNonTrigMva = new std::vector<float>;
 
     
 
@@ -2097,6 +2102,7 @@ void ElecIdAnalyzer::endEvent(){
     delete T_Elec_PFpy;
     delete T_Elec_PFpz;
     delete T_Elec_PFmva;
+    delete T_Elec_PFNonTrigMva;
 
   
     

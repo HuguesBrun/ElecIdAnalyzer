@@ -421,6 +421,7 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<float>* T_Elec_PFpy;
     std::vector<float>* T_Elec_PFpz;
     std::vector<float>* T_Elec_PFmva;
+    std::vector<float>* T_Elec_PFNonTrigMva;
 	
 	
 	//now the muons ! 

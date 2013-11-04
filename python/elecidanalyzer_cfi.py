@@ -24,7 +24,7 @@ if savePatInTree:
 
 
 process.GlobalTag.globaltag = 'START53_V7A::All'
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))
 
 
 
@@ -156,9 +156,9 @@ if savePatInTree:
     process.load('EGamma.EGammaAnalysisTools.electronIdMVAProducer_cfi')
     process.eidMVASequence = cms.Sequence(  process.mvaTrigV0 + process.mvaNonTrigV0 )
     #Electron ID
-    process.patElectrons.electronIDSources.mvaTrigV0    = cms.InputTag("mvaTrigV0")
-    process.patElectrons.electronIDSources.mvaNonTrigV0 = cms.InputTag("mvaNonTrigV0")
-    process.patPF2PATSequence.replace( process.patElectronsPFlow, process.eidMVASequence * process.patElectronsPFlow )
+    process.patElectronsPFlow.electronIDSources.mvaTrigV0    = cms.InputTag("mvaTrigV0")
+    process.patElectronsPFlow.electronIDSources.mvaNonTrigV0 = cms.InputTag("mvaNonTrigV0")
+    process.patPF2PATSequencePFlow.replace( process.patElectronsPFlow, process.eidMVASequence * process.patElectronsPFlow)
 
     #Only one isoCone can be saved in patElectrons... Set to DR0.3 since it is used in both SUSY and TOP
     process.patElectronsPFlow.isolationValues.pfNeutralHadrons = cms.InputTag( 'elPFIsoValueNeutral03PFIdPFlow' )
