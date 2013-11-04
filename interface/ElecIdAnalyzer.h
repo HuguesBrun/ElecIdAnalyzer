@@ -170,8 +170,8 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
                                                      const reco::PFCandidateCollection &,
                                                      const reco::GsfElectronCollection &,
                                               const reco::MuonCollection &);
-      virtual void doMCtruth(reco::GsfElectronRef, edm::Handle <reco::GenParticleCollection>, double);
-    virtual void doMCtruthMuons(const reco::Muon*, edm::Handle <reco::GenParticleCollection>, double);
+      virtual void doMCtruth(const pat::Electron*, edm::Handle <reco::GenParticleCollection>, double);
+    virtual void doMCtruthMuons(const pat::Muon*, edm::Handle <reco::GenParticleCollection>, double);
 
       virtual float deltaR(float , float , float , float );
       virtual float deltaPhi(float , float);
@@ -421,6 +421,7 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<float>* T_Elec_PFpy;
     std::vector<float>* T_Elec_PFpz;
     std::vector<float>* T_Elec_PFmva;
+    std::vector<float>* T_Elec_PFNonTrigMva;
 	
 	
 	//now the muons ! 

@@ -602,12 +602,11 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     
     if (doElectrons_){
         // loop on electrons
-        unsigned int n = els_h->size();
+        unsigned int n = electrons->size();
     //    cout << "nb of electrons = " << n << endl;
         for(unsigned int i = 0; i < n; ++i) {
             
-            // get reference to electron
-            reco::GsfElectronRef ele(els_h, i);
+             const pat::Electron* ele = &((*electrons)[i]);
             
             if (isMC_) doMCtruth(ele, genParticles, 0.3);
             
@@ -630,7 +629,7 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
             T_Elec_SC_Et->push_back( ele->superCluster()->energy()/TMath::CosH(ele->superCluster()->eta()));
             T_Elec_SC_Eta->push_back( ele->superCluster()->eta());
-        float etaSC = ele->superCluster()->eta();
+            float etaSC = ele->superCluster()->eta();
 
             T_Elec_sigmaIetaIeta ->push_back( ele->sigmaIetaIeta());
             T_Elec_deltaPhiIn->push_back( ele->deltaPhiSuperClusterTrackAtVtx());
@@ -638,125 +637,37 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Elec_isEcalDriven -> push_back(ele->ecalDrivenSeed());
             T_Elec_HtoE ->push_back(ele->hadronicOverEm());
 
-        T_Elec_dr03TkSumPt->push_back(ele->dr03TkSumPt());
-        T_Elec_dr03EcalSumEt->push_back(ele->dr03EcalRecHitSumEt());
-        T_Elec_dr03HcalSumEt->push_back(ele->dr03HcalTowerSumEt());
+            T_Elec_dr03TkSumPt->push_back(ele->dr03TkSumPt());
+            T_Elec_dr03EcalSumEt->push_back(ele->dr03EcalRecHitSumEt());
+            T_Elec_dr03HcalSumEt->push_back(ele->dr03HcalTowerSumEt());
 
             T_Elec_isEB->push_back(ele->isEB());
             T_Elec_isEE->push_back(ele->isEE());
             
             // conversion rejection variables
-            bool vtxFitConversion = ConversionTools::hasMatchedConversion(*ele, conversions_h, beamSpot.position());
+           // bool vtxFitConversion = ConversionTools::hasMatchedConversion(*ele, conversions_h, beamSpot.position());
             float mHits = ele->gsfTrack()->trackerExpectedHitsInner().numberOfHits(); 
             float missingHist = ele->gsfTrack()->trackerExpectedHitsInner().numberOfLostHits();
-            T_Elec_passConversionVeto->push_back(vtxFitConversion);
+            T_Elec_passConversionVeto->push_back(ele->passConversionVeto());
             T_Elec_nHits->push_back(mHits);
             T_Elec_nLost->push_back(missingHist);
             
-            double iso_ch =  (*(isoVals)[0])[ele];
-            double iso_em = (*(isoVals)[1])[ele];
-            double iso_nh = (*(isoVals)[2])[ele];
-            double iso_chAll = (*(isoVals)[3])[ele];
-            double iso_chPU = (*(isoVals)[4])[ele];
-            double iso_ch04 =  (*(isoVals)[5])[ele];
-            double iso_em04 = (*(isoVals)[6])[ele];
-            double iso_nh04 = (*(isoVals)[7])[ele];
-            double iso_chAll04 = (*(isoVals)[8])[ele];
-            double iso_chPU04 = (*(isoVals)[9])[ele];
-            T_Elec_photonIso->push_back(iso_em);
-            T_Elec_neutralHadronIso->push_back(iso_nh);
-            T_Elec_chargedHadronIso->push_back(iso_ch);
-            T_Elec_allChargedHadronIso->push_back(iso_chAll);
-            T_Elec_puChargedHadronIso->push_back(iso_chPU);
             
+            T_Elec_photonIso->push_back(ele->photonIso());
+            T_Elec_neutralHadronIso->push_back(ele->neutralHadronIso());
+            T_Elec_chargedHadronIso->push_back(ele->chargedHadronIso());
+            T_Elec_puChargedHadronIso->push_back(ele->puChargedHadronIso());
+            
+            /*
             
             T_Elec_photonIso04->push_back(iso_em04);
             T_Elec_neutralHadronIso04->push_back(iso_nh04);
             T_Elec_chargedHadronIso04->push_back(iso_ch04);
             T_Elec_allChargedHadronIso04->push_back(iso_chAll04);
-            T_Elec_puChargedHadronIso04->push_back(iso_chPU04);
+            T_Elec_puChargedHadronIso04->push_back(iso_chPU04);*/
             
             float rhoPlus = std::max(0.0, Rho);
             // effective area for isolation
-            float AEff = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, etaSC, ElectronEffectiveArea::kEleEAData2011);
-            
-            float isoSum04 = iso_ch04 + std::max(iso_em04 + iso_nh04 - rhoPlus * AEff, 0.0); 
-        
-            T_Elec_CombIsoHWW->push_back(isoSum04);  
-            
-            // working points
-            bool veto       = EgammaCutBasedEleId::PassWP(EgammaCutBasedEleId::VETO, ele, conversions_h, beamSpot, vtx_h, iso_ch, iso_em, iso_nh, rhoIso);
-            bool loose      = EgammaCutBasedEleId::PassWP(EgammaCutBasedEleId::LOOSE, ele, conversions_h, beamSpot, vtx_h, iso_ch, iso_em, iso_nh, rhoIso);
-            bool medium     = EgammaCutBasedEleId::PassWP(EgammaCutBasedEleId::MEDIUM, ele, conversions_h, beamSpot, vtx_h, iso_ch, iso_em, iso_nh, rhoIso);
-            bool tight      = EgammaCutBasedEleId::PassWP(EgammaCutBasedEleId::TIGHT, ele, conversions_h, beamSpot, vtx_h, iso_ch, iso_em, iso_nh, rhoIso);
-            
-            // eop/fbrem cuts for extra tight ID
-            bool fbremeopin = EgammaCutBasedEleId::PassEoverPCuts(ele);
-            
-            // cuts to match tight trigger requirements
-            bool trigtight = EgammaCutBasedEleId::PassTriggerCuts(EgammaCutBasedEleId::TRIGGERTIGHT, ele);
-            
-            // for 2011 WP70 trigger
-            bool trigwp70 = EgammaCutBasedEleId::PassTriggerCuts(EgammaCutBasedEleId::TRIGGERWP70, ele);
-            
-            T_Elec_passVeto->push_back(veto);
-            T_Elec_passLoose->push_back(loose);
-            T_Elec_passMedium->push_back(medium);
-            T_Elec_passTight->push_back(tight);
-            T_Elec_passFbremopin->push_back(fbremeopin);
-            T_Elec_passtrigTight->push_back(trigtight);
-            T_Elec_passtrigwp70->push_back(trigwp70);
-            
-            bool isTriggering = trainTrigPresel(*ele);
-            //T_Elec_isTrig->push_back();
-             double myMVANonTrigMethod = myMVANonTrig->mvaValue(*ele,*pv,thebuilder,lazyTools,debugMVAclass);
-            double myMVATrigMethod= myMVATrig->mvaValue(*ele,*pv,thebuilder,lazyTools,debugMVAclass);
-            
-            double isomva = fElectronIsoMVA->mvaValue( *ele, vtx_h->at(0), 
-                                                      inPfCands, Rho, 
-                                                      ElectronEffectiveArea::kEleEAData2011,
-                                                      IdentifiedElectrons, IdentifiedMuons);
-            T_Elec_isTrig->push_back(isTriggering);
-            T_Elec_MVAid_trig->push_back(myMVATrigMethod);
-            T_Elec_MVAid_Nontrig->push_back(myMVANonTrigMethod);
-            T_Elec_Mvaiso->push_back(isomva);
-            
-            
-            bool foundAElectronPfMatch = false;
-            if (doPFPATmatching_){
-            /// look if the electron is a PF one
-                for( size_t iElectron = 0; iElectron < electrons->size(); ++iElectron ) {
-                    float PFdeltaR = deltaR(ele->phi(), electrons->at( iElectron ).phi(), ele->eta(), electrons->at( iElectron ).eta());
-                    if (PFdeltaR>0.1) continue;
-                    foundAElectronPfMatch = true;
-                    T_Elec_isPF->push_back(1);
-                    T_Elec_PFenergy->push_back(electrons->at( iElectron ).energy());
-                    T_Elec_PFeta->push_back(electrons->at( iElectron ).eta());
-                    T_Elec_PFphi->push_back(electrons->at( iElectron ).phi());
-                    T_Elec_PFpt->push_back(electrons->at( iElectron ).pt());
-                    T_Elec_PFpx->push_back(electrons->at( iElectron ).px());
-                    T_Elec_PFpy->push_back(electrons->at( iElectron ).py());
-                    T_Elec_PFpz->push_back(electrons->at( iElectron ).pz());
-                    T_Elec_PFmva->push_back(electrons->at( iElectron ).userFloat("mvaTrigV0"));
-                }
-            }
-            if (!(foundAElectronPfMatch)) T_Elec_isPF->push_back(0);
-
-            
-            double theRadIso = GetRadialIsoValue(*ele, inPfCands);
-            T_Elec_RadialIso->push_back(theRadIso);
-            
-            double theRadIsoVeto = GetRadialIsoValueVeto(*ele, inPfCands);
-            T_Elec_RadialIsoVeto->push_back(theRadIsoVeto);
-            
-            double theRadIsoVetoMore = GetRadialIsoValueVetoMore(*ele, inPfCands, IdentifiedElectrons, IdentifiedMuons);
-            T_Elec_RadialIsoVetoMore->push_back(theRadIsoVetoMore);
-            
-            fillIsoRings(*ele, vtx_h->at(0), 
-            inPfCands, Rho, 
-            ElectronEffectiveArea::kEleEAData2011,
-            IdentifiedElectrons, IdentifiedMuons);
-            
             int pass_Elec_HLT_Elec27_WP80 = 0;
             int pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = 0;
             int pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = 0;
@@ -825,12 +736,11 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Elec_PreShowerOverRaw->push_back(ele->superCluster()->preshowerEnergy() / ele->superCluster()->rawEnergy());
             T_Elec_EcalEnergy->push_back(ele->ecalEnergy());
             T_Elec_TrackPatVtx->push_back(ele->trackMomentumAtVtx().R());
+            const string mvaTrigV0 = "mvaTrigV0";
+            T_Elec_MVAid_trig->push_back(ele->electronID(mvaTrigV0));
             
-            bool isPassingMVA = passMVAcuts((*ele), myMVATrigMethod);
-            T_Elec_passMVA->push_back(isPassingMVA);
-            
-            bool isPassingFO = passFOcuts((*ele), vtx_h->at(0), vtxFitConversion);
-            T_Elec_isFO->push_back(isPassingFO);
+            const string mvaNonTrigV0 = "mvaNonTrigV0";
+            T_Elec_MVAid_Nontrig->push_back(ele->electronID(mvaNonTrigV0));
             
             float fMVAVar_d0;
             if (ele->gsfTrack().isNonnull()) {
@@ -930,12 +840,12 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     }
 	
 	if (doMuons_){
-		int nbMuons = recoMuons->size();
+		int nbMuons = patMuons->size();
 		//cout << "il y a " << nbMuons << " muons " << endl;
 		//loop on the muons in the event 
 		for (int k = 0 ; k < nbMuons ; k++){
 	
-          const reco::Muon* muon = &((*recoMuons)[k]);
+          const pat::Muon* muon = &((*patMuons)[k]);
           //  cout << "le muon : eta=" << muon->eta() << " phi=" << muon->phi() << endl;
             if (isMC_) doMCtruthMuons(muon, genParticles, 0.3);
 
@@ -1465,6 +1375,7 @@ ElecIdAnalyzer::beginJob()
         mytree_->Branch("T_Elec_PFpy","std::vector<float>", &T_Elec_PFpy);
         mytree_->Branch("T_Elec_PFpz","std::vector<float>", &T_Elec_PFpz);
         mytree_->Branch("T_Elec_PFmva","std::vector<float>", &T_Elec_PFmva);
+        mytree_->Branch("T_Elec_PFNonTrigMva","std::vector<float>", &T_Elec_PFNonTrigMva);
     }
     
     
@@ -1812,6 +1723,7 @@ ElecIdAnalyzer::beginEvent()
     T_Elec_PFpy = new std::vector<float>;
     T_Elec_PFpz = new std::vector<float>;
     T_Elec_PFmva = new std::vector<float>;
+    T_Elec_PFNonTrigMva = new std::vector<float>;
 
     
 
@@ -2097,6 +2009,7 @@ void ElecIdAnalyzer::endEvent(){
     delete T_Elec_PFpy;
     delete T_Elec_PFpz;
     delete T_Elec_PFmva;
+    delete T_Elec_PFNonTrigMva;
 
   
     
@@ -2493,7 +2406,7 @@ ElecIdAnalyzer::doMCtruth(reco::GsfElectronRef theElec, edm::Handle <reco::GenPa
 
 
 void 
-ElecIdAnalyzer::doMCtruth(reco::GsfElectronRef theElec, edm::Handle <reco::GenParticleCollection> genParts, double dR)
+ElecIdAnalyzer::doMCtruth(const pat::Electron *theElec, edm::Handle <reco::GenParticleCollection> genParts, double dR)
 {
     int nbOfGen = genParts->size();
     // cout << "electron pt=" << theElec->pt() << " eta=" << theElec->eta() << " phi=" << theElec->phi() << endl;
@@ -2563,7 +2476,7 @@ ElecIdAnalyzer::doMCtruth(reco::GsfElectronRef theElec, edm::Handle <reco::GenPa
 }
 
 void
-ElecIdAnalyzer::doMCtruthMuons(const reco::Muon* theMuon, edm::Handle <reco::GenParticleCollection> genParts, double dR)
+ElecIdAnalyzer::doMCtruthMuons(const pat::Muon* theMuon, edm::Handle <reco::GenParticleCollection> genParts, double dR)
 {
     int nbOfGen = genParts->size();
     float minDiff= 100;
