@@ -583,7 +583,8 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         }
     }
     T_Event_AveNTruePU=truePu/3.;
-    
+    int goodVertexIndex = -999;
+    int nGoodVertex  =   0;
     // loop on the vertices 
     if (vtxs.size() != 0){
         for (size_t i=0; i < vtxs.size(); i++){
@@ -594,7 +595,14 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Vertex_rho->push_back( vtxs[i].position().Rho());
             T_Vertex_ndof->push_back(vtxs[i].ndof());
             T_Vertex_isFake->push_back(vtxs[i].isFake());
-            T_Vertex_tracksSize->push_back(vtxs[i].tracksSize());      
+            T_Vertex_tracksSize->push_back(vtxs[i].tracksSize());
+            if (fabs(vtxs[i].z()) < 24 &&
+                vtxs[i].position().Rho()  <  2 &&
+                vtxs[i].ndof()  >  4 &&
+                !vtxs[i].isFake()) {
+                    nGoodVertex++;
+                    if (nGoodVertex == 1) goodVertexIndex = i;
+            }
         }
     } 
     
@@ -959,16 +967,22 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Muon_Mass->push_back(muon->mass());
             T_Muon_charge->push_back(muon->charge());
             
+           // T_Muon_PFMuonPt->push_back(muon->PfP4().pt());
+            
+            T_Muon_vx->push_back(muon->vx());
+            T_Muon_vy->push_back(muon->vy());
+            T_Muon_vz->push_back(muon->vz());
+            
             T_Muon_numberOfChambers->push_back(muon->numberOfChambers());
             T_Muon_numberOfChambersRPC->push_back(muon->numberOfChambersNoRPC());
             T_Muon_numberOfMatches->push_back(muon->numberOfMatches());
             T_Muon_numberOfMatchedStations->push_back(muon->numberOfMatchedStations());
             bool isMatchTheStation = muon::isGoodMuon(*muon, muon::TMOneStationTight);
             bool isGlobalMuonPT = muon::isGoodMuon(*muon, muon::GlobalMuonPromptTight);
-            bool isGlobalMuonArbitrated = muon::isGoodMuon(*muon, muon::TrackerMuonArbitrated);
+            bool isTrackerMuonArbitrated = muon::isGoodMuon(*muon, muon::TrackerMuonArbitrated);
             T_Muon_TMLastStationTight->push_back(isMatchTheStation);
             T_Muon_IsGlobalMuon_PromptTight->push_back(isGlobalMuonPT);
-            T_Muon_IsTrackerMuonArbitrated->push_back(isGlobalMuonArbitrated);
+            T_Muon_IsTrackerMuonArbitrated->push_back(isTrackerMuonArbitrated);
             
             if (muon->globalTrack().isNull()) T_Muon_globalTrackChi2->push_back(-1); else T_Muon_globalTrackChi2->push_back(muon->globalTrack()->normalizedChi2());
             if (muon->globalTrack().isNull()) T_Muon_validMuonHits->push_back(-1); else T_Muon_validMuonHits->push_back(muon->globalTrack()->hitPattern().numberOfValidMuonHits());
@@ -984,14 +998,14 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 T_Muon_trkNbOfValidTrackeHits->push_back(-1);
             }
             else {
-                T_Muon_trkNbOfTrackerLayers->push_back(muon->muonBestTrack()->hitPattern().trackerLayersWithMeasurement());
-                T_Muon_trkError->push_back(muon->muonBestTrack()->ptError());
-                T_Muon_trkValidPixelHits->push_back(muon->muonBestTrack()->hitPattern().numberOfValidPixelHits());
-                T_Muon_dB->push_back(fabs(muon->muonBestTrack()->dxy(pv->position())));
-                T_Muon_dBstop->push_back(fabs(muon->muonBestTrack()->dxy(pv->position())));
-                T_Muon_dzPV->push_back(fabs(muon->muonBestTrack()->dz(pv->position())));
-                T_Muon_dzstop->push_back(fabs(muon->muonBestTrack()->dz(pv->position())));
-                T_Muon_trkNbOfValidTrackeHits->push_back(muon->muonBestTrack()->hitPattern().numberOfValidTrackerHits());
+                T_Muon_trkNbOfTrackerLayers->push_back(muon->innerTrack()->hitPattern().trackerLayersWithMeasurement());
+                T_Muon_trkError->push_back(muon->innerTrack()->ptError());
+                T_Muon_trkValidPixelHits->push_back(muon->innerTrack()->hitPattern().numberOfValidPixelHits());
+                T_Muon_dB->push_back(fabs(muon->innerTrack()->dxy(pv->position())));
+                T_Muon_dBstop->push_back(fabs(muon->innerTrack()->dxy(pv->position())));
+                T_Muon_dzPV->push_back(fabs(muon->innerTrack()->dz(pv->position())));
+                T_Muon_dzstop->push_back(fabs(muon->innerTrack()->dz(pv->position())));
+                T_Muon_trkNbOfValidTrackeHits->push_back(muon->innerTrack()->hitPattern().numberOfValidTrackerHits());
             }
             T_Muon_isoR03_emEt->push_back(muon->isolationR03().emEt);
             T_Muon_isoR03_hadEt->push_back(muon->isolationR03().hadEt);
@@ -1490,12 +1504,16 @@ ElecIdAnalyzer::beginJob()
         mytree_->Branch("T_Muon_Py", "std::vector<float>", &T_Muon_Py);
         mytree_->Branch("T_Muon_Pz", "std::vector<float>", &T_Muon_Pz);
         mytree_->Branch("T_Muon_Mass", "std::vector<float>", &T_Muon_Mass);
+        mytree_->Branch("T_Muon_vx", "std::vector<float>", &T_Muon_vx);
+        mytree_->Branch("T_Muon_vy", "std::vector<float>", &T_Muon_vy);
+        mytree_->Branch("T_Muon_vz", "std::vector<float>", &T_Muon_vz);
         mytree_->Branch("T_Muon_IsGlobalMuon", "std::vector<bool>", &T_Muon_IsGlobalMuon);
         mytree_->Branch("T_Muon_IsTrackerMuon", "std::vector<bool>", &T_Muon_IsTrackerMuon);
         mytree_->Branch("T_Muon_IsPFMuon", "std::vector<bool>", &T_Muon_IsPFMuon);
         mytree_->Branch("T_Muon_IsCaloMuon", "std::vector<bool>", &T_Muon_IsCaloMuon);
         mytree_->Branch("T_Muon_IsStandAloneMuon", "std::vector<bool>", &T_Muon_IsStandAloneMuon);
         mytree_->Branch("T_Muon_IsMuon", "std::vector<bool>", &T_Muon_IsMuon);
+        mytree_->Branch("T_Muon_PFMuonPt", "std::vector<float>", &T_Muon_PFMuonPt);
         mytree_->Branch("T_Muon_IsGlobalMuon_PromptTight", "std::vector<bool>", &T_Muon_IsGlobalMuon_PromptTight);
         mytree_->Branch("T_Muon_IsTrackerMuonArbitrated", "std::vector<bool>", &T_Muon_IsTrackerMuonArbitrated);
         mytree_->Branch("T_Muon_numberOfChambers", "std::vector<int>", &T_Muon_numberOfChambers);
@@ -1835,9 +1853,14 @@ ElecIdAnalyzer::beginEvent()
 	T_Muon_Py = new std::vector<float>;
 	T_Muon_Pz = new std::vector<float>;
 	T_Muon_Mass = new std::vector<float>;
+	T_Muon_vx = new std::vector<float>;
+	T_Muon_vy = new std::vector<float>;
+	T_Muon_vz = new std::vector<float>;
+    
 	T_Muon_IsGlobalMuon = new std::vector<bool>;
 	T_Muon_IsTrackerMuon = new std::vector<bool>;
 	T_Muon_IsPFMuon = new std::vector<bool>;
+	T_Muon_PFMuonPt = new std::vector<float>;
 	T_Muon_IsCaloMuon = new std::vector<bool>;
 	T_Muon_IsStandAloneMuon = new std::vector<bool>;
 	T_Muon_IsMuon = new std::vector<bool>;
@@ -2126,9 +2149,14 @@ void ElecIdAnalyzer::endEvent(){
 	delete T_Muon_Py;
 	delete T_Muon_Pz;
 	delete T_Muon_Mass;
+	delete T_Muon_vx;
+	delete T_Muon_vy;
+	delete T_Muon_vz;
+    
 	delete T_Muon_IsGlobalMuon;
 	delete T_Muon_IsTrackerMuon;
 	delete T_Muon_IsPFMuon;
+	delete T_Muon_PFMuonPt;
 	delete T_Muon_IsCaloMuon;
 	delete T_Muon_IsStandAloneMuon;
 	delete T_Muon_IsMuon;

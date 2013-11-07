@@ -434,11 +434,17 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
 	std::vector<float>*T_Muon_Py;
 	std::vector<float>*T_Muon_Pz;
 	std::vector<float>*T_Muon_Mass;
+    
+    std::vector<float>*T_Muon_vx;
+    std::vector<float>*T_Muon_vy;
+    std::vector<float>*T_Muon_vz;
+
 
     
 	std::vector<bool> *T_Muon_IsGlobalMuon;
     std::vector<bool> *T_Muon_IsTrackerMuon;
     std::vector<bool> *T_Muon_IsPFMuon;
+    std::vector<float> *T_Muon_PFMuonPt;
     std::vector<bool> *T_Muon_IsCaloMuon;
     std::vector<bool> *T_Muon_IsStandAloneMuon;
     std::vector<bool> *T_Muon_IsMuon;
@@ -455,6 +461,7 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<float> *T_Muon_globalTrackChi2;
     std::vector<int>  *T_Muon_validMuonHits;
     std::vector<float> *T_Muon_trkKink;
+    
     std::vector<int>  *T_Muon_trkNbOfTrackerLayers;
     std::vector<int>  *T_Muon_trkNbOfValidTrackeHits;
     std::vector<int>  *T_Muon_trkValidPixelHits;
