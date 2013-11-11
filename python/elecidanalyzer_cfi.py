@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-savePatInTree=True
+savePatInTree=False
 
 
 process = cms.Process("EX")
@@ -14,8 +14,10 @@ process.load("Configuration.StandardSequences.Reconstruction_cff")
 ## import skeleton process
 
 # load the PAT config
+
+from PhysicsTools.PatAlgos.patTemplate_cfg import *
+
 if savePatInTree:
-    from PhysicsTools.PatAlgos.patTemplate_cfg import *
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
     from PhysicsTools.PatAlgos.tools.pfTools import *
     postfix = "PFlow"
@@ -24,7 +26,7 @@ if savePatInTree:
 
 
 process.GlobalTag.globaltag = 'START53_V7A::All'
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
 
 
 
@@ -173,5 +175,5 @@ if savePatInTree:
     process.p = cms.Path(process.primaryVertexFilter * process.noscraping * process.kt6PFJetsForIsolation * process.pfiso * getattr(process,"patPF2PATSequence"+postfix)* process.theEleIdAnalyzer)
 else:
     #sequence with no PF
-    process.p = cms.Path(process.primaryVertexFilter * process.noscraping * process.kt6PFJetsForIsolation * process.pfiso * process.theEleIdAnalyzer)
+    process.p = cms.Path(process.primaryVertexFilter * process.noscraping * process.kt6PFJetsForIsolation * process.pfiso * process.patDefaultSequence * process.theEleIdAnalyzer)
 

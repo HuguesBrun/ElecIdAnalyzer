@@ -306,12 +306,12 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     
     //read the PAT PF electrons
     edm::Handle<pat::ElectronCollection > electrons;
-    iEvent.getByLabel( "selectedPatElectronsPFlow", electrons );
+    iEvent.getByLabel( "selectedPatElectrons", electrons );
     
 
     //read the PAT PF muons
     edm::Handle<pat::MuonCollection > patMuons;
-    iEvent.getByLabel( "selectedPatMuonsPFlow", patMuons );
+    iEvent.getByLabel( "selectedPatMuons", patMuons );
 
     //map for MC matching
    // Handle<CandMatchMap> match;
@@ -941,12 +941,12 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     }
 	
 	if (doMuons_){
-		int nbMuons = recoMuons->size();
+		int nbMuons = patMuons->size();
 		//cout << "il y a " << nbMuons << " muons " << endl;
 		//loop on the muons in the event 
 		for (int k = 0 ; k < nbMuons ; k++){
 	
-          const reco::Muon* muon = &((*recoMuons)[k]);
+          const pat::Muon* muon = &((*patMuons)[k]);
           //  cout << "le muon : eta=" << muon->eta() << " phi=" << muon->phi() << endl;
             if (isMC_) doMCtruthMuons(muon, genParticles, 0.3);
 
@@ -967,7 +967,7 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Muon_Mass->push_back(muon->mass());
             T_Muon_charge->push_back(muon->charge());
             
-           // T_Muon_PFMuonPt->push_back(muon->PfP4().pt());
+            T_Muon_PFMuonPt->push_back(muon->pfP4().pt());
             
             T_Muon_vx->push_back(muon->vx());
             T_Muon_vy->push_back(muon->vy());
@@ -987,13 +987,13 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             if (muon->globalTrack().isNull()) T_Muon_globalTrackChi2->push_back(-1); else T_Muon_globalTrackChi2->push_back(muon->globalTrack()->normalizedChi2());
             if (muon->globalTrack().isNull()) T_Muon_validMuonHits->push_back(-1); else T_Muon_validMuonHits->push_back(muon->globalTrack()->hitPattern().numberOfValidMuonHits());
             T_Muon_trkKink->push_back(muon->combinedQuality().trkKink);
-            if (muon->muonBestTrack().isNull()) {
+            if (muon->innerTrack().isNull()) {
                 T_Muon_trkNbOfTrackerLayers->push_back(-1);
                 T_Muon_trkError->push_back(-1);
                 T_Muon_dB->push_back(-1);
-                T_Muon_dBstop->push_back(-1);
+                //T_Muon_dBstop->push_back(-1);
                 T_Muon_dzPV->push_back(-1);
-                T_Muon_dzstop->push_back(-1);
+                //T_Muon_dzstop->push_back(-1);
                 T_Muon_trkValidPixelHits->push_back(-1);
                 T_Muon_trkNbOfValidTrackeHits->push_back(-1);
             }
@@ -1002,11 +1002,13 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 T_Muon_trkError->push_back(muon->innerTrack()->ptError());
                 T_Muon_trkValidPixelHits->push_back(muon->innerTrack()->hitPattern().numberOfValidPixelHits());
                 T_Muon_dB->push_back(fabs(muon->innerTrack()->dxy(pv->position())));
-                T_Muon_dBstop->push_back(fabs(muon->innerTrack()->dxy(pv->position())));
+                //T_Muon_dBstop->push_back(fabs(muon->innerTrack()->dxy(pv->position())));
                 T_Muon_dzPV->push_back(fabs(muon->innerTrack()->dz(pv->position())));
-                T_Muon_dzstop->push_back(fabs(muon->innerTrack()->dz(pv->position())));
+                //T_Muon_dzstop->push_back(fabs(muon->innerTrack()->dz(pv->position())));
                 T_Muon_trkNbOfValidTrackeHits->push_back(muon->innerTrack()->hitPattern().numberOfValidTrackerHits());
             }
+            T_Muon_dBstop->push_back(muon->dB());
+            T_Muon_dzstop->push_back(fabs(muon->vz() - vtxs[goodVertexIndex].z()));
             T_Muon_isoR03_emEt->push_back(muon->isolationR03().emEt);
             T_Muon_isoR03_hadEt->push_back(muon->isolationR03().hadEt);
             T_Muon_isoR03_hoEt->push_back(muon->isolationR03().hoEt);
