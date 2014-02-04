@@ -227,7 +227,7 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     // iso deposits
     IsoDepositVals isoVals(isoValInputTags_.size());
     for (size_t j = 0; j < isoValInputTags_.size(); ++j) {
-        iEvent.getByLabel(isoValInputTags_[j], isoVals[j]);
+        //iEvent.getByLabel(isoValInputTags_[j], isoVals[j]);
     }
     
     // conversions
@@ -653,16 +653,16 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             T_Elec_nHits->push_back(mHits);
             T_Elec_nLost->push_back(missingHist);
             
-            double iso_ch =  (*(isoVals)[0])[ele];
-            double iso_em = (*(isoVals)[1])[ele];
-            double iso_nh = (*(isoVals)[2])[ele];
-            double iso_chAll = (*(isoVals)[3])[ele];
-            double iso_chPU = (*(isoVals)[4])[ele];
-            double iso_ch04 =  (*(isoVals)[5])[ele];
-            double iso_em04 = (*(isoVals)[6])[ele];
-            double iso_nh04 = (*(isoVals)[7])[ele];
-            double iso_chAll04 = (*(isoVals)[8])[ele];
-            double iso_chPU04 = (*(isoVals)[9])[ele];
+            double iso_ch = 0;// (*(isoVals)[0])[ele];
+            double iso_em = 0;//(*(isoVals)[1])[ele];
+            double iso_nh = 0;//(*(isoVals)[2])[ele];
+            double iso_chAll = 0;//(*(isoVals)[3])[ele];
+            double iso_chPU = 0;//(*(isoVals)[4])[ele];
+            double iso_ch04 = ele->pfIsolationVariables().chargedHadronIso;// (*(isoVals)[5])[ele];
+            double iso_em04 = ele->pfIsolationVariables().photonIso;//(*(isoVals)[6])[ele];
+            double iso_nh04 = ele->pfIsolationVariables().neutralHadronIso;//(*(isoVals)[7])[ele];
+            double iso_chAll04 = 0;//(*(isoVals)[8])[ele];
+            double iso_chPU04 = 0;//(*(isoVals)[9])[ele];
             T_Elec_photonIso->push_back(iso_em);
             T_Elec_neutralHadronIso->push_back(iso_nh);
             T_Elec_chargedHadronIso->push_back(iso_ch);
@@ -1148,7 +1148,7 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     }
     
     if (doPhotons_){
-        int nbphoton = 0;
+        //int nbphoton = 0;
         for(reco::PhotonCollection::const_iterator aPho = photons->begin(); aPho != photons->end(); aPho++){
             T_Pho_Et->push_back(aPho->et());
             T_Pho_Energy->push_back(aPho->energy());
@@ -2536,10 +2536,10 @@ ElecIdAnalyzer::doMCtruth(reco::GsfElectronRef theElec, edm::Handle <reco::GenPa
     
     if (iteDiff>=0) {
         const reco::GenParticle & theCand = (*genParts)[iteDiff];
-        const reco::Candidate * mom = theCand.mother();
+        //const reco::Candidate * mom = theCand.mother();
         //     cout << "ID =" << theCand.pdgId() << " pt = " << theCand.pt() << " status=" << theCand.status() << endl;
         //   cout << "nb of mother " << theCand.numberOfMothers() << endl;
-        if (theCand.numberOfMothers()>0) mom = theCand.mother();
+        //if (theCand.numberOfMothers()>0) mom = theCand.mother();
         //   cout << "mother id " << mom->pdgId() << endl; 
         T_Gen_Elec_Px->push_back(theCand.px());
         T_Gen_Elec_Py->push_back(theCand.py());
@@ -2605,10 +2605,10 @@ ElecIdAnalyzer::doMCtruthMuons(const reco::Muon* theMuon, edm::Handle <reco::Gen
     
     if (iteDiff>=0) {
         const reco::GenParticle & theCand = (*genParts)[iteDiff];
-        const reco::Candidate * mom = theCand.mother();
+       // const reco::Candidate * mom = theCand.mother();
         //     cout << "ID =" << theCand.pdgId() << " pt = " << theCand.pt() << " status=" << theCand.status() << endl;
        //    cout << "nb of mother " << theCand.numberOfMothers() << endl;
-        if (theCand.numberOfMothers()>0) mom = theCand.mother();
+        //if (theCand.numberOfMothers()>0) mom = theCand.mother();
         //   cout << "mother id " << mom->pdgId() << endl;
         T_Gen_Muon_Px->push_back(theCand.px());
         T_Gen_Muon_Py->push_back(theCand.py());

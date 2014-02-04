@@ -1,6 +1,5 @@
 import FWCore.ParameterSet.Config as cms
 
-savePatInTree=True
 
 
 process = cms.Process("EX")
@@ -10,21 +9,8 @@ process.load('Configuration/StandardSequences/MagneticField_38T_cff')
 process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
 process.load("Configuration.StandardSequences.Reconstruction_cff")
 
-# try to add the PAT PF sequences in the analyser...
-## import skeleton process
-
-# load the PAT config
-if savePatInTree:
-    from PhysicsTools.PatAlgos.patTemplate_cfg import *
-    process.load("PhysicsTools.PatAlgos.patSequences_cff")
-    from PhysicsTools.PatAlgos.tools.pfTools import *
-    postfix = "PFlow"
-    jetAlgo="AK5"
-    usePF2PAT(process,runPF2PAT=True, jetAlgo=jetAlgo, runOnMC=True, postfix=postfix)
-
-
-process.GlobalTag.globaltag = 'START53_V7A::All'
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))
+process.GlobalTag.globaltag = 'POSTLS162_V2::All'
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 
 
 
@@ -42,12 +28,8 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 10
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-#    'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/TTsample/MYCOPY_3_1_1rg.root'),
-                                      'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_1.root',
-                                      'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_2.root',
-                                      'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_3.root',
-                                      'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_4.root',
-                                      'file:/sps/cms/hbrun/CMSSW_5_3_10_forNewSims/src/files/runDepMC/MCDY_runDep_5.root'),
+                                      'file:/sps/cms/hbrun/CMSSW_6_2_5_triggerStudies/src/file/ggToHWW.root'
+    ),
     secondaryFileNames = cms.untracked.vstring(),
     noEventSort = cms.untracked.bool(True),
     duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
@@ -59,15 +41,6 @@ from RecoJets.JetProducers.kt4PFJets_cfi import *
 process.kt6PFJetsForIsolation = kt4PFJets.clone( rParam = 0.6, doRhoFastjet = True )
 process.kt6PFJetsForIsolation.Rho_EtaMax = cms.double(2.5)
 
-#compute the pf iso
-from CommonTools.ParticleFlow.Tools.pfIsolation import setupPFElectronIso, setupPFMuonIso
-process.eleIsoSequence = setupPFElectronIso(process, 'gsfElectrons')
-process.pfiso = cms.Sequence(process.pfParticleSelectionSequence + process.eleIsoSequence)
-
-process.theDiElecFilter = cms.EDFilter('DiElecFilter',
-     electronsInputTag       = cms.InputTag("gsfElectrons")                                       
-)
-                                    
 
 process.theEleIdAnalyzer = cms.EDAnalyzer('ElecIdAnalyzer',
     isMC                        = cms.bool(True),
@@ -128,50 +101,5 @@ process.triggerResultsFilter.hltResults = cms.InputTag( "TriggerResults", "", "H
 
 
 
-if savePatInTree:
-    # top projections in PF2PAT:
-    getattr(process,"pfNoPileUp"+postfix).enable = True
-    getattr(process,"pfNoMuon"+postfix).enable = True
-    getattr(process,"pfNoElectron"+postfix).enable = True
-    
-    # tau considered as jet
-    getattr(process,"pfNoTau"+postfix).enable = False
-    getattr(process,"pfNoJet"+postfix).enable = False
-
-    # verbose flags for the PF2PAT modules
-    getattr(process,"pfNoMuon"+postfix).verbose = False
-
-    #ask the analyzer to
-    getattr(process,"theEleIdAnalyzer").doPFPATmatching = True
-
-    #all pfMuons considered as isolated
-    process.pfIsolatedMuonsPFlow.combinedIsolationCut = cms.double(9999.)
-    process.pfIsolatedMuonsPFlow.isolationCut = cms.double(9999.)
-    process.pfSelectedMuonsPFlow.cut = cms.string("pt>5")
-
-    #all pfElectrons considered as isolated
-    process.pfIsolatedElectronsPFlow.combinedIsolationCut = cms.double(9999.)
-    process.pfIsolatedElectronsPFlow.isolationCut = cms.double(9999.)
-
-    process.load('EGamma.EGammaAnalysisTools.electronIdMVAProducer_cfi')
-    process.eidMVASequence = cms.Sequence(  process.mvaTrigV0 + process.mvaNonTrigV0 )
-    #Electron ID
-    process.patElectronsPFlow.electronIDSources.mvaTrigV0    = cms.InputTag("mvaTrigV0")
-    process.patElectronsPFlow.electronIDSources.mvaNonTrigV0 = cms.InputTag("mvaNonTrigV0")
-    process.patPF2PATSequencePFlow.replace( process.patElectronsPFlow, process.eidMVASequence * process.patElectronsPFlow)
-
-    #Only one isoCone can be saved in patElectrons... Set to DR0.3 since it is used in both SUSY and TOP
-    process.patElectronsPFlow.isolationValues.pfNeutralHadrons = cms.InputTag( 'elPFIsoValueNeutral03PFIdPFlow' )
-    process.patElectronsPFlow.isolationValues.pfPhotons = cms.InputTag( 'elPFIsoValueGamma03PFIdPFlow' )
-    process.patElectronsPFlow.isolationValues.pfChargedHadrons = cms.InputTag( 'elPFIsoValueCharged03PFIdPFlow' )
-    process.patElectronsPFlow.isolationValues.pfPUChargedHadrons = cms.InputTag( 'elPFIsoValuePU03PFIdPFlow' )
-    process.patElectronsPFlow.isolationValues.pfChargedAll = cms.InputTag("elPFIsoValueChargedAll03PFIdPFlow")
-
-
-if savePatInTree:
-    #sequence with PF
-    process.p = cms.Path(process.primaryVertexFilter * process.noscraping * process.kt6PFJetsForIsolation * process.pfiso * getattr(process,"patPF2PATSequence"+postfix)* process.theEleIdAnalyzer)
-else:
-    #sequence with no PF
-    process.p = cms.Path(process.primaryVertexFilter * process.noscraping * process.kt6PFJetsForIsolation * process.pfiso * process.theEleIdAnalyzer)
+process.p = cms.Path(process.primaryVertexFilter * process.noscraping * process.kt6PFJetsForIsolation * process.theEleIdAnalyzer)
 
