@@ -98,6 +98,9 @@ ElecIdAnalyzer::ElecIdAnalyzer(const edm::ParameterSet& iConfig)
     HLT_triggerObjects.push_back("hltL3pfL1DoubleMu10MuOpenL1f0L2pf0L3PreFiltered8");//22
     HLT_triggerObjects.push_back("hltL3fL1sMu10MuOpenL1f0L2f10L3Filtered17");//23
     HLT_triggerObjects.push_back("hltDiMuonGlbFiltered17TrkFiltered8");//24
+    
+    // check all filters for trigger studies purpose !
+    HLT_triggerObjects.push_back("hltDiMuonGlbFiltered17TrkFiltered8");//25
 
     
     
@@ -431,6 +434,7 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             }
             if (!(foundThePathInMenu)) theBitCorr.push_back(-1);
         }
+	std::cout << "size trigger object=" << HLT_triggerObjects.size() << std::endl;
         for (unsigned int j=0; j<HLT_triggerObjects.size(); j++)
             moduleLabels.push_back(edm::InputTag(HLT_triggerObjects[j], "", triggerResultsLabel_.process()));
     }
@@ -2519,11 +2523,11 @@ ElecIdAnalyzer::doMCtruth(reco::GsfElectronRef theElec, edm::Handle <reco::GenPa
         const reco::Candidate * theMother;
         while (hasMother) {
             theMother = theLocalCandidate->mother();
-        //    cout << "mum PDGid = " << theMother->pdgId() << endl;
             theLocalCandidate = theMother;
             hasMother = (theLocalCandidate->numberOfMothers()>0);
             motherID = theMother->pdgId();
-            if ((theMother->pdgId()==23)||(theMother->pdgId()==22)) break;
+//	    cout << "mum PDGid = " << theMother->pdgId() << endl;
+            if ((theMother->pdgId()==25)||(fabs(theMother->pdgId())==15)) break;
         }
       //  cout << "fin " << endl;
    //     float theDiff = fabs(p.pt()-theElec->pt())/p.pt();
@@ -2592,7 +2596,7 @@ ElecIdAnalyzer::doMCtruthMuons(const reco::Muon* theMuon, edm::Handle <reco::Gen
             theLocalCandidate = theMother;
             hasMother = (theLocalCandidate->numberOfMothers()>0);
             motherID = theMother->pdgId();
-            if ((theMother->pdgId()==23)||(theMother->pdgId()==22)) break;
+            if ((theMother->pdgId()==25)||(fabs(theMother->pdgId())==15)) break;
         }
         //  cout << "fin " << endl;
         //     float theDiff = fabs(p.pt()-theElec->pt())/p.pt();
