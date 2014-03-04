@@ -10,7 +10,7 @@ process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
 process.load("Configuration.StandardSequences.Reconstruction_cff")
 
 process.GlobalTag.globaltag = 'POSTLS162_V2::All'
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 
 
 
@@ -18,7 +18,7 @@ process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 
 
 
-process.MessageLogger.cerr.FwkReport.reportEvery = 10
+process.MessageLogger.cerr.FwkReport.reportEvery = 100
 #
 # the MC global Tag : START53_V7A
 # the RERECO of 2012 data (Jan22 reRECO) for run ABCD FT_53_V21_AN6

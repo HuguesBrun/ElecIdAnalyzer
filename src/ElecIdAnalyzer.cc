@@ -71,36 +71,90 @@ ElecIdAnalyzer::ElecIdAnalyzer(const edm::ParameterSet& iConfig)
     
     //electron part :
     HLT_triggerObjects.push_back("hltEle27WP80TrackIsoFilter");//0
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter");//1
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoFilter");//2
-    HLT_triggerObjects.push_back("hltEle17CaloIdVTCaloIsoVTTrkIdTTrkIsoVTEle8PMMassFilter");//3
-    HLT_triggerObjects.push_back("hltEle17CaloIdVTCaloIsoVTTrkIdTTrkIsoVTEle8TrackIsoFilter");//4
-    HLT_triggerObjects.push_back("hltEle20CaloIdVTCaloIsoVTTrkIdTTrkIsoVTSC4PMMassFilter");//5
-    HLT_triggerObjects.push_back("hltEle20CaloIdVTCaloIsoVTTrkIdTTrkIsoVTSC4TrackIsoFilter");//6
-    HLT_triggerObjects.push_back("hltEle17CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//7
-    HLT_triggerObjects.push_back("hltEle8TightIdLooseIsoTrackIsoFilter");//8
+    
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoClusterShapeFilter");//1  //start Higher Pt electrons
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoEcalIsoFilter");//2
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHEFilter");//3
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHcalIsoFilter");//4
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoPixelMatchFilter");//5
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoOneOEMinusOneOPFilter");//6
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDetaFilter");//7
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDphiFilter");//8
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoFilter");//9
+
+    
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoClusterShapeDoubleFilter");//10
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoEcalIsoDoubleFilter");//11
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHEDoubleFilter");//12
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHcalIsoDoubleFilter");//13
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoPixelMatchDoubleFilter");//14
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoOneOEMinusOneOPDoubleFilter");//15
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDetaDoubleFilter");//16
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDphiDoubleFilter");//17
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter");//18
+    
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDZ");//19  DZ filter
+    
+   /* HLT_triggerObjects.push_back("hltEle17CaloIdVTCaloIsoVTTrkIdTTrkIsoVTEle8PMMassFilter");//20
+    HLT_triggerObjects.push_back("hltEle17CaloIdVTCaloIsoVTTrkIdTTrkIsoVTEle8TrackIsoFilter");//21
+    HLT_triggerObjects.push_back("hltEle20CaloIdVTCaloIsoVTTrkIdTTrkIsoVTSC4PMMassFilter");//22
+    HLT_triggerObjects.push_back("hltEle20CaloIdVTCaloIsoVTTrkIdTTrkIsoVTSC4TrackIsoFilter");//23
+    HLT_triggerObjects.push_back("hltEle17CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//24
+    HLT_triggerObjects.push_back("hltEle8TightIdLooseIsoTrackIsoFilter");//25*/
     
     //muon part :
-    HLT_triggerObjects.push_back("hltL3fL1sMu10MuOpenOR3p5L1f0L2f10L3Filtered17");//9
-    HLT_triggerObjects.push_back("hltDiMuonGlbFiltered17TrkFiltered8");//10
-    HLT_triggerObjects.push_back("hltL3pfL1DoubleMu10MuOpenOR3p5L1f0L2pf0L3PreFiltered8");//11
-    HLT_triggerObjects.push_back("hltL3fL1DoubleMu10MuOpenOR3p5L1f0L2f10L3Filtered17");//12
-    HLT_triggerObjects.push_back("hltL3fL1sMu12L3Filtered17");//13
-    HLT_triggerObjects.push_back("hltL3fL1sMu3L3Filtered8");//14
-    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//15
-    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12L3Filtered8");//16
-    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//17
-    HLT_triggerObjects.push_back("hltL1Mu12EG7L3MuFiltered17");//18
-    HLT_triggerObjects.push_back("hltL3crIsoL1sMu16L1f0L2f16QL3f24QL3crIsoRhoFiltered0p15");//19
-    HLT_triggerObjects.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f24QL3crIsoRhoFiltered0p15");//20
-    //muon begin of the year
-    HLT_triggerObjects.push_back("hltL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17");//21
-    HLT_triggerObjects.push_back("hltL3pfL1DoubleMu10MuOpenL1f0L2pf0L3PreFiltered8");//22
-    HLT_triggerObjects.push_back("hltL3fL1sMu10MuOpenL1f0L2f10L3Filtered17");//23
-    HLT_triggerObjects.push_back("hltDiMuonGlbFiltered17TrkFiltered8");//24
+    // Mu17_Mu8
+    HLT_triggerObjects.push_back("hltL1DoubleMu10MuOpenOR3p5L1Filtered0");//20
+    HLT_triggerObjects.push_back("hltL2pfL1DoubleMu10MuOpenOR3p5L1f0L2PreFiltered0");//21
+    HLT_triggerObjects.push_back("hltL2fL1DoubleMu10MuOpenOR3p5L1f0L2Filtered10");//22
+    HLT_triggerObjects.push_back("hltL3pfL1DoubleMu10MuOpenOR3p5L1f0L2pf0L3PreFiltered8");//23
+    HLT_triggerObjects.push_back("hltL3fL1DoubleMu10MuOpenOR3p5L1f0L2f10L3Filtered17");//24
+    HLT_triggerObjects.push_back("hltDiMuonGlb17Glb8DzFiltered0p2");//25
     
-    // check all filters for trigger studies purpose !
-    HLT_triggerObjects.push_back("hltDiMuonGlbFiltered17TrkFiltered8");//25
+    //Mu17TkMu8
+    HLT_triggerObjects.push_back("hltL1sL1DoubleMu10MuOpenORDoubleMu103p5");//26
+    HLT_triggerObjects.push_back("hltL1fL1sDoubleMu10MuOpenOR3p5L1Filtered0");//27
+    HLT_triggerObjects.push_back("hltL2fL1sDoubleMu10MuOpenOR3p5L1f0L2Filtered10");//28
+    HLT_triggerObjects.push_back("hltL3fL1sMu10MuOpenOR3p5L1f0L2f10L3Filtered17");//29
+    HLT_triggerObjects.push_back("hltDiMuonGlbFiltered17TrkFiltered8");//30
+    HLT_triggerObjects.push_back("hltDiMuonGlb17Trk8DzFiltered0p2");//31
+    
+    
+    //Mu17_Ele8
+    HLT_triggerObjects.push_back("hltL1Mu12EG7L1MuFiltered0");//32
+    HLT_triggerObjects.push_back("hltL1Mu12EG7L2MuFiltered0");//33
+    HLT_triggerObjects.push_back("hltL1Mu12EG7L3MuFiltered17");//34
+    
+    
+    HLT_triggerObjects.push_back("hltEG8EtFilterL1Mu12EG7");//35
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLClusterShapeFilter");//36
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLEcalIsoFilter");//37
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLHEFilter");//38
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLHcalIsoFilter");//39
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLPixelMatchFilter");//40
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLOneOEMinusOneOPFilter");//41
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLDetaFilter");//42
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLDphiFilter");//43
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//44
+    
+    
+    //Mu8_Mu17
+    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12");//45
+    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12L1Filtered0");//46
+    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12L2Filtered5");//47
+    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12L3Filtered8");//48
+    HLT_triggerObjects.push_back("hltMu8EG17EtFilter");//49
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTClusterShapeFilter");//50
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLEcalIsoFilter");//51
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLHEFilter");//52
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLHcalIsoFilter");//53
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter");//54
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLOneOEMinusOneOPFilter");//55
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLTrkIdVLDetaFilter");//56
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLTrkIdVLDphiFilter");//57
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//58
+    
+ 
 
     
     
@@ -320,6 +374,10 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    // Handle<CandMatchMap> match;
    // iEvent.getByLabel( "electronsMCmatch", match );
     
+    /*edm::Handle<reco::RecoEcalCandidateIsolationMap> depMap;
+    edm::InputTag isoTag_("kt6PFJets","m");
+    iEvent.getByLabel (isoToken_,depMap);*/
+    
     
     
     reco::Vertex dummy;
@@ -479,7 +537,7 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     }
     
 
-
+    trigger::TriggerObjectCollection hltFilterTest;
     
 
     
@@ -778,21 +836,24 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             
             for (size_t t = 0 ; t < selectedObjects.size() ; t++){
           //    cout << "eta = " << selectedObjects[t].eta() << " phi = " << selectedObjects[t].phi() << "filter = " << HLT_triggerObjects[theHLTcorr[t]] << endl;
+             //  cout << "avant matchng = " << theHLTcorr[t] << endl;
                 float HLTdeltaR = deltaR(ele->phi(), selectedObjects[t].phi(), ele->eta(), selectedObjects[t].eta());
           //  cout << "delta R =" << HLTdeltaR << endl;
                 if (HLTdeltaR < 0.3){
-          //     cout << "coucou on passe = " << theHLTcorr[t] << endl;
+             //  cout << "coucou on passe = " << theHLTcorr[t] << endl;
                     if (theHLTcorr[t] == 0) pass_Elec_HLT_Elec27_WP80 = 1;
-                    if (theHLTcorr[t] == 1) pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = 1; 
-                    if (theHLTcorr[t] == 2) pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = 1; 
-                    if (theHLTcorr[t] == 3) pass_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg = 1; 
+                    if ((theHLTcorr[t]>=1)&&(theHLTcorr[t]<=19)) pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=1)&&(theHLTcorr[t]<=19)) pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = theHLTcorr[t];
+                /*    if (theHLTcorr[t] == 3) pass_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg = 1;
                     if (theHLTcorr[t] == 4) pass_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg = 1; 
                     if (theHLTcorr[t] == 5) pass_Elec_HLT_Ele20_SC4_TnP_SC4Leg = 1; 
                     if (theHLTcorr[t] == 6) pass_Elec_HLT_Ele20_SC4_TnP_Ele20Leg = 1;
                     if (theHLTcorr[t] == 7) pass_Elec_HLT_Ele17_Ele8_Ele8Leg = 1;
-                    if (theHLTcorr[t] == 8) pass_Elec_HLT_Ele17_Ele8_Ele17Leg = 1;
-                    if (theHLTcorr[t] == 15) pass_Elec_HLT_Mu8_Ele17_Ele17Leg = 1;
-                    if (theHLTcorr[t] == 17) pass_Elec_HLT_Ele8_Mu17_Ele8Leg = 1;
+                    if (theHLTcorr[t] == 8) pass_Elec_HLT_Ele17_Ele8_Ele17Leg = 1;*/
+                    if ((theHLTcorr[t]>=45)&&(theHLTcorr[t]<=58)) pass_Elec_HLT_Mu8_Ele17_Ele17Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=32)&&(theHLTcorr[t]<=44)) pass_Elec_HLT_Ele8_Mu17_Ele8Leg  = theHLTcorr[t];
+		    //if (theHLTcorr[t] == 25) cout << "on a  trouve la seed " << endl;
+		   // if (theHLTcorr[t] == 26) cout << "on a  trouve un elect" << endl;
                }
             }
             T_Elec_HLT_Elec27_WP80->push_back(pass_Elec_HLT_Elec27_WP80);
@@ -1038,14 +1099,14 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 //if (HLTdeltaR < 0.3){
                 if ((HLTdeltaR < 0.3)&&(relatDeltaPt<0.5)){
                //     	cout << "coucou on passe = " << theHLTcorr[t] << endl;
-                    if ((theHLTcorr[t] == 9)||(theHLTcorr[t] == 23))  pass_HLT_Mu17_TkMu8_Mu17Leg = 1;
-                    if ((theHLTcorr[t] == 10)||(theHLTcorr[t] == 24)) pass_HLT_Mu17_TkMu8_Mu8Leg = 1;
-                    if ((theHLTcorr[t] == 12)||(theHLTcorr[t] == 21)) pass_HLT_Mu17_Mu8_Mu17Leg = 1;
-                    if ((theHLTcorr[t] == 11)||(theHLTcorr[t] == 22)) pass_HLT_Mu17_Mu8_Mu8Leg = 1;
+                    if ((theHLTcorr[t]>=26)&&(theHLTcorr[t]<=31))  pass_HLT_Mu17_TkMu8_Mu17Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=26)&&(theHLTcorr[t]<=31)) pass_HLT_Mu17_TkMu8_Mu8Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=20)&&(theHLTcorr[t]<=25)) pass_HLT_Mu17_Mu8_Mu17Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=20)&&(theHLTcorr[t]<=25)) pass_HLT_Mu17_Mu8_Mu8Leg = theHLTcorr[t];
                     if (theHLTcorr[t] == 13) pass_HLT_Mu17_Mu17_obj = 1;
                     if (theHLTcorr[t] == 14) pass_HLT_Mu17_Mu8_obj = 1;
-                    if (theHLTcorr[t] == 16) pass_HLT_Mu8_Ele17_Mu8Leg = 1;
-                    if (theHLTcorr[t] == 18) pass_HLT_Ele8_Mu17_Mu17Leg = 1;
+                    if ((theHLTcorr[t]>=45)&&(theHLTcorr[t]<=58)) pass_HLT_Mu8_Ele17_Mu8Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=32)&&(theHLTcorr[t]<=44)) pass_HLT_Ele8_Mu17_Mu17Leg = theHLTcorr[t];
                     if (theHLTcorr[t] == 19) pass_HLT_IsoMu24 = 1;
                     if (theHLTcorr[t] == 20) pass_HLT_IsoMu24_2p1 = 1;
 
