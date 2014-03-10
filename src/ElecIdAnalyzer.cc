@@ -374,11 +374,199 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    // Handle<CandMatchMap> match;
    // iEvent.getByLabel( "electronsMCmatch", match );
     
-    /*edm::Handle<reco::RecoEcalCandidateIsolationMap> depMap;
+    //edm::Handle<edm::Ref<reco::RecoEcalCandidateCollection> > electronFirtFilter;
+/*    edm::Handle<trigger::TriggerFilterObjectWithRefs> electronFirtFilter;
+    edm::InputTag firstFilterTag_("hltEle17TightIdLooseIsoEle8TightIdLooseIsoClusterShapeFilter","","myHLT");*/
+    std::vector<TString> listInputTags;
+    listInputTags.push_back("hltEG17EtFilterDoubleEG137");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoClusterShapeFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoEcalIsoFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHEFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHcalIsoFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoPixelMatchFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoOneOEMinusOneOPFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDetaFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDphiFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoFilter");
+    listInputTags.push_back("hltDoubleEG8EtFilterUnseeded");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoClusterShapeDoubleFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHEDoubleFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHcalIsoDoubleFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoPixelMatchDoubleFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoOneOEMinusOneOPDoubleFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDetaDoubleFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDphiDoubleFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter");
+    listInputTags.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDZ");
+    
+    std::vector<edm::InputTag>  TriggerFiltersInputTags_;
+   // cout << "nb of filters =" << TriggerFiltersInputTags_.size() << endl;
+    
+  /*  for (unsigned int i = 0 ; i < listInputTags.size(), i++){
+        TriggerFiltersInputTags_.push_back(edm::InputTag("hltEG17EtFilterDoubleEG137","","myHLT"));
+    }*/
+    
+    
+    TrigFiltVect hltFilters( listInputTags.size() );
+    for (unsigned int i = 0 ; i <  listInputTags.size() ; i++){
+        cout << "i=" << i << endl;
+        iEvent.getByLabel(edm::InputTag(listInputTags.at(i),"","myHLT"), hltFilters[i]);
+    }
+
+    std::vector<TString> namesOfAssoMap;
+    namesOfAssoMap.push_back("hltL1SeededHLTClusterShape");
+    edm::Handle<recoEcalCandidateMap> clusterShapeMap;
+    if (hltFilters[0].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(0),"","myHLT"),clusterShapeMap);
+
+    namesOfAssoMap.push_back("hltL1SeededPhotonEcalIso");
+    edm::Handle<recoEcalCandidateMap> isoEcalMap;
+    if (hltFilters[1].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(1),"","myHLT"),isoEcalMap);
+
+    namesOfAssoMap.push_back("hltL1SeededPhotonHcalForHE");
+    edm::Handle<recoEcalCandidateMap> isoHEMap;
+    if (hltFilters[2].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(2),"","myHLT"),isoHEMap);
+
+    namesOfAssoMap.push_back("hltL1SeededPhotonHcalIso");
+    edm::Handle<recoEcalCandidateMap> isoHcalMap;
+    if (hltFilters[3].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(3),"","myHLT"),isoHcalMap);
+    
+
+    namesOfAssoMap.push_back("hltL1SeededStartUpElectronPixelSeeds");
+    edm::Handle<reco::ElectronSeedCollection> hltElectronSeed;
+    if (hltFilters[4].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(4),"","myHLT"),hltElectronSeed);
+
+    namesOfAssoMap.push_back("hltPixelMatch3HitElectronsL1Seeded");
+    edm::Handle<reco::ElectronCollection> hltElectronColl;
+    if (hltFilters[5].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(5),"","myHLT"),hltElectronColl);
+    
+    namesOfAssoMap.push_back("hlt3HitElectronL1SeededDetaDphi");
+    edm::Handle<reco::ElectronIsolationMap> hltElectrondPhiMap;
+    if (hltFilters[6].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(6),"Deta","myHLT"),hltElectrondPhiMap);
+    
+    namesOfAssoMap.push_back("hlt3HitElectronL1SeededDetaDphi");
+    edm::Handle<reco::ElectronIsolationMap> hltElectrondEtaMap;
+    if (hltFilters[7].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(7),"Dphi","myHLT"),hltElectrondEtaMap);
+    
+    namesOfAssoMap.push_back("hltL1Seeded3HitElectronTrackIso");
+    edm::Handle<reco::ElectronIsolationMap> hltElectrondTkIsoMap;
+    if (hltFilters[6].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(8),"","myHLT"),hltElectrondTkIsoMap);
+    
+    
+    namesOfAssoMap.push_back("hltActivityPhotonClusterShape");
+    edm::Handle<recoEcalCandidateMap> clusterShapeMapT;
+    if (hltFilters[10].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(9),"","myHLT"),clusterShapeMapT);
+    
+    namesOfAssoMap.push_back("hltActivityPhotonEcalIso");
+    edm::Handle<recoEcalCandidateMap> isoEcalMapT;
+    if (hltFilters[11].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(10),"","myHLT"),isoEcalMapT);
+    
+    namesOfAssoMap.push_back("hltActivityPhotonHcalForHE");
+    edm::Handle<recoEcalCandidateMap> isoHEMapT;
+    if (hltFilters[12].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(11),"","myHLT"),isoHEMapT);
+    
+    namesOfAssoMap.push_back("hltActivityPhotonHcalIso");
+    edm::Handle<recoEcalCandidateMap> isoHcalMapT;
+    if (hltFilters[13].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(12),"","myHLT"),isoHcalMapT);
+    
+    
+    namesOfAssoMap.push_back("hltActivityStartUpElectronPixelSeeds");
+    edm::Handle<reco::ElectronSeedCollection> hltElectronSeedT;
+    if (hltFilters[14].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(13),"","myHLT"),hltElectronSeedT);
+    
+    namesOfAssoMap.push_back("hltPixelMatch3HitElectronsActivity");
+    edm::Handle<reco::ElectronCollection> hltElectronCollT;
+    if (hltFilters[15].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(14),"","myHLT"),hltElectronCollT);
+    
+    namesOfAssoMap.push_back("hlt3HitElectronActivityDetaDphi");
+    edm::Handle<reco::ElectronIsolationMap> hltElectrondPhiMapT;
+    if (hltFilters[16].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(15),"Deta","myHLT"),hltElectrondPhiMapT);
+    
+    namesOfAssoMap.push_back("hlt3HitElectronActivityDetaDphi");
+    edm::Handle<reco::ElectronIsolationMap> hltElectrondEtaMapT;
+    if (hltFilters[17].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(16),"Dphi","myHLT"),hltElectrondEtaMapT);
+    
+    namesOfAssoMap.push_back("hlt3HitElectronActivityTrackIso");
+    edm::Handle<reco::ElectronIsolationMap> hltElectrondTkIsoMapT;
+    if (hltFilters[16].isValid()) iEvent.getByLabel(edm::InputTag(namesOfAssoMap.at(17),"","myHLT"),hltElectrondTkIsoMapT);
+    
+    
+   /* std::vector<TString> listInputTagsMuons;
+    listInputTagsMuons.push_back("hltL1DoubleMu10MuOpenOR3p5L1Filtered0");
+    listInputTagsMuons.push_back("hltL2pfL1DoubleMu10MuOpenOR3p5L1f0L2PreFiltered0");
+    listInputTagsMuons.push_back("hltL2fL1DoubleMu10MuOpenOR3p5L1f0L2Filtered10");
+    listInputTagsMuons.push_back("hltL3pfL1DoubleMu10MuOpenOR3p5L1f0L2pf0L3PreFiltered8");
+    listInputTagsMuons.push_back("hltL3fL1DoubleMu10MuOpenOR3p5L1f0L2f10L3Filtered17");
+    listInputTagsMuons.push_back("hltDiMuonGlb17Glb8DzFiltered0p2");
+
+    
+    Handle<RecoChargedCandidateCollection> allL2Muons;
+    iEvent.getByLabel(edm::InputTag("hltL2MuonCandidates","","myHLT"),allL2Muons);
+    
+    Handle<BeamSpot> beamSpotHandle;
+    iEvent.getByLabel(edm::InputTag("hltOnlineBeamSpot","","myHLT"),beamSpotHandle);
+
+    Handle<RecoChargedCandidateCollection> allL3Muons;
+    iEvent.getByLabel(edm::InputTag("hltL3MuonCandidates","","myHLT"),allL3Muons);*/
+    
+    
+    //edm::InputTag firstFilterTag_("hltEG17EtFilterDoubleEG137","","myHLT");
+//    iEvent.getByLabel (firstFilterTag_,electronFirtFilter);0
+  //  cout << "isValide=" << electronFirtFilter.isValid() << endl;
+    
+    /*if ( electronFirtFilter.isValid()){
+    	std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > recoecalcands;
+    	electronFirtFilter->getObjects(trigger::TriggerCluster, recoecalcands);
+    } `*/
+    
+    //edm::Handle<edm::AssociationMap<edm::OneToValue<vector<reco::RecoEcalCandidate>,float> > > electronEcalMap;
+    //edm::Handle<edm::AssociationMap<edm::OneToValue<vector<reco::RecoEcalCandidate>,float,unsigned int> > > electronEcalMap;
+    //edm::InputTag ecalMapTag_("hltL1SeededPhotonEcalIso","","myHLT");
+    //iEvent.getByLabel (ecalMapTag_,electronEcalMap);
+    //cout << "isValide=" << electronEcalMap.isValid() << endl;
+    
+   /* bool theMapIsValid = electronEcalMap.isValid();
+    //edm::AssociationMap<edm::OneToValue<vector<reco::RecoEcalCandidate>,float,unsigned int> > theIsoMap;
+edm::Ref<reco::RecoEcalCandidateCollection> ref;  
+ if ( electronFirtFilter.isValid()){
+     cout << "coucou" << endl;
+        std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > recoecalcands;
+        //electronFirtFilter->getObjects(trigger::TriggerCluster, recoecalcands); 
+        electronFirtFilter->getObjects(trigger::TriggerPhoton, recoecalcands); 
+    if (theMapIsValid){
+        cout << "c nous ! " << endl;
+	cout << "nb in the vector=" << recoecalcands.size() << endl;
+   	 for (unsigned int i=0; i<recoecalcands.size(); i++) {
+		ref = recoecalcands[i];
+        edm::AssociationMap<edm::OneToValue<vector<reco::RecoEcalCandidate>,float> >::const_iterator mapi = (*electronEcalMap).find( ref );
+		cout << "pt=" << ref->pt() << endl;
+        cout << "iso=" << mapi->val << endl;
+	} 
+   }
+}*/
+    
+   /* edm::Handle<reco::RecoEcalCandidateIsolationMap> depMap;
     edm::InputTag isoTag_("kt6PFJets","m");
     iEvent.getByLabel (isoToken_,depMap);*/
     
     
+ /* if ( electronFirtFilter.isValid()){
+      const std::vector<edm::Ref <reco::RecoEcalCandidate> > *theElectronCand =electronFirtFilter.product();
+      cout << "nb of cands=" << theElectronCand->size() << endl;
+      int nbOfCands = theElectronCand->size();
+   //   if (theMapIsValid){
+	
+   //   }
+      for (int j=0 ; j < nbOfCands ; j++){
+          reco::RecoEcalCandidate theLocalCand = theElectronCand->at(j);
+          cout << "pt=" << theLocalCand.pt() << endl;
+	 if (theMapIsValid){
+//		float theIsoValue = electronEcalMap->find(j);
+//		cout << "isoValue=" << theIsoValue << endl;
+  	 }
+      }
+
+  }*/
+
     
     reco::Vertex dummy;
     const reco::Vertex *pv = &dummy;
@@ -822,6 +1010,458 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             ElectronEffectiveArea::kEleEAData2011,
             IdentifiedElectrons, IdentifiedMuons);
             
+            
+            
+            ///////////////////Try HLT matching
+            
+            int candFilterEtLead = -1;
+            float candValEtLead = -1;
+            float candValSigEta = -1;
+            if (hltFilters[0].isValid()){
+                std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > candsFilterEtLead;
+                edm::Ref<reco::RecoEcalCandidateCollection> ref;
+                hltFilters[0]->getObjects(trigger::TriggerCluster, candsFilterEtLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterEtLead.size() ; trigIte++){
+                    ref = candsFilterEtLead[trigIte];
+                    
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterEtLead[rightIte];
+                    candValEtLead = ref->pt();
+                    if (clusterShapeMap.isValid()){
+                        recoEcalCandidateMap::const_iterator valSigEta = (*clusterShapeMap).find(ref);
+                        candValSigEta = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candfilterEtLead =" << candFilterEtLead << endl;
+            cout << "candValEtLead =" << candValEtLead << endl;
+            cout << "candValSigEta =" << candValSigEta << endl;
+            
+            float candValIsoEcal = -1;
+            if (hltFilters[1].isValid()){
+                std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > candsFilterCSLead;
+                edm::Ref<reco::RecoEcalCandidateCollection> ref;
+                hltFilters[1]->getObjects(trigger::TriggerPhoton, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    if (isoEcalMap.isValid()){
+                        recoEcalCandidateMap::const_iterator valSigEta = (*isoEcalMap).find(ref);
+                        candValIsoEcal = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candValIsoEcal = " << candValIsoEcal << endl;
+            
+
+            float candValIsoHE = -1;
+            if (hltFilters[2].isValid()){
+                std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > candsFilterCSLead;
+                edm::Ref<reco::RecoEcalCandidateCollection> ref;
+                hltFilters[2]->getObjects(trigger::TriggerPhoton, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    if (isoHEMap.isValid()){
+                        recoEcalCandidateMap::const_iterator valSigEta = (*isoHEMap).find(ref);
+                        candValIsoHE = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candValIsoHE = " << candValIsoHE << endl;
+            
+            
+            float candValIsoHcal = -1;
+            if (hltFilters[3].isValid()){
+                std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > candsFilterCSLead;
+                edm::Ref<reco::RecoEcalCandidateCollection> ref;
+                hltFilters[3]->getObjects(trigger::TriggerPhoton, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    if (isoHcalMap.isValid()){
+                        recoEcalCandidateMap::const_iterator valSigEta = (*isoHcalMap).find(ref);
+                        candValIsoHcal = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candValIsoHcal = " << candValIsoHcal << endl;
+            
+            
+            float candValnbPixMatches = -1;
+            if (hltFilters[4].isValid()){
+                std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > candsFilterCSLead;
+                edm::Ref<reco::RecoEcalCandidateCollection> ref;
+                hltFilters[4]->getObjects(trigger::TriggerPhoton, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    reco::SuperClusterRef recr2 = ref->superCluster();
+                    if (hltElectronSeed.isValid()){
+                        int nmatch = 0;
+                        for(reco::ElectronSeedCollection::const_iterator it = hltElectronSeed->begin(); it != hltElectronSeed->end(); it++){
+                            edm::RefToBase<reco::CaloCluster> caloCluster = it->caloCluster() ;
+                            reco::SuperClusterRef scRef = caloCluster.castTo<reco::SuperClusterRef>() ;
+                            // std::cout<<"BB ref, e, eta, phi"<<&(*scRef)<<" "<<scRef->energy()<<" "<<scRef->eta()<<" "<<scRef->phi()<<std::endl;
+                            if(&(*recr2) ==  &(*scRef)) {
+                                    nmatch++;
+                            }
+                        }
+                        candValnbPixMatches = nmatch;
+                    }
+                }
+            }
+            cout << "candValnbPixMatches = " << candValnbPixMatches << endl;
+            
+            
+            float candValEoP = -1;
+            if (hltFilters[5].isValid()){
+                std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > candsFilterCSLead;
+                edm::Ref<reco::RecoEcalCandidateCollection> ref;
+                hltFilters[5]->getObjects(trigger::TriggerCluster, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    reco::SuperClusterRef recr2 = ref->superCluster();
+                    if (hltElectronColl.isValid()){
+                        for(reco::ElectronCollection::const_iterator iElectron = hltElectronColl->begin(); iElectron != hltElectronColl->end(); iElectron++){
+                            reco::ElectronRef electronref(reco::ElectronRef(hltElectronColl,iElectron - hltElectronColl->begin()));
+                            const reco::SuperClusterRef theClus = electronref->superCluster();
+                            if(&(*recr2) ==  &(*theClus)) {
+                                const math::XYZVector trackMom =  electronref->track()->momentum();
+                                if( trackMom.R() != 0) candValEoP = fabs((1/electronref->superCluster()->energy()) - (1/trackMom.R()));
+                            }
+                        }
+                    }
+                }
+            }
+            cout << "candValEoP = " << candValEoP << endl;
+            
+            
+            float candValdPhi = -1;
+            if (hltFilters[6].isValid()){
+                std::vector<edm::Ref<reco::ElectronCollection> > candsFilterCSLead;
+                edm::Ref<reco::ElectronCollection> ref;
+                hltFilters[6]->getObjects(trigger::TriggerElectron, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    if (hltElectrondPhiMap.isValid()){
+                        reco::ElectronIsolationMap::const_iterator valSigEta = (*hltElectrondPhiMap).find(ref);
+                        candValdPhi = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candValdPhi = " << candValdPhi << endl;
+            
+            
+            float candValdEta = -1;
+            if (hltFilters[7].isValid()){
+                std::vector<edm::Ref<reco::ElectronCollection> > candsFilterCSLead;
+                edm::Ref<reco::ElectronCollection> ref;
+                hltFilters[7]->getObjects(trigger::TriggerElectron, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    if (hltElectrondEtaMap.isValid()){
+                        reco::ElectronIsolationMap::const_iterator valSigEta = (*hltElectrondEtaMap).find(ref);
+                        candValdEta = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candValdEta = " << candValdEta << endl;
+            
+            float candValTkIso = -1;
+            float candValvZ = -1;
+            if (hltFilters[6].isValid()){
+                std::vector<edm::Ref<reco::ElectronCollection> > candsFilterCSLead;
+                edm::Ref<reco::ElectronCollection> ref;
+                hltFilters[6]->getObjects(trigger::TriggerElectron, candsFilterCSLead);
+
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    candValvZ = ref->vz();
+                    if (hltElectrondTkIsoMap.isValid()){
+                        reco::ElectronIsolationMap::const_iterator valSigEta = (*hltElectrondTkIsoMap).find(ref);
+                        candValTkIso = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candValTkIso = " << candValTkIso << endl;
+            cout << "candValvZ = " << candValvZ << endl;
+            
+            int candFilterEtLeadT = -1;
+            float candValEtLeadT = -1;
+            float candValSigEtaT = -1;
+            if (hltFilters[10].isValid()){
+                std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > candsFilterEtLead;
+                edm::Ref<reco::RecoEcalCandidateCollection> ref;
+                hltFilters[10]->getObjects(trigger::TriggerCluster, candsFilterEtLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterEtLead.size() ; trigIte++){
+                    ref = candsFilterEtLead[trigIte];
+                    
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterEtLead[rightIte];
+                    candValEtLeadT = ref->pt();
+                    if (clusterShapeMapT.isValid()){
+                        recoEcalCandidateMap::const_iterator valSigEta = (*clusterShapeMapT).find(ref);
+                        candValSigEtaT = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candfilterEtLead =" << candFilterEtLeadT << endl;
+            cout << "candValEtLead =" << candValEtLeadT << endl;
+            cout << "candValSigEta =" << candValSigEtaT << endl;
+            
+            float candValIsoEcalT = -1;
+            if (hltFilters[11].isValid()){
+                std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > candsFilterCSLead;
+                edm::Ref<reco::RecoEcalCandidateCollection> ref;
+                hltFilters[11]->getObjects(trigger::TriggerPhoton, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    if (isoEcalMapT.isValid()){
+                        recoEcalCandidateMap::const_iterator valSigEta = (*isoEcalMapT).find(ref);
+                        candValIsoEcalT = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candValIsoEcal  = " << candValIsoEcalT << endl;
+            
+            
+            float candValIsoHET = -1;
+            if (hltFilters[12].isValid()){
+                std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > candsFilterCSLead;
+                edm::Ref<reco::RecoEcalCandidateCollection> ref;
+                hltFilters[12]->getObjects(trigger::TriggerPhoton, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    if (isoHEMapT.isValid()){
+                        recoEcalCandidateMap::const_iterator valSigEta = (*isoHEMapT).find(ref);
+                        candValIsoHET = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candValIsoHE T = " << candValIsoHET << endl;
+            
+            
+            float candValIsoHcalT = -1;
+            if (hltFilters[13].isValid()){
+                std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > candsFilterCSLead;
+                edm::Ref<reco::RecoEcalCandidateCollection> ref;
+                hltFilters[13]->getObjects(trigger::TriggerPhoton, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    if (isoHcalMapT.isValid()){
+                        recoEcalCandidateMap::const_iterator valSigEta = (*isoHcalMapT).find(ref);
+                        candValIsoHcalT = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candValIsoHcal T  = " << candValIsoHcalT << endl;
+            
+            
+            float candValnbPixMatchesT = -1;
+            if (hltFilters[14].isValid()){
+                std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > candsFilterCSLead;
+                edm::Ref<reco::RecoEcalCandidateCollection> ref;
+                hltFilters[14]->getObjects(trigger::TriggerPhoton, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    reco::SuperClusterRef recr2 = ref->superCluster();
+                    if (hltElectronSeedT.isValid()){
+                        int nmatch = 0;
+                        for(reco::ElectronSeedCollection::const_iterator it = hltElectronSeedT->begin(); it != hltElectronSeedT->end(); it++){
+                            edm::RefToBase<reco::CaloCluster> caloCluster = it->caloCluster() ;
+                            reco::SuperClusterRef scRef = caloCluster.castTo<reco::SuperClusterRef>() ;
+                            // std::cout<<"BB ref, e, eta, phi"<<&(*scRef)<<" "<<scRef->energy()<<" "<<scRef->eta()<<" "<<scRef->phi()<<std::endl;
+                            if(&(*recr2) ==  &(*scRef)) {
+                                nmatch++;
+                            }
+                        }
+                        candValnbPixMatchesT = nmatch;
+                    }
+                }
+            }
+            cout << "candValnbPixMatches T  = " << candValnbPixMatchesT << endl;
+            
+            
+            float candValEoPT = -1;
+            if (hltFilters[15].isValid()){
+                std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > candsFilterCSLead;
+                edm::Ref<reco::RecoEcalCandidateCollection> ref;
+                hltFilters[15]->getObjects(trigger::TriggerCluster, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    reco::SuperClusterRef recr2 = ref->superCluster();
+                    if (hltElectronCollT.isValid()){
+                        for(reco::ElectronCollection::const_iterator iElectron = hltElectronCollT->begin(); iElectron != hltElectronCollT->end(); iElectron++){
+                            reco::ElectronRef electronref(reco::ElectronRef(hltElectronCollT,iElectron - hltElectronCollT->begin()));
+                            const reco::SuperClusterRef theClus = electronref->superCluster();
+                            if(&(*recr2) ==  &(*theClus)) {
+                                const math::XYZVector trackMom =  electronref->track()->momentum();
+                                if( trackMom.R() != 0) candValEoPT = fabs((1/electronref->superCluster()->energy()) - (1/trackMom.R()));
+                            }
+                        }
+                    }
+                }
+            }
+            cout << "candValEoP T  = " << candValEoPT << endl;
+            
+            
+            float candValdPhiT = -1;
+            if (hltFilters[16].isValid()){
+                std::vector<edm::Ref<reco::ElectronCollection> > candsFilterCSLead;
+                edm::Ref<reco::ElectronCollection> ref;
+                hltFilters[16]->getObjects(trigger::TriggerElectron, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    if (hltElectrondPhiMapT.isValid()){
+                        reco::ElectronIsolationMap::const_iterator valSigEta = (*hltElectrondPhiMapT).find(ref);
+                        candValdPhiT = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candValdPhiT = " << candValdPhiT << endl;
+            
+            
+            float candValdEtaT = -1;
+            if (hltFilters[7].isValid()){
+                std::vector<edm::Ref<reco::ElectronCollection> > candsFilterCSLead;
+                edm::Ref<reco::ElectronCollection> ref;
+                hltFilters[7]->getObjects(trigger::TriggerElectron, candsFilterCSLead);
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    if (hltElectrondEtaMapT.isValid()){
+                        reco::ElectronIsolationMap::const_iterator valSigEta = (*hltElectrondEtaMapT).find(ref);
+                        candValdEta = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candValdEtaT = " << candValdEtaT << endl;
+            
+            float candValTkIsoT = -1;
+            float candValvzT = -1;
+            if (hltFilters[16].isValid()){
+                std::vector<edm::Ref<reco::ElectronCollection> > candsFilterCSLead;
+                edm::Ref<reco::ElectronCollection> ref;
+                hltFilters[16]->getObjects(trigger::TriggerElectron, candsFilterCSLead);
+                
+                float rightIte = -1;
+                for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
+                    ref = candsFilterCSLead[trigIte];
+                    float HLTdeltaR = deltaR(ele->phi(), ref->phi(), ele->eta(), ref->eta());
+                    if (HLTdeltaR<0.3) rightIte = trigIte;
+                }
+                if (rightIte>=0){
+                    ref = candsFilterCSLead[rightIte];
+                    candValvzT = ref->vz();
+                    if (hltElectrondTkIsoMapT.isValid()){
+                        reco::ElectronIsolationMap::const_iterator valSigEta = (*hltElectrondTkIsoMapT).find(ref);
+                        candValTkIsoT = valSigEta->val;
+                    }
+                }
+            }
+            cout << "candValTkIsoT = " << candValTkIsoT << endl;
+            cout << "candValvzT = " << candValvzT << endl;
+            
             int pass_Elec_HLT_Elec27_WP80 = 0;
             int pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = 0;
             int pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = 0;
@@ -840,7 +1480,7 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 float HLTdeltaR = deltaR(ele->phi(), selectedObjects[t].phi(), ele->eta(), selectedObjects[t].eta());
           //  cout << "delta R =" << HLTdeltaR << endl;
                 if (HLTdeltaR < 0.3){
-             //  cout << "coucou on passe = " << theHLTcorr[t] << endl;
+                    cout << "coucou on passe = " << theHLTcorr[t] << endl;
                     if (theHLTcorr[t] == 0) pass_Elec_HLT_Elec27_WP80 = 1;
                     if ((theHLTcorr[t]>=1)&&(theHLTcorr[t]<=19)) pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = theHLTcorr[t];
                     if ((theHLTcorr[t]>=1)&&(theHLTcorr[t]<=19)) pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = theHLTcorr[t];
@@ -1076,6 +1716,72 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             
             float theMVAvalue = PFisolationMVA(muon,  inPfCands, pv, T_Event_Rho);
             T_Muon_isoRingsMVA->push_back(theMVAvalue);
+            
+            /*cout << "reco muon= " << muon->pt() << endl;
+           // cout << "valid? " << allL2Muons.isValid() < endl;
+            float muonL2eta = -1;
+            float muonL2pt = -1;
+            float muonL2nStations = -1;
+            float muonL2nCSCwithHits = -1;
+            float muonL2nDTwithHits = -1;
+            float muonL2Dxy = -1;
+            float muonL2dz = -1;
+            float muonL2absPar0 = -1;
+            float muonL2muonError0 = -1;
+           if (allL2Muons.isValid()){
+             //   RecoChargedCandidateCollection::const_iterator goodcand;
+                for(RecoChargedCandidateCollection::const_iterator cand=allL2Muons->begin(); cand!=allL2Muons->end(); cand++){
+                    TrackRef mu = cand->get<TrackRef>();
+                    float HLTdeltaR = deltaR(muon->phi(), mu->phi(), muon->eta(), mu->eta());
+                    if (HLTdeltaR<0.3) {
+                        muonL2eta = mu->eta();
+                        muonL2pt = mu->pt();
+                        muonL2nStations = mu->hitPattern().muonStationsWithAnyHits();
+                        muonL2nCSCwithHits = mu->hitPattern().dtStationsWithAnyHits();
+                        muonL2nDTwithHits = mu->hitPattern().cscStationsWithAnyHits();
+                        if (beamSpotHandle.isValid()){
+                            BeamSpot::Point beamSpot = beamSpotHandle->position();
+                            muonL2Dxy = std::abs(mu->dxy(beamSpot));
+                            muonL2dz = std::abs(mu->dz(beamSpot));
+                        }
+                        muonL2absPar0 = std::abs(mu->parameter(0));
+                        muonL2muonError0 = mu->error(0);
+                    }
+                }
+             
+            }
+            cout << "muonL2eta=" << muonL2eta << endl;
+            cout << "muonL2pt=" << muonL2pt << endl;
+            cout << "muonL2nStations=" << muonL2nStations << endl;
+            cout << "muonL2nCSCwithHits=" << muonL2nCSCwithHits << endl;
+            cout << "muonL2nDTwithHits=" << muonL2nDTwithHits << endl;
+            cout << "muonL2Dxy=" << muonL2Dxy << endl;
+            cout << "muonL2dz=" << muonL2dz << endl;
+            cout << "muonL2absPar0=" << muonL2absPar0 << endl;
+            cout << "muonL2muonError0=" << muonL2muonError0 << endl;
+            */
+            
+            
+           /* float muonL3eta = -1;
+            float muonL3pt = -1;
+            float muonL3nStations = -1;
+            float muonL3nCSCwithHits = -1;
+            float muonL3nDTwithHits = -1;
+            float muonL3Dxy = -1;
+            float muonL3dz = -1;
+            float muonL3absPar0 = -1;
+            float muonL3muonError0 = -1;*/
+           /* if (allL3Muons.isValid()){
+                    for(RecoChargedCandidateCollection::const_iterator cand=allL3Muons->begin(); cand!=allL3Muons->end(); cand++){
+                        TrackRef mu = cand->get<TrackRef>();
+                        float HLTdeltaR = deltaR(muon->phi(), mu->phi(), muon->eta(), mu->eta());
+                        if (HLTdeltaR<0.3) {
+                            cout << "mu pt=" << mu->pt() << " eta=" << mu->eta() << endl;
+                            
+                        }
+                    }
+                
+            }*/
             
             /// now do HLT matching for muons
             int pass_HLT_Mu17_TkMu8_Mu17Leg = 0;
@@ -1523,6 +2229,31 @@ ElecIdAnalyzer::beginJob()
     mytree_->Branch("T_Elec_dr03EcalSumEt","std::vector<float>", &T_Elec_dr03EcalSumEt);
     mytree_->Branch("T_Elec_dr03HcalSumEt","std::vector<float>", &T_Elec_dr03HcalSumEt);
     
+    mytree_->Branch("T_ElecTrg_Lead_Pt","std::vector<float>", &T_ElecTrg_Lead_Pt);
+    mytree_->Branch("T_ElecTrg_Lead_sigmaIeta","std::vector<float>", &T_ElecTrg_Lead_sigmaIeta);
+    mytree_->Branch("T_ElecTrg_Lead_isoEcal","std::vector<float>", &T_ElecTrg_Lead_isoEcal);
+    mytree_->Branch("T_ElecTrg_Lead_HoE","std::vector<float>", &T_ElecTrg_Lead_HoE);
+    mytree_->Branch("T_ElecTrg_Lead_isoHcal","std::vector<float>", &T_ElecTrg_Lead_isoHcal);
+    mytree_->Branch("T_ElecTrg_Lead_PixMatch","std::vector<int>", &T_ElecTrg_Lead_PixMatch);
+    mytree_->Branch("T_ElecTrg_Lead_EoP","std::vector<float>", &T_ElecTrg_Lead_EoP);
+    mytree_->Branch("T_ElecTrg_Lead_dPhi","std::vector<float>", &T_ElecTrg_Lead_dPhi);
+    mytree_->Branch("T_ElecTrg_Lead_dEta","std::vector<float>", &T_ElecTrg_Lead_dEta);
+    mytree_->Branch("T_ElecTrg_Lead_isoTrack","std::vector<float>", &T_ElecTrg_Lead_isoTrack);
+    mytree_->Branch("T_ElecTrg_Lead_vz","std::vector<float>", &T_ElecTrg_Lead_vz);
+
+    mytree_->Branch("T_ElecTrg_Trail_Pt","std::vector<float>", &T_ElecTrg_Trail_Pt);
+    mytree_->Branch("T_ElecTrg_Trail_sigmaIeta","std::vector<float>", &T_ElecTrg_Trail_sigmaIeta);
+    mytree_->Branch("T_ElecTrg_Trail_isoEcal","std::vector<float>", &T_ElecTrg_Trail_isoEcal);
+    mytree_->Branch("T_ElecTrg_Trail_HoE","std::vector<float>", &T_ElecTrg_Trail_HoE);
+    mytree_->Branch("T_ElecTrg_Trail_isoHcal","std::vector<float>", &T_ElecTrg_Trail_isoHcal);
+    mytree_->Branch("T_ElecTrg_Trail_PixMatch","std::vector<int>", &T_ElecTrg_Trail_PixMatch);
+    mytree_->Branch("T_ElecTrg_Trail_EoP","std::vector<float>", &T_ElecTrg_Trail_EoP);
+    mytree_->Branch("T_ElecTrg_Trail_dPhi","std::vector<float>", &T_ElecTrg_Trail_dPhi);
+    mytree_->Branch("T_ElecTrg_Trail_dEta","std::vector<float>", &T_ElecTrg_Trail_dEta);
+    mytree_->Branch("T_ElecTrg_Trail_isoTrack","std::vector<float>", &T_ElecTrg_Trail_isoTrack);
+    mytree_->Branch("T_ElecTrg_Trail_vz","std::vector<float>", &T_ElecTrg_Trail_vz);
+
+    
     if (doPFPATmatching_){
         mytree_->Branch("T_Elec_isPF","std::vector<int>", &T_Elec_isPF);
         mytree_->Branch("T_Elec_PFenergy","std::vector<float>", &T_Elec_PFenergy);
@@ -1872,6 +2603,31 @@ ElecIdAnalyzer::beginEvent()
     T_Elec_dr03EcalSumEt = new std::vector<float>;
     T_Elec_dr03HcalSumEt = new std::vector<float>;
     
+    T_ElecTrg_Lead_Pt = new std::vector<float>;
+    T_ElecTrg_Lead_sigmaIeta = new std::vector<float>;
+    T_ElecTrg_Lead_isoEcal = new std::vector<float>;
+    T_ElecTrg_Lead_HoE = new std::vector<float>;
+    T_ElecTrg_Lead_isoHcal = new std::vector<float>;
+    T_ElecTrg_Lead_PixMatch = new std::vector<int>;
+    T_ElecTrg_Lead_EoP = new std::vector<float>;
+    T_ElecTrg_Lead_dPhi = new std::vector<float>;
+    T_ElecTrg_Lead_dEta = new std::vector<float>;
+    T_ElecTrg_Lead_isoTrack = new std::vector<float>;
+    T_ElecTrg_Lead_vz = new std::vector<float>;
+
+    T_ElecTrg_Trail_Pt = new std::vector<float>;
+    T_ElecTrg_Trail_sigmaIeta = new std::vector<float>;
+    T_ElecTrg_Trail_isoEcal = new std::vector<float>;
+    T_ElecTrg_Trail_HoE = new std::vector<float>;
+    T_ElecTrg_Trail_isoHcal = new std::vector<float>;
+    T_ElecTrg_Trail_PixMatch = new std::vector<int>;
+    T_ElecTrg_Trail_EoP = new std::vector<float>;
+    T_ElecTrg_Trail_dPhi = new std::vector<float>;
+    T_ElecTrg_Trail_dEta = new std::vector<float>;
+    T_ElecTrg_Trail_isoTrack = new std::vector<float>;
+    T_ElecTrg_Trail_vz = new std::vector<float>;
+    
+    
     T_Elec_isPF = new std::vector<int>;
     T_Elec_PFenergy = new std::vector<float>;
     T_Elec_PFeta = new std::vector<float>;
@@ -2101,6 +2857,31 @@ void ElecIdAnalyzer::endEvent(){
     delete T_Elec_RadialIso;
     delete T_Elec_RadialIsoVeto;
     delete T_Elec_RadialIsoVetoMore;
+    
+    
+    delete T_ElecTrg_Lead_Pt;
+    delete T_ElecTrg_Lead_sigmaIeta;
+    delete T_ElecTrg_Lead_isoEcal;
+    delete T_ElecTrg_Lead_HoE;
+    delete T_ElecTrg_Lead_isoHcal;
+    delete T_ElecTrg_Lead_PixMatch;
+    delete T_ElecTrg_Lead_EoP;
+    delete T_ElecTrg_Lead_dPhi;
+    delete T_ElecTrg_Lead_dEta;
+    delete T_ElecTrg_Lead_isoTrack;
+    delete T_ElecTrg_Lead_vz;
+    
+    delete T_ElecTrg_Trail_Pt;
+    delete T_ElecTrg_Trail_sigmaIeta;
+    delete T_ElecTrg_Trail_isoEcal;
+    delete T_ElecTrg_Trail_HoE;
+    delete T_ElecTrg_Trail_isoHcal;
+    delete T_ElecTrg_Trail_PixMatch;
+    delete T_ElecTrg_Trail_EoP;
+    delete T_ElecTrg_Trail_dPhi;
+    delete T_ElecTrg_Trail_dEta;
+    delete T_ElecTrg_Trail_isoTrack;
+    delete T_ElecTrg_Trail_vz;
     
     delete T_Elec_ChargedIso_DR0p0To0p1;
     delete T_Elec_ChargedIso_DR0p1To0p2;

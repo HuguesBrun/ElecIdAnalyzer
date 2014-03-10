@@ -1,4 +1,8 @@
+
 import FWCore.ParameterSet.Config as cms
+
+
+saveRECOoutput = False
 
 process = cms.Process('myHLT')
 
@@ -77,7 +81,7 @@ process.noscraping = cms.EDFilter("FilterOutScraping",
 process.MessageLogger.cerr.FwkReport.reportEvery = 1
 
 process.maxEvents = cms.untracked.PSet(
-                                       input = cms.untracked.int32(500)
+                                       input = cms.untracked.int32(20)
                                        )
 
 
@@ -131,10 +135,11 @@ process.pInSchedule = cms.Schedule([process.p,process.pAnalyzer])
 
 process.schedule = cms.Schedule(process.HLTSchedule)
 process.schedule.extend(process.pInSchedule)
-#process.schedule.extend(process.HLTSchedule)
-process.endjob_step = cms.EndPath(process.endOfProcess)
-process.RECOSIMoutput_step = cms.EndPath(process.RECOSIMoutput)
-process.schedule.extend([process.endjob_step,process.RECOSIMoutput_step])
+
+if saveRECOoutput:
+    process.endjob_step = cms.EndPath(process.endOfProcess)
+    process.RECOSIMoutput_step = cms.EndPath(process.RECOSIMoutput)
+    process.schedule.extend([process.endjob_step,process.RECOSIMoutput_step])
 
 # customisation of the process.
 

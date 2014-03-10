@@ -38,6 +38,9 @@
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 
+#include "DataFormats/EgammaCandidates/interface/Electron.h"
+#include "DataFormats/EgammaCandidates/interface/ElectronFwd.h"
+
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 #include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
 #include "DataFormats/EgammaCandidates/interface/Conversion.h"
@@ -111,7 +114,12 @@
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 
+#include "DataFormats/RecoCandidate/interface/RecoEcalCandidate.h"
+#include "DataFormats/RecoCandidate/interface/RecoEcalCandidateFwd.h"
 
+#include "DataFormats/EgammaCandidates/interface/ElectronIsolationAssociation.h"
+#include "DataFormats/RecoCandidate/interface/RecoChargedCandidateFwd.h"
+#include "DataFormats/RecoCandidate/interface/RecoChargedCandidate.h"
 
 
 // root stuff !
@@ -235,6 +243,8 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
 
 
     HLTConfigProvider hltConfig;
+    
+    bool doFullHLTMatching_ = true;
     
 
     
@@ -410,6 +420,31 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<float>* T_Elec_dZ;
     std::vector<bool>* T_Elec_isFO;
     std::vector<float>* T_Elec_CombIsoHWW;
+    
+    //trigger param
+    std::vector<float>* T_ElecTrg_Lead_Pt;
+    std::vector<float>* T_ElecTrg_Lead_sigmaIeta;
+    std::vector<float>* T_ElecTrg_Lead_isoEcal;
+    std::vector<float>* T_ElecTrg_Lead_HoE;
+    std::vector<float>* T_ElecTrg_Lead_isoHcal;
+    std::vector<int>* T_ElecTrg_Lead_PixMatch;
+    std::vector<float>* T_ElecTrg_Lead_EoP;
+    std::vector<float>* T_ElecTrg_Lead_dPhi;
+    std::vector<float>* T_ElecTrg_Lead_dEta;
+    std::vector<float>* T_ElecTrg_Lead_isoTrack;
+    std::vector<float>* T_ElecTrg_Lead_vz;
+
+    std::vector<float>* T_ElecTrg_Trail_Pt;
+    std::vector<float>* T_ElecTrg_Trail_sigmaIeta;
+    std::vector<float>* T_ElecTrg_Trail_isoEcal;
+    std::vector<float>* T_ElecTrg_Trail_HoE;
+    std::vector<float>* T_ElecTrg_Trail_isoHcal;
+    std::vector<int>* T_ElecTrg_Trail_PixMatch;
+    std::vector<float>* T_ElecTrg_Trail_EoP;
+    std::vector<float>* T_ElecTrg_Trail_dPhi;
+    std::vector<float>* T_ElecTrg_Trail_dEta;
+    std::vector<float>* T_ElecTrg_Trail_isoTrack;
+    std::vector<float>* T_ElecTrg_Trail_vz;
     
     //PF info
     std::vector<int>* T_Elec_isPF;
@@ -608,6 +643,11 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
 };
 typedef std::vector< edm::Handle< edm::ValueMap<reco::IsoDeposit> > >   IsoDepositMaps;
 typedef std::vector< edm::Handle< edm::ValueMap<double> > >             IsoDepositVals;
+
+typedef std::vector< edm::Handle<trigger::TriggerFilterObjectWithRefs> > TrigFiltVect;
+typedef std::vector<  std::vector<edm::Ref<reco::RecoEcalCandidateCollection> > > RecoEcalCollVect;
+typedef edm::AssociationMap<edm::OneToValue<vector<reco::RecoEcalCandidate>,float,unsigned int> > recoEcalCandidateMap;
+
 
 //}
 
