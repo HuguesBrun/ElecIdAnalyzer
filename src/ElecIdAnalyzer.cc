@@ -72,28 +72,30 @@ ElecIdAnalyzer::ElecIdAnalyzer(const edm::ParameterSet& iConfig)
     //electron part :
     HLT_triggerObjects.push_back("hltEle27WP80TrackIsoFilter");//0
     
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoClusterShapeFilter");//1  //start Higher Pt electrons
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoEcalIsoFilter");//2
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHEFilter");//3
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHcalIsoFilter");//4
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoPixelMatchFilter");//5
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoOneOEMinusOneOPFilter");//6
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDetaFilter");//7
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDphiFilter");//8
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoFilter");//9
+    HLT_triggerObjects.push_back("hltL1sL1DoubleEG137");//1
+    HLT_triggerObjects.push_back("hltEG17EtFilterDoubleEG137");//2
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoClusterShapeFilter");//3  //start Higher Pt electrons
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoEcalIsoFilter");//4
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHEFilter");//5
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHcalIsoFilter");//6
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoPixelMatchFilter");//7
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoOneOEMinusOneOPFilter");//8
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDetaFilter");//9
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDphiFilter");//10
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoFilter");//11
 
     
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoClusterShapeDoubleFilter");//10
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoEcalIsoDoubleFilter");//11
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHEDoubleFilter");//12
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHcalIsoDoubleFilter");//13
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoPixelMatchDoubleFilter");//14
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoOneOEMinusOneOPDoubleFilter");//15
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDetaDoubleFilter");//16
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDphiDoubleFilter");//17
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter");//18
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoClusterShapeDoubleFilter");//12
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoEcalIsoDoubleFilter");//13
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHEDoubleFilter");//14
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoHcalIsoDoubleFilter");//15
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoPixelMatchDoubleFilter");//16
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoOneOEMinusOneOPDoubleFilter");//17
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDetaDoubleFilter");//18
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoDphiDoubleFilter");//19
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDoubleFilter");//20
     
-    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDZ");//19  DZ filter
+    HLT_triggerObjects.push_back("hltEle17TightIdLooseIsoEle8TightIdLooseIsoTrackIsoDZ");//21  DZ filter
     
    /* HLT_triggerObjects.push_back("hltEle17CaloIdVTCaloIsoVTTrkIdTTrkIsoVTEle8PMMassFilter");//20
     HLT_triggerObjects.push_back("hltEle17CaloIdVTCaloIsoVTTrkIdTTrkIsoVTEle8TrackIsoFilter");//21
@@ -104,55 +106,54 @@ ElecIdAnalyzer::ElecIdAnalyzer(const edm::ParameterSet& iConfig)
     
     //muon part :
     // Mu17_Mu8
-    HLT_triggerObjects.push_back("hltL1DoubleMu10MuOpenOR3p5L1Filtered0");//20
-    HLT_triggerObjects.push_back("hltL2pfL1DoubleMu10MuOpenOR3p5L1f0L2PreFiltered0");//21
-    HLT_triggerObjects.push_back("hltL2fL1DoubleMu10MuOpenOR3p5L1f0L2Filtered10");//22
-    HLT_triggerObjects.push_back("hltL3pfL1DoubleMu10MuOpenOR3p5L1f0L2pf0L3PreFiltered8");//23
-    HLT_triggerObjects.push_back("hltL3fL1DoubleMu10MuOpenOR3p5L1f0L2f10L3Filtered17");//24
-    HLT_triggerObjects.push_back("hltDiMuonGlb17Glb8DzFiltered0p2");//25
+    HLT_triggerObjects.push_back("hltL1DoubleMu10MuOpenOR3p5L1Filtered0");//22
+    HLT_triggerObjects.push_back("hltL2pfL1DoubleMu10MuOpenOR3p5L1f0L2PreFiltered0");//23
+    HLT_triggerObjects.push_back("hltL2fL1DoubleMu10MuOpenOR3p5L1f0L2Filtered10");//24
+    HLT_triggerObjects.push_back("hltL3pfL1DoubleMu10MuOpenOR3p5L1f0L2pf0L3PreFiltered8");//25
+    HLT_triggerObjects.push_back("hltL3fL1DoubleMu10MuOpenOR3p5L1f0L2f10L3Filtered17");//26
+    HLT_triggerObjects.push_back("hltDiMuonGlb17Glb8DzFiltered0p2");//27
     
     //Mu17TkMu8
-    HLT_triggerObjects.push_back("hltL1sL1DoubleMu10MuOpenORDoubleMu103p5");//26
-    HLT_triggerObjects.push_back("hltL1fL1sDoubleMu10MuOpenOR3p5L1Filtered0");//27
-    HLT_triggerObjects.push_back("hltL2fL1sDoubleMu10MuOpenOR3p5L1f0L2Filtered10");//28
-    HLT_triggerObjects.push_back("hltL3fL1sMu10MuOpenOR3p5L1f0L2f10L3Filtered17");//29
-    HLT_triggerObjects.push_back("hltDiMuonGlbFiltered17TrkFiltered8");//30
-    HLT_triggerObjects.push_back("hltDiMuonGlb17Trk8DzFiltered0p2");//31
+    HLT_triggerObjects.push_back("hltL1sL1DoubleMu10MuOpenORDoubleMu103p5");//28
+    HLT_triggerObjects.push_back("hltL1fL1sDoubleMu10MuOpenOR3p5L1Filtered0");//29
+    HLT_triggerObjects.push_back("hltL2fL1sDoubleMu10MuOpenOR3p5L1f0L2Filtered10");//30
+    HLT_triggerObjects.push_back("hltL3fL1sMu10MuOpenOR3p5L1f0L2f10L3Filtered17");//31
+    HLT_triggerObjects.push_back("hltDiMuonGlbFiltered17TrkFiltered8");//32
+    HLT_triggerObjects.push_back("hltDiMuonGlb17Trk8DzFiltered0p2");//33
     
     
     //Mu17_Ele8
-    HLT_triggerObjects.push_back("hltL1Mu12EG7L1MuFiltered0");//32
-    HLT_triggerObjects.push_back("hltL1Mu12EG7L2MuFiltered0");//33
-    HLT_triggerObjects.push_back("hltL1Mu12EG7L3MuFiltered17");//34
+    HLT_triggerObjects.push_back("hltL1Mu12EG7L1MuFiltered0");//34
+    HLT_triggerObjects.push_back("hltL1Mu12EG7L2MuFiltered0");//35
+    HLT_triggerObjects.push_back("hltL1Mu12EG7L3MuFiltered17");//36
     
-    
-    HLT_triggerObjects.push_back("hltEG8EtFilterL1Mu12EG7");//35
-    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLClusterShapeFilter");//36
-    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLEcalIsoFilter");//37
-    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLHEFilter");//38
-    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLHcalIsoFilter");//39
-    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLPixelMatchFilter");//40
-    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLOneOEMinusOneOPFilter");//41
-    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLDetaFilter");//42
-    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLDphiFilter");//43
-    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//44
+    HLT_triggerObjects.push_back("hltEG8EtFilterL1Mu12EG7");//37
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLClusterShapeFilter");//38
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLEcalIsoFilter");//39
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLHEFilter");//40
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLHcalIsoFilter");//41
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLPixelMatchFilter");//42
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLOneOEMinusOneOPFilter");//43
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLDetaFilter");//44
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLDphiFilter");//45
+    HLT_triggerObjects.push_back("hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//46
     
     
     //Mu8_Mu17
-    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12");//45
-    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12L1Filtered0");//46
-    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12L2Filtered5");//47
-    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12L3Filtered8");//48
-    HLT_triggerObjects.push_back("hltMu8EG17EtFilter");//49
-    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTClusterShapeFilter");//50
-    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLEcalIsoFilter");//51
-    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLHEFilter");//52
-    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLHcalIsoFilter");//53
-    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter");//54
-    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLOneOEMinusOneOPFilter");//55
-    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLTrkIdVLDetaFilter");//56
-    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLTrkIdVLDphiFilter");//57
-    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//58
+    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12");//47
+    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12L1Filtered0");//48
+    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12L2Filtered5");//49
+    HLT_triggerObjects.push_back("hltL1sL1Mu3p5EG12ORL1MuOpenEG12L3Filtered8");//50
+    HLT_triggerObjects.push_back("hltMu8EG17EtFilter");//51
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTClusterShapeFilter");//52
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLEcalIsoFilter");//53
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLHEFilter");//54
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLHcalIsoFilter");//55
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter");//56
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLOneOEMinusOneOPFilter");//57
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLTrkIdVLDetaFilter");//58
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLTrkIdVLDphiFilter");//59
+    HLT_triggerObjects.push_back("hltMu8Ele17CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter");//60
     
  
 
@@ -409,7 +410,7 @@ ElecIdAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     
     TrigFiltVect hltFilters( listInputTags.size() );
     for (unsigned int i = 0 ; i <  listInputTags.size() ; i++){
-        cout << "i=" << i << endl;
+       // cout << "i=" << i << endl;
         iEvent.getByLabel(edm::InputTag(listInputTags.at(i),"","myHLT"), hltFilters[i]);
     }
 
@@ -1014,7 +1015,7 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
             
             ///////////////////Try HLT matching
             
-            int candFilterEtLead = -1;
+           // int candFilterEtLead = -1;
             float candValEtLead = -1;
             float candValSigEta = -1;
             if (hltFilters[0].isValid()){
@@ -1037,9 +1038,12 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candfilterEtLead =" << candFilterEtLead << endl;
-            cout << "candValEtLead =" << candValEtLead << endl;
-            cout << "candValSigEta =" << candValSigEta << endl;
+            //cout << "candfilterEtLead =" << candFilterEtLead << endl;
+//cout << "candValEtLead =" << candValEtLead << endl;
+      //      cout << "candValSigEta =" << candValSigEta << endl;
+            
+            T_ElecTrg_Lead_Pt->push_back(candValEtLead);
+            T_ElecTrg_Lead_sigmaIeta->push_back(candValSigEta);
             
             float candValIsoEcal = -1;
             if (hltFilters[1].isValid()){
@@ -1061,8 +1065,9 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValIsoEcal = " << candValIsoEcal << endl;
-            
+     //       cout << "candValIsoEcal = " << candValIsoEcal << endl;
+            T_ElecTrg_Lead_isoEcal->push_back(candValIsoEcal);
+
 
             float candValIsoHE = -1;
             if (hltFilters[2].isValid()){
@@ -1084,8 +1089,8 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValIsoHE = " << candValIsoHE << endl;
-            
+     //      cout << "candValIsoHE = " << candValIsoHE << endl;
+            T_ElecTrg_Lead_HoE->push_back(candValIsoHE);
             
             float candValIsoHcal = -1;
             if (hltFilters[3].isValid()){
@@ -1107,8 +1112,9 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValIsoHcal = " << candValIsoHcal << endl;
-            
+     //       cout << "candValIsoHcal = " << candValIsoHcal << endl;
+            T_ElecTrg_Lead_isoHcal->push_back(candValIsoHcal);
+
             
             float candValnbPixMatches = -1;
             if (hltFilters[4].isValid()){
@@ -1138,8 +1144,9 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValnbPixMatches = " << candValnbPixMatches << endl;
-            
+      //      cout << "candValnbPixMatches = " << candValnbPixMatches << endl;
+            T_ElecTrg_Lead_PixMatch->push_back(candValnbPixMatches);
+
             
             float candValEoP = -1;
             if (hltFilters[5].isValid()){
@@ -1167,8 +1174,9 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValEoP = " << candValEoP << endl;
-            
+        //    cout << "candValEoP = " << candValEoP << endl;
+            T_ElecTrg_Lead_EoP->push_back(candValEoP);
+
             
             float candValdPhi = -1;
             if (hltFilters[6].isValid()){
@@ -1189,8 +1197,9 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValdPhi = " << candValdPhi << endl;
-            
+     //       cout << "candValdPhi = " << candValdPhi << endl;
+            T_ElecTrg_Lead_dPhi->push_back(candValdPhi);
+
             
             float candValdEta = -1;
             if (hltFilters[7].isValid()){
@@ -1211,8 +1220,9 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValdEta = " << candValdEta << endl;
-            
+     //       cout << "candValdEta = " << candValdEta << endl;
+            T_ElecTrg_Lead_dEta->push_back(candValdEta);
+
             float candValTkIso = -1;
             float candValvZ = -1;
             if (hltFilters[6].isValid()){
@@ -1235,10 +1245,13 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValTkIso = " << candValTkIso << endl;
-            cout << "candValvZ = " << candValvZ << endl;
+///cout << "candValTkIso = " << candValTkIso << endl;
+      //      cout << "candValvZ = " << candValvZ << endl;
+            T_ElecTrg_Lead_isoTrack->push_back(candValTkIso);
+            T_ElecTrg_Lead_vz->push_back(candValvZ);
+
             
-            int candFilterEtLeadT = -1;
+            //int candFilterEtLeadT = -1;
             float candValEtLeadT = -1;
             float candValSigEtaT = -1;
             if (hltFilters[10].isValid()){
@@ -1261,9 +1274,11 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candfilterEtLead =" << candFilterEtLeadT << endl;
-            cout << "candValEtLead =" << candValEtLeadT << endl;
-            cout << "candValSigEta =" << candValSigEtaT << endl;
+           // cout << "candfilterEtLead =" << candFilterEtLeadT << endl;
+         //   cout << "candValEtLead =" << candValEtLeadT << endl;
+        //    cout << "candValSigEta =" << candValSigEtaT << endl;
+            T_ElecTrg_Trail_Pt->push_back(candValEtLeadT);
+            T_ElecTrg_Trail_sigmaIeta->push_back(candValSigEtaT);
             
             float candValIsoEcalT = -1;
             if (hltFilters[11].isValid()){
@@ -1285,8 +1300,9 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValIsoEcal  = " << candValIsoEcalT << endl;
-            
+       //     cout << "candValIsoEcal  = " << candValIsoEcalT << endl;
+            T_ElecTrg_Trail_isoEcal->push_back(candValIsoEcalT);
+
             
             float candValIsoHET = -1;
             if (hltFilters[12].isValid()){
@@ -1308,8 +1324,9 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValIsoHE T = " << candValIsoHET << endl;
-            
+    //        cout << "candValIsoHE T = " << candValIsoHET << endl;
+            T_ElecTrg_Trail_HoE->push_back(candValIsoHET);
+
             
             float candValIsoHcalT = -1;
             if (hltFilters[13].isValid()){
@@ -1331,8 +1348,9 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValIsoHcal T  = " << candValIsoHcalT << endl;
-            
+      //      cout << "candValIsoHcal T  = " << candValIsoHcalT << endl;
+            T_ElecTrg_Trail_isoHcal->push_back(candValIsoHcalT);
+
             
             float candValnbPixMatchesT = -1;
             if (hltFilters[14].isValid()){
@@ -1362,8 +1380,9 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValnbPixMatches T  = " << candValnbPixMatchesT << endl;
-            
+        //    cout << "candValnbPixMatches T  = " << candValnbPixMatchesT << endl;
+            T_ElecTrg_Trail_PixMatch->push_back(candValnbPixMatchesT);
+
             
             float candValEoPT = -1;
             if (hltFilters[15].isValid()){
@@ -1391,8 +1410,9 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValEoP T  = " << candValEoPT << endl;
-            
+     //       cout << "candValEoP T  = " << candValEoPT << endl;
+            T_ElecTrg_Trail_EoP->push_back(candValEoPT);
+
             
             float candValdPhiT = -1;
             if (hltFilters[16].isValid()){
@@ -1413,14 +1433,15 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValdPhiT = " << candValdPhiT << endl;
-            
+      //      cout << "candValdPhiT = " << candValdPhiT << endl;
+            T_ElecTrg_Trail_dPhi->push_back(candValdPhiT);
+
             
             float candValdEtaT = -1;
-            if (hltFilters[7].isValid()){
+            if (hltFilters[17].isValid()){
                 std::vector<edm::Ref<reco::ElectronCollection> > candsFilterCSLead;
                 edm::Ref<reco::ElectronCollection> ref;
-                hltFilters[7]->getObjects(trigger::TriggerElectron, candsFilterCSLead);
+                hltFilters[17]->getObjects(trigger::TriggerElectron, candsFilterCSLead);
                 float rightIte = -1;
                 for (unsigned int trigIte = 0 ; trigIte < candsFilterCSLead.size() ; trigIte++){
                     ref = candsFilterCSLead[trigIte];
@@ -1435,7 +1456,9 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValdEtaT = " << candValdEtaT << endl;
+      //      cout << "candValdEtaT = " << candValdEtaT << endl;
+            T_ElecTrg_Trail_dEta->push_back(candValdEtaT);
+
             
             float candValTkIsoT = -1;
             float candValvzT = -1;
@@ -1459,8 +1482,12 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                     }
                 }
             }
-            cout << "candValTkIsoT = " << candValTkIsoT << endl;
-            cout << "candValvzT = " << candValvzT << endl;
+     //       cout << "candValTkIsoT = " << candValTkIsoT << endl;
+    //        cout << "candValvzT = " << candValvzT << endl;
+            T_ElecTrg_Trail_isoTrack->push_back(candValTkIsoT);
+            T_ElecTrg_Trail_vz->push_back(candValvzT);
+
+            
             
             int pass_Elec_HLT_Elec27_WP80 = 0;
             int pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = 0;
@@ -1480,18 +1507,18 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
                 float HLTdeltaR = deltaR(ele->phi(), selectedObjects[t].phi(), ele->eta(), selectedObjects[t].eta());
           //  cout << "delta R =" << HLTdeltaR << endl;
                 if (HLTdeltaR < 0.3){
-                    cout << "coucou on passe = " << theHLTcorr[t] << endl;
+       //             cout << "coucou on passe = " << theHLTcorr[t] << endl;
                     if (theHLTcorr[t] == 0) pass_Elec_HLT_Elec27_WP80 = 1;
-                    if ((theHLTcorr[t]>=1)&&(theHLTcorr[t]<=19)) pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = theHLTcorr[t];
-                    if ((theHLTcorr[t]>=1)&&(theHLTcorr[t]<=19)) pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=1)&&(theHLTcorr[t]<=21)) pass_Elec_HLT_Ele17TightID_Ele8_Ele8Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=1)&&(theHLTcorr[t]<=21)) pass_Elec_HLT_Ele17TightID_Ele8_Ele17Leg = theHLTcorr[t];
                 /*    if (theHLTcorr[t] == 3) pass_Elec_HLT_Ele17_Ele8_TnP_Ele8Leg = 1;
                     if (theHLTcorr[t] == 4) pass_Elec_HLT_Ele17_Ele8_TnP_Ele17Leg = 1; 
                     if (theHLTcorr[t] == 5) pass_Elec_HLT_Ele20_SC4_TnP_SC4Leg = 1; 
                     if (theHLTcorr[t] == 6) pass_Elec_HLT_Ele20_SC4_TnP_Ele20Leg = 1;
                     if (theHLTcorr[t] == 7) pass_Elec_HLT_Ele17_Ele8_Ele8Leg = 1;
                     if (theHLTcorr[t] == 8) pass_Elec_HLT_Ele17_Ele8_Ele17Leg = 1;*/
-                    if ((theHLTcorr[t]>=45)&&(theHLTcorr[t]<=58)) pass_Elec_HLT_Mu8_Ele17_Ele17Leg = theHLTcorr[t];
-                    if ((theHLTcorr[t]>=32)&&(theHLTcorr[t]<=44)) pass_Elec_HLT_Ele8_Mu17_Ele8Leg  = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=47)&&(theHLTcorr[t]<=60)) pass_Elec_HLT_Mu8_Ele17_Ele17Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=34)&&(theHLTcorr[t]<=46)) pass_Elec_HLT_Ele8_Mu17_Ele8Leg  = theHLTcorr[t];
 		    //if (theHLTcorr[t] == 25) cout << "on a  trouve la seed " << endl;
 		   // if (theHLTcorr[t] == 26) cout << "on a  trouve un elect" << endl;
                }
@@ -1794,30 +1821,33 @@ edm::Ref<reco::RecoEcalCandidateCollection> ref;
             int pass_HLT_Ele8_Mu17_Mu17Leg = 0;
             int pass_HLT_IsoMu24 = 0;
             int pass_HLT_IsoMu24_2p1 = 0;
-
             
+            
+            float muonL1deltaR = -1;
             for (size_t t = 0 ; t < selectedObjects.size() ; t++){
                // cout << "eta = " << selectedObjects[t].eta() << " phi = " << selectedObjects[t].phi() << "muon Pt =" << muon->pt()<< "filter = " << HLT_triggerObjects[theHLTcorr[t]] << endl;
                // cout << "pt trigger" << selectedObjects[t].pt() << endl;
                 float HLTdeltaR = deltaR(muon->phi(), selectedObjects[t].phi(), muon->eta(), selectedObjects[t].eta());
-		float relatDeltaPt = fabs(selectedObjects[t].pt()-muon->pt())/muon->pt();
+		//float relatDeltaPt = fabs(selectedObjects[t].pt()-muon->pt())/muon->pt();
                // cout << "delta R =" << HLTdeltaR << endl;
-                //if (HLTdeltaR < 0.3){
-                if ((HLTdeltaR < 0.3)&&(relatDeltaPt<0.5)){
+                if (theHLTcorr[t]==26) muonL1deltaR = HLTdeltaR;
+                if (HLTdeltaR < 0.3){
+                //if ((HLTdeltaR < 0.3)&&(relatDeltaPt<0.5)){
                //     	cout << "coucou on passe = " << theHLTcorr[t] << endl;
-                    if ((theHLTcorr[t]>=26)&&(theHLTcorr[t]<=31))  pass_HLT_Mu17_TkMu8_Mu17Leg = theHLTcorr[t];
-                    if ((theHLTcorr[t]>=26)&&(theHLTcorr[t]<=31)) pass_HLT_Mu17_TkMu8_Mu8Leg = theHLTcorr[t];
-                    if ((theHLTcorr[t]>=20)&&(theHLTcorr[t]<=25)) pass_HLT_Mu17_Mu8_Mu17Leg = theHLTcorr[t];
-                    if ((theHLTcorr[t]>=20)&&(theHLTcorr[t]<=25)) pass_HLT_Mu17_Mu8_Mu8Leg = theHLTcorr[t];
-                    if (theHLTcorr[t] == 13) pass_HLT_Mu17_Mu17_obj = 1;
-                    if (theHLTcorr[t] == 14) pass_HLT_Mu17_Mu8_obj = 1;
-                    if ((theHLTcorr[t]>=45)&&(theHLTcorr[t]<=58)) pass_HLT_Mu8_Ele17_Mu8Leg = theHLTcorr[t];
-                    if ((theHLTcorr[t]>=32)&&(theHLTcorr[t]<=44)) pass_HLT_Ele8_Mu17_Mu17Leg = theHLTcorr[t];
-                    if (theHLTcorr[t] == 19) pass_HLT_IsoMu24 = 1;
-                    if (theHLTcorr[t] == 20) pass_HLT_IsoMu24_2p1 = 1;
+                    if ((theHLTcorr[t]>=28)&&(theHLTcorr[t]<=33))  pass_HLT_Mu17_TkMu8_Mu17Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=28)&&(theHLTcorr[t]<=33)) pass_HLT_Mu17_TkMu8_Mu8Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=22)&&(theHLTcorr[t]<=27)) pass_HLT_Mu17_Mu8_Mu17Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=22)&&(theHLTcorr[t]<=27)) pass_HLT_Mu17_Mu8_Mu8Leg = theHLTcorr[t];
+                    if (theHLTcorr[t] == 15) pass_HLT_Mu17_Mu17_obj = 1;
+                    if (theHLTcorr[t] == 16) pass_HLT_Mu17_Mu8_obj = 1;
+                    if ((theHLTcorr[t]>=47)&&(theHLTcorr[t]<=60)) pass_HLT_Mu8_Ele17_Mu8Leg = theHLTcorr[t];
+                    if ((theHLTcorr[t]>=34)&&(theHLTcorr[t]<=46)) pass_HLT_Ele8_Mu17_Mu17Leg = theHLTcorr[t];
+                    if (theHLTcorr[t] == 21) pass_HLT_IsoMu24 = 1;
+                    if (theHLTcorr[t] == 22) pass_HLT_IsoMu24_2p1 = 1;
 
                 }
             }
+            T_Muon_HLT_deltaRtoL1->push_back(muonL1deltaR);
             T_Muon_HLT_Mu17_TkMu8_Mu17Leg->push_back(pass_HLT_Mu17_TkMu8_Mu17Leg);
             T_Muon_HLT_Mu17_TkMu8_Mu8Leg->push_back(pass_HLT_Mu17_TkMu8_Mu8Leg);
             T_Muon_HLT_Mu17_Mu8_Mu17Leg->push_back(pass_HLT_Mu17_Mu8_Mu17Leg);
@@ -2326,6 +2356,7 @@ ElecIdAnalyzer::beginJob()
         mytree_->Branch("T_Muon_photonIsoR03", "std::vector<float>", &T_Muon_photonIsoR03);
         mytree_->Branch("T_Muon_chargedHadronIsoPUR03", "std::vector<float>", &T_Muon_chargedHadronIsoPUR03);
         mytree_->Branch("T_Muon_isoRingsMVA", "std::vector<float>", &T_Muon_isoRingsMVA);
+        mytree_->Branch("T_Muon_HLT_deltaRtoL1", "std::vector<float>", &T_Muon_HLT_deltaRtoL1);
         mytree_->Branch("T_Muon_HLT_Mu17_TkMu8_Mu17Leg", "std::vector<int>", &T_Muon_HLT_Mu17_TkMu8_Mu17Leg);
         mytree_->Branch("T_Muon_HLT_Mu17_TkMu8_Mu8Leg", "std::vector<int>", &T_Muon_HLT_Mu17_TkMu8_Mu8Leg);
         mytree_->Branch("T_Muon_HLT_Mu17_Mu8_Mu17Leg", "std::vector<int>", &T_Muon_HLT_Mu17_Mu8_Mu17Leg);
@@ -2696,6 +2727,7 @@ ElecIdAnalyzer::beginEvent()
     T_Muon_neutralHadronIsoR03 = new std::vector<float>;
     T_Muon_photonIsoR03 = new std::vector<float>;
     T_Muon_chargedHadronIsoPUR03 = new std::vector<float>;
+	T_Muon_HLT_deltaRtoL1 = new std::vector<float>;
 	T_Muon_HLT_Mu17_TkMu8_Mu17Leg = new std::vector<int>;
 	T_Muon_HLT_Mu17_TkMu8_Mu8Leg = new std::vector<int>;
 	T_Muon_HLT_Mu17_Mu8_Mu17Leg = new std::vector<int>;
@@ -3012,6 +3044,7 @@ void ElecIdAnalyzer::endEvent(){
 	delete T_Muon_neutralHadronIsoR03;
 	delete T_Muon_photonIsoR03;
 	delete T_Muon_chargedHadronIsoPUR03;
+	delete T_Muon_HLT_deltaRtoL1;
 	delete T_Muon_HLT_Mu17_TkMu8_Mu17Leg;
 	delete T_Muon_HLT_Mu17_TkMu8_Mu8Leg;
 	delete T_Muon_HLT_Mu17_Mu8_Mu17Leg;

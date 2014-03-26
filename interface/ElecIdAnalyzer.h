@@ -519,6 +519,7 @@ class ElecIdAnalyzer : public edm::EDAnalyzer {
     std::vector<float> *T_Muon_isoRingsMVA;
     
     //trigger matching 
+    std::vector<float> *T_Muon_HLT_deltaRtoL1;
     std::vector<int> *T_Muon_HLT_Mu17_TkMu8_Mu17Leg;
     std::vector<int> *T_Muon_HLT_Mu17_TkMu8_Mu8Leg;
     std::vector<int> *T_Muon_HLT_Mu17_Mu8_Mu17Leg;
